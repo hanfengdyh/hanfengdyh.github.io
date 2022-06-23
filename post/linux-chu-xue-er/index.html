@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Linux初学（二） | HanFeng</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://hanfengdyh.github.io/favicon.ico?v=1655996354803">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://hanfengdyh.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://hanfengdyh.github.io">
+        <img class="avatar" src="https://hanfengdyh.github.io/images/avatar.png?v=1655996354803" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://hanfengdyh.github.io">
+        <h1 class="site-title">HanFeng</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Linux初学（二）</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-06-22</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><strong>连接器选项</strong></p>
+<p>（1）object-file-name</p>
+<p>文件没有特别明确后缀，使用如下操作，obj文件可以变成连接器的输入文件</p>
+<pre><code>$ gcc -o test main.o sub.o  ,main.o和sub.o就是输入文件
+</code></pre>
+<p>（2）-llibrary</p>
+<p>连接名为library的库文件，这个方法找到的是库文件——即由OBJ文件组成的归档文件</p>
+<p>（3）-nostartfiles</p>
+<p>不连接系统标准启动文件，而标准库文件仍能正常启动</p>
+<p>（4）-nostdlib</p>
+<p>不连接系统标准启动文件和标准库文件，只把指定文件传递给连接器。仍以options程序作为例子</p>
+<pre><code>$ gcc -v -nostdlib -o test main.o sub.o
+</code></pre>
+<p>(5)-static</p>
+<p>在支持动态连接的系统上阻止连接共享库</p>
+<p>(6)-shared</p>
+<p>生成一个共享OBJ文件，它可以和其他的OBJ文件连接产生可执行文件，只有部分系统支持，</p>
+<p>不想用源代码发布程序时可以用它来生成库文件</p>
+<pre><code>$ gcc -c -o sub.o sub.c
+
+$ gcc -shared -o sub.a sub.o
+</code></pre>
+<p>以后要使用sub.c 中的函数sub_fun时，连接程序时，将sub.a加入就行</p>
+<pre><code>$ gcc -o test main.o ./sub.a
+</code></pre>
+<p>也可以多个文件作为一个库文件</p>
+<pre><code>$ gcc -shared -o sub.a sub .o sub2.o sub3.o
+</code></pre>
+<p>(7)-Xlinker option</p>
+<p>把选项option传递给连接器。可以用来传递系统特定的连接选项，gcc无法识别这些选项。必须使用两次-Xlinker，一次传递选项，另一次传递其他参数。</p>
+<p>(8)-Wl,option</p>
+<p>把选项option传递给连接器。如果option中有逗号，就在逗号处分割成多个选项。</p>
+<p>(9)-u symbol</p>
+<p>使连接器认为取消了symbol的符号定义，从而连接库模块以取得定义可以使用多个-u选项各自跟上不同的符号，使得连接器调入附加的库模块。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://hanfengdyh.github.io/post/linux-chu-xue/">
+              <h3 class="post-title">
+                下一篇：Linux初学
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://hanfengdyh.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

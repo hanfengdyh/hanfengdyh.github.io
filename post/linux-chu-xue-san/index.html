@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Linux初学（三） | HanFeng</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://hanfengdyh.github.io/favicon.ico?v=1655996354803">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://hanfengdyh.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://hanfengdyh.github.io">
+        <img class="avatar" src="https://hanfengdyh.github.io/images/avatar.png?v=1655996354803" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://hanfengdyh.github.io">
+        <h1 class="site-title">HanFeng</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Linux初学（三）</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-06-23</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h3 id="目录选项">目录选项</h3>
+<p>下列选项指定搜索路径，用于查头文件、库文件或编译器的某些成员。</p>
+<p>(1)-Idir</p>
+<p>在头文件的搜索路径列表中添加敌人目录。</p>
+<p>(2)-I-</p>
+<p>任何在“-I-” 前面用来指定的搜索路径只适用于“#include“file” ”这种情况，不适用于“#include&lt;stdio.h&gt;”</p>
+<p>用-I-选项指定的搜索路径位于“-I-”选项后面，就可以搜索所有的#include指令</p>
+<p>(3)-Ldir</p>
+<p>在“-I”选项的搜索路径列表中添加dier目录。</p>
+<p>(4)-Bprefix</p>
+<p>这个选项指出在何处寻找可执行文件、库文件以及编译器自己的数据文件。编译器驱动程序需要使用某些工具，比如： cpp 、 ccl （或 C +＋的 cclplus )、 as 和 ld 。它把 prefix 当作欲执行的工具的前缀，这个前缀可以用来指定目录，也可以用来修改工具名字。</p>
+<p>对于要运行的工具，编译器驱动程序首先试着加上“- B ”前缀（如果存在），如果没有找到文件或没有指定“- B ”选项，编译器接着会试验两个标准前缀 usr / lib / gcc ／和/ usr / local / lib / gcc - lib /。如果仍然没能够找到所需文件，编译器就在“ PATH ”环境变量指定的路径中寻找没加任何前缀的文件名。如果有需要，运行时（ run - time ）支持文件 libgcc . a 也在“- B ”前缀的搜索范围之内。如果这里没有找到，就在上面提到的两个标准前缀中寻找。如果上述方法没有找到这个文件，就不连接它了。多数情况的多数机器上， libgcc . a 并非必不可少。可以通过环境变量 GCCEXEC PREFIX 获得近似的效果：如果定义了这个变量，其值就和上面说的一样被用作前缀。如果同时指定了“- B ”选项和 GCC EXEC _ PREFIX 变量，编译器首先使用“- B ”选项，然后才尝试环境变量值。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://hanfengdyh.github.io/post/linux-chu-xue-er/">
+              <h3 class="post-title">
+                下一篇：Linux初学（二）
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://hanfengdyh.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
