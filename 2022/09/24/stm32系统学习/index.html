@@ -1,104 +1,146 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>stm32系统学习 | Hanfeng博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="stm32主系统由四个去驱动单元和四个被动单元构成。 四个驱动是内核DCode总线；系统总线；通用DMA1；通用DMA2 四被动单元是AHB到APB的桥：连接所有APB的设备；内存FLASH；内部SRAM；FSMC ① ICode 总线：该总线将 M3 内核指令总线和闪存指令接口相连，指令的预取在该总线上面完成。② DCode 总线：该总线将 M3 内核的 DCode 总线与闪存存储器的数据接口相">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>stm32系统学习 | Hanfeng博客</title><meta name="keywords" content="stm32"><meta name="author" content="dyh"><meta name="copyright" content="dyh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="stm32主系统由四个去驱动单元和四个被动单元构成。 四个驱动是内核DCode总线；系统总线；通用DMA1；通用DMA2 四被动单元是AHB到APB的桥：连接所有APB的设备；内存FLASH；内部SRAM；FSMC ① ICode 总线：该总线将 M3 内核指令总线和闪存指令接口相连，指令的预取在该总线上面完成。② DCode 总线：该总线将 M3 内核的 DCode 总线与闪存存储器的数据接口相">
 <meta property="og:type" content="article">
 <meta property="og:title" content="stm32系统学习">
 <meta property="og:url" content="http://example.com/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Hanfeng博客">
 <meta property="og:description" content="stm32主系统由四个去驱动单元和四个被动单元构成。 四个驱动是内核DCode总线；系统总线；通用DMA1；通用DMA2 四被动单元是AHB到APB的桥：连接所有APB的设备；内存FLASH；内部SRAM；FSMC ① ICode 总线：该总线将 M3 内核指令总线和闪存指令接口相连，指令的预取在该总线上面完成。② DCode 总线：该总线将 M3 内核的 DCode 总线与闪存存储器的数据接口相">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.postimg.cc/2SHzHt8g/liucheng.png">
 <meta property="article:published_time" content="2022-09-24T12:37:27.000Z">
 <meta property="article:modified_time" content="2022-09-25T10:42:57.103Z">
 <meta property="article:author" content="dyh">
 <meta property="article:tag" content="stm32">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.postimg.cc/2SHzHt8g/liucheng.png">
-  
-    <link rel="alternate" href="/atom.xml" title="Hanfeng博客" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+<meta name="twitter:card" content="summary"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'stm32系统学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-09-25 18:42:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
 
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hanfeng博客</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-stm32系统学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" class="article-date">
-  <time class="dt-published" datetime="2022-09-24T12:37:27.000Z" itemprop="datePublished">2022-09-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
   
-    <h1 class="p-name article-title" itemprop="headline name">
-      stm32系统学习
-    </h1>
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
   
-
-      </header>
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
     
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><strong>stm32主系统由四个去驱动单元和四个被动单元构成。</strong></p>
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Hanfeng博客</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">stm32系统学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-09-24T12:37:27.000Z" title="发表于 2022-09-24 20:37:27">2022-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-25T10:42:57.103Z" title="更新于 2022-09-25 18:42:57">2022-09-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="stm32系统学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>stm32主系统由四个去驱动单元和四个被动单元构成。</strong></p>
 <p>四个驱动是内核DCode总线；系统总线；通用DMA1；通用DMA2</p>
 <p>四被动单元是AHB到APB的桥：连接所有APB的设备；内存FLASH；内部SRAM；FSMC</p>
 <p>① ICode 总线：该总线将 M3 内核指令总线和闪存指令接口相连，指令的预取在该总线上<br>面完成。<br>② DCode 总线：该总线将 M3 内核的 DCode 总线与闪存存储器的数据接口相连接，常量<br>加载和调试访问在该总线上面完成。<br>③ 系统总线：该总线连接 M3 内核的系统总线到总线矩阵，总线矩阵协调内核和 DMA 间<br>访问。<br>④ DMA 总线：该总线将 DMA 的 AHB 主控接口与总线矩阵相连，总线矩阵协调 CPU 的<br>DCode 和 DMA 到 SRAM,闪存和外设的访问。<br>⑤ 总线矩阵：总线矩阵协调内核系统总线和 DMA 主控总线之间的访问仲裁，仲裁利用<br>轮换算法。<br>⑥ AHB&#x2F;APB 桥:这两个桥在 AHB 和 2 个 APB 总线间提供同步连接，APB1 操作速度限于<br>36MHz,APB2 操作速度全速。</p>
@@ -107,151 +149,4 @@
 <p>①HSI 是高速内部时钟，RC 振荡器，频率为 8MHz。<br>②HSE 是高速外部时钟，可接石英&#x2F;陶瓷谐振器，或者接外部时钟源，频率范围为 4MHz到16MHz。<br>③LSI 是低速内部时钟，RC 振荡器，频率为 40kHz。独立看门狗的时钟源只能是 LSI，同<br>时 LSI 还可以作为 RTC 的时钟源。<br>④LSE 是低速外部时钟，使用频率为 32.768kHz 的石英晶体。这个主要是 RTC 的时钟源。<br>⑤PLL 为锁相环倍频输出，其时钟输入源可选择为 HSI&#x2F;2、HSE 或者 HSE&#x2F;2。倍频可选择为2到16 倍，但是其输出频率最大不得超过 72MHz。</p>
 <p>程序执行顺序</p>
 <p><a target="_blank" rel="noopener" href="https://postimg.cc/68vJqYZh"><img src="https://i.postimg.cc/2SHzHt8g/liucheng.png" alt="liucheng.png"></a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" data-id="cl8x3r14i000mgov882a31n0b" data-title="stm32系统学习" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stm32/" rel="tag">stm32</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2022/09/27/stm32%E5%AE%9E%E6%88%98%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">前一篇</strong>
-      <div class="article-nav-title">
-        
-          stm32实战篇
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2022/09/21/stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">后一篇</strong>
-      <div class="article-nav-title">stm32最小系统板制作</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/makefile/" rel="tag">makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stm32/" rel="tag">stm32</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/makefile/" style="font-size: 10px;">makefile</a> <a href="/tags/stm32/" style="font-size: 20px;">stm32</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%B8%89/">Linux初学(三)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%BA%8C/">Linux初学(二)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/06/linux%E5%88%9D%E5%AD%A6/">Linux初学(一)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/06/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/03/C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/">C语言算法项</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2022 dyh<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">dyh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/">http://example.com/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Hanfeng博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/stm32/">stm32</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/09/27/stm32%E5%AE%9E%E6%88%98%E7%AF%87/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">stm32实战篇</div></div></a></div><div class="next-post pull-right"><a href="/2022/09/21/stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">stm32最小系统板制作</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/07/01/stm32hal%E5%BA%93/" title="stm32hal库"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-01</div><div class="title">stm32hal库</div></div></a></div><div><a href="/2022/09/27/stm32%E5%AE%9E%E6%88%98%E7%AF%87/" title="stm32实战篇"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-27</div><div class="title">stm32实战篇</div></div></a></div><div><a href="/2022/09/21/stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/" title="stm32最小系统板制作"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-21</div><div class="title">stm32最小系统板制作</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dyh</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%B8%89/" title="Linux初学(三)"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux初学(三)"/></a><div class="content"><a class="title" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%B8%89/" title="Linux初学(三)">Linux初学(三)</a><time datetime="2022-10-06T12:37:44.968Z" title="发表于 2022-10-06 20:37:44">2022-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%BA%8C/" title="Linux初学(二)"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux初学(二)"/></a><div class="content"><a class="title" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%BA%8C/" title="Linux初学(二)">Linux初学(二)</a><time datetime="2022-10-06T12:37:23.009Z" title="发表于 2022-10-06 20:37:23">2022-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6/" title="Linux初学(一)"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux初学(一)"/></a><div class="content"><a class="title" href="/2022/10/06/linux%E5%88%9D%E5%AD%A6/" title="Linux初学(一)">Linux初学(一)</a><time datetime="2022-10-06T12:35:51.901Z" title="发表于 2022-10-06 20:35:51">2022-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/06/hello-world/" title="Hello World"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2022/10/06/hello-world/" title="Hello World">Hello World</a><time datetime="2022-10-06T10:55:46.681Z" title="发表于 2022-10-06 18:55:46">2022-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/" title="C语言算法项"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言算法项"/></a><div class="content"><a class="title" href="/2022/10/03/C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/" title="C语言算法项">C语言算法项</a><time datetime="2022-10-03T10:43:27.000Z" title="发表于 2022-10-03 18:43:27">2022-10-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By dyh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
