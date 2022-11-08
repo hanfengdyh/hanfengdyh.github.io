@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Linux——文件IO操作</title>
+      <link href="/2022/11/08/Linux%E2%80%94%E2%80%94%E6%96%87%E4%BB%B6IO%E6%93%8D%E4%BD%9C/"/>
+      <url>/2022/11/08/Linux%E2%80%94%E2%80%94%E6%96%87%E4%BB%B6IO%E6%93%8D%E4%BD%9C/</url>
+      
+        <content type="html"><![CDATA[<h3 id="文件IO基础"><a href="#文件IO基础" class="headerlink" title="文件IO基础"></a>文件IO基础</h3><p>文件IO是指对文件的输入输出操作。</p><h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>调用函数会有返回值，该返回值为一个文件描述符，对于Linux内核而言，所有打开文件都会通过文件描述符进行索引。</p><p>当调用open函数打开或者创建一个新文件，内核会向进程返回一个文件描述符，用于指带被打开的文件，所有执行 IO 操作的系统调用都是通过文件描述符来索引到对应的文件。一个进程可以打开多个文件，但是在 Linux 系统中，一个进程可以打开的文件数是有限制，并不是可以无限制打开很多的文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ulimit</span> -n<span class="comment">##查看进程打开文件的最大数量</span></span></span><br><span class="line">1024</span><br></pre></td></tr></table></figure><p>每一个被打开的文件在同一个进程中都有一个唯一的文件描述符，不会重复，如果文件被关闭后，它对应的文件描述符将会被释放，那么这个文件描述符将可以再次分配给其它打开的文件、与对应的文件绑定起来。</p><p>每次给打开的文件分配文件描述符都是从最小的没有被使用的文件描述符（0~1023）开始，当之前打开的文件被关闭之后，那么它对应的文件描述符会被释放，释放之后也就成为了一个没有被使用的文件描述符了。</p><p>但是 0、1、2 这三个文件描述符已经默认被系统占用了，分别分配给了系统标准输入（0）、标准输出（1）以及标准错误（2）。</p><h4 id="open打开文件"><a href="#open打开文件" class="headerlink" title="open打开文件"></a>open打开文件</h4><p>open 函数用于打开文件，当然除了打开已经存在的文件之外，还可以创建一个新的文件。</p><p>在应用程序中调用 open 函数即可传入 2 个参数（pathname、flags）、也可传入 3 个参数（pathname、flags、mode），但是第三个参数 mode 需要在第二个参数 flags 满足条件时才会有效，稍后将对此进行说明；从图 2.3.1 可知，在应用程序中使用 open 函数时，需要包含 3 个头文件“#include<br>”、“#include ”、“#include ”。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Linux——Shell脚本学习</title>
       <link href="/2022/10/23/Linux%E2%80%94%E2%80%94Shell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/"/>
       <url>/2022/10/23/Linux%E2%80%94%E2%80%94Shell%E8%84%9A%E6%9C%AC%E5%AD%A6%E4%B9%A0/</url>
