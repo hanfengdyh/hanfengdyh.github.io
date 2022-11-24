@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Linux——字符串处理</title>
+      <link href="/2022/11/23/Linux%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/"/>
+      <url>/2022/11/23/Linux%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<h2 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h2><h3 id="字符串输入输出"><a href="#字符串输入输出" class="headerlink" title="字符串输入输出"></a>字符串输入输出</h3><p>设备输出stdout、设备键盘输入stdin、设备错误显示stderr。</p><p>常用的字符串输入函数有putchar()、puts()、fputc()、fputs()只能输出字符串函数，不像printf可以格式化输出，所以一般用printf。</p><p><strong>puts</strong>函数原型可通过man 3 puts查看。</p><p>使用 puts()函数连换行符’ \n ‘都省了，函数内部会自动在其后添加一个换行符。</p><p><strong>putchar</strong>函数原型可通过man 3 putchar查看。</p><p>putchar()函数可以把参数 c 指定的字符（一个无符号字符）输出到标准输出设备，其输出可以是一个字符，可以是介于 0~127 之间的一个十进制整型数（包含 0 和 127，输出其对应的 ASCII 码字符），也可以是用 char 类型定义好的一个字符型变量。</p><p><strong>fputc</strong>函数原型可通过man 3 fputc查看</p><p>fputc()与 putchar()类似，也用于输出参数 c 指定的字符（一个无符号字符），与 putchar()区别在于，putchar()只能输出到标准输出设备，而 fputc()可把字符输出到指定的文件中，既可以是标准输出、标准错误设备，也可以是一个普通文件。</p><p><strong>fputs</strong></p><p>fputs()与 puts()类似，也用于输出一条字符串，与 puts()区别在于，puts()只能输出到标准输出设备，而 fputs()可把字符串输出到指定的文件中，既可以是标准输出、标准错误设备，也可以是一个普通文件。</p><h3 id="内存填充"><a href="#内存填充" class="headerlink" title="内存填充"></a>内存填充</h3><p>在编程中，经常需要将某一块内存中的数据全部设置为指定的值，譬如在定义数组、结构体这种类型变量时，通常需要对其进行初始化操作，而初始化操作一般都是将其占用的内存空间全部填充为 0。</p><p><strong>memset函数</strong>用于将某一块内存的数据全部设置为指定的值</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *s, <span class="type">int</span> c, <span class="type">size_t</span> n)</span>;</span><br></pre></td></tr></table></figure><p>s：需要进行数据填充的内存空间起始地址。<br>c：要被设置的值，该值以 int 类型传递。但在使用过程中是以无符号字符形式<br>n：填充的字节数。</p><p><strong>bzero函数</strong>用于将一块内存的数据都设置为0</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;strings.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">bzero</span><span class="params">(<span class="type">void</span> *s, <span class="type">size_t</span> n)</span>;</span><br></pre></td></tr></table></figure><p>s：内存空间的起始地址。<br>n：填充的字节数。<br>返回值：无返回值。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>学习一个阶段的感受</title>
       <link href="/2022/11/18/%E9%9A%8F%E7%AC%94/"/>
       <url>/2022/11/18/%E9%9A%8F%E7%AC%94/</url>
