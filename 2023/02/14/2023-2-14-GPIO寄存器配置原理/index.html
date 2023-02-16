@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>GPIO寄存器配置原理 | 涵风 Blog</title><meta name="keywords" content="裸机开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="i.MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i.MX6ULL的寄存器） 裸机系统：汇编操作寄存器点灯、C语言操作寄存器点灯 跑Linux系统：字符驱动LED点灯、设备树驱动LED点灯  IO与GPIO是两个概念，GPIO是属于IO的一部分。IO: Input Output，用于CPU与外界进行信息交互。例如CPU 读内存数据需要 I&#x2F;O 系统，CPU 输出数据到屏幕显示出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPIO寄存器配置原理">
+<meta property="og:url" content="http://example.com/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="i.MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i.MX6ULL的寄存器） 裸机系统：汇编操作寄存器点灯、C语言操作寄存器点灯 跑Linux系统：字符驱动LED点灯、设备树驱动LED点灯  IO与GPIO是两个概念，GPIO是属于IO的一部分。IO: Input Output，用于CPU与外界进行信息交互。例如CPU 读内存数据需要 I&#x2F;O 系统，CPU 输出数据到屏幕显示出">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/wenzhang.png">
+<meta property="article:published_time" content="2023-02-14T07:20:27.000Z">
+<meta property="article:modified_time" content="2023-02-15T07:29:55.327Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="裸机开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/wenzhang.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GPIO寄存器配置原理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-15 15:29:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/wenzhang.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GPIO寄存器配置原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-14T07:20:27.000Z" title="发表于 2023-02-14 15:20:27">2023-02-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-15T07:29:55.327Z" title="更新于 2023-02-15 15:29:55">2023-02-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="GPIO寄存器配置原理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="i-MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i-MX6ULL的寄存器）"><a href="#i-MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i-MX6ULL的寄存器）" class="headerlink" title="i.MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i.MX6ULL的寄存器）"></a>i.MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i.MX6ULL的寄存器）</h3><ul>
+<li><strong>裸机系统</strong>：汇编操作寄存器点灯、C语言操作寄存器点灯</li>
+<li><strong>跑Linux系统</strong>：字符驱动LED点灯、设备树驱动LED点灯</li>
+</ul>
+<h3 id="IO与GPIO是两个概念，GPIO是属于IO的一部分。"><a href="#IO与GPIO是两个概念，GPIO是属于IO的一部分。" class="headerlink" title="IO与GPIO是两个概念，GPIO是属于IO的一部分。"></a>IO与GPIO是两个概念，GPIO是属于IO的一部分。</h3><p>IO: Input Output，用于CPU与外界进行信息交互。例如CPU 读内存数据需要 I&#x2F;O 系统，CPU 输出数据到屏幕显示出来也需要 I&#x2F;O 系统，信息在 I&#x2F;O 系统上传输有串行或并行。<br>GPIO: General-Purpose IO ports，即通用I&#x2F;O口，在微控制器芯片上一般都会提供一个“通用可编程I&#x2F;O接口”。接口至少有两个寄存器——数据寄存器与控制寄存器。数据寄存器的各位直接引到芯片外部，控制寄存器则是对数据寄存器中每一位进行独立的设置。</p>
+<h3 id="imx6ul的GPIO硬件结构"><a href="#imx6ul的GPIO硬件结构" class="headerlink" title="imx6ul的GPIO硬件结构"></a>imx6ul的GPIO硬件结构</h3><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230215_150827.png"></p>
+<p>① PAD：它代表了i.MX6ULL芯片的一个GPIO引脚。</p>
+<p>② IOMUX复用选择器：与STM32的引脚复用功能类似，i.MX6ULL芯片的每个IO通过IOMUXC中的MUX寄存器和PAD寄存器设置，可以支持多种功能(如GPIO、IIC、USART…)。</p>
+<p>IOMUX由其左侧的IOMUXC提供寄存器给用户进行配置，它又分成MUX_Mode（IO 模式控制）以及Pad Settings（Pad 配置）两个部分：</p>
+<ol>
+<li><p>MUX_Mode配置：用来配置引脚的复用功能</p>
+<p>2.Pad Settings 配置：配置引脚的属性，例如驱动能力，是否使用上下拉电阻，是否使用保持器，是否使用开漏模式以及使用施密特模式还是CMOS模式等</p>
+</li>
+</ol>
+<p>③ Block外设功能控制块：例如具有PWM输出功能的引脚，它需要PWM外设的支持。</p>
+<p>④ GPIO外设：GPIO模块是每个IO都具有的外设， 它是IO控制的基本功能， 如输出高低电平、 检测电平输入等。当需要使用引脚的GPIO功能时，就要配置GPIO外设中的各个寄存器(DR、GDIR、PSR…)。</p>
+<p>⑤ 与其它引脚的连接：这里是另一个引脚PAD2，它与PAD1有一根信号线连接，表示部分引脚的输出可以作为另一个引脚的输入。</p>
+<h4 id="GPIO配置"><a href="#GPIO配置" class="headerlink" title="GPIO配置"></a>GPIO配置</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> DR;         <span class="comment">/**&lt; GPIO data register, offset: 0x0 */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> GDIR;       <span class="comment">/**&lt; GPIO direction register, offset: 0x4 */</span></span><br><span class="line">  __I  <span class="type">uint32_t</span> PSR;        <span class="comment">/**&lt; GPIO pad status register, offset: 0x8 */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> ICR1;       <span class="comment">/**&lt; GPIO interrupt configuration register1, offset: 0xC */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> ICR2;       <span class="comment">/**&lt; GPIO interrupt configuration register2, offset: 0x10 */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> IMR;        <span class="comment">/**&lt; GPIO interrupt mask register, offset: 0x14 */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> ISR;        <span class="comment">/**&lt; GPIO interrupt status register, offset: 0x18 */</span></span><br><span class="line">  __IO <span class="type">uint32_t</span> EDGE_SEL;   <span class="comment">/**&lt; GPIO edge select register, offset: 0x1C */</span></span><br><span class="line">&#125; GPIO_Type;</span><br></pre></td></tr></table></figure>
+
+<p>DR（data register），即数据寄存器，它是32位的，一个GPIO组最大只有32个IO，因此DR寄存器中的每个位都对应一个 GPIO。当GPIO被配置为输出模式后，向指定的位写入数据那么相应的IO就会输出相应的高低电平，当 GPIO被配置为输入模式后，此寄存器就保存着对应IO的电平值，每个位对对应一个GPIO。</p>
+<p><strong>GDIR（GPIO direction register）</strong>，即方向寄存器，也是32位的，用来设置某个GPIO的工作方向的，即输入&#x2F;输出。同样的，每个IO对应一个位，如果要设置GPIO为输入，就设置相应的位为0，如果要设置为输出，就设置为1</p>
+<p><strong>PSR（Pad Status Register）</strong>，即状态寄存器，也是32位的。注意它是一个<strong>只读寄存器</strong>，每个IO对应一个位，读取相应的位即可获取对应的GPIO的状(高低电平值)，功能和输入状态下的DR寄存器一样。</p>
+<p><strong>ICR1（interrupt configuration register1）和ICR2</strong>，都是中断控制寄存器， ICR1用于配置低16个GPIO，ICR2 用于配置高16 个GPIO。</p>
+<p><strong>IMR（interrupt mask register）</strong>，即中断屏蔽寄存器，也是32位，每个IO对应一个位。IMR寄存器用来控制GPIO的中断禁止和使能，如果使能某个GPIO的中断，那么设置相应的位为1即可，反之，如果要禁止中断，那么就设置相应的位为0即可。</p>
+<p><strong>ISR（interrupt status register）</strong>，即中断状态寄存器，也是32位，每个IO对应一个位。只要某个GPIO的中断发生，则ISR中相应的位就会被置1。所以通过读取ISR寄存器来判断是否发生了中断，类似于学习STM32用到的中断标志位。</p>
+<p><strong>EDGE_SEL（edge select register）</strong>，即边沿选择寄存器，也是32位，每个IO对应一个位。</p>
+<p>它用来设置边沿中断， 并会覆盖ICR1和ICR2的设置。</p>
+<h4 id="时钟配置"><a href="#时钟配置" class="headerlink" title="时钟配置"></a>时钟配置</h4><p><strong>CCM（Clock Controller Module）时钟控制模块寄存器用来使能外设时钟。 CMM一共有CCM_CCGR0~CCM_CCGR6</strong>这 7 个寄存器，控制着I.MX6U的所有外设时钟开关。</p>
+<p>以CCM_CCGR0为例，它是个32位寄存器，每2位控制一个外设的时钟，比如 bit31:30 控制着GPIO2 的外设时钟，两个位就有 4 种操作方式：</p>
+<table>
+<thead>
+<tr>
+<th>位设置</th>
+<th>时钟控制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>00</td>
+<td>所有模式下都关闭外设时钟</td>
+</tr>
+<tr>
+<td>01</td>
+<td>只有在运行模式下打开外设时钟，等待模式和停止模式下均关闭外设时钟</td>
+</tr>
+<tr>
+<td>10</td>
+<td>未使用(保留)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>除了停止模式以外，其他所有模式下时钟都打开</td>
+</tr>
+</tbody></table>
+<p><strong>配置总结</strong><br>使用i.MX6ULL的GPIO时，需要如下几步配置：</p>
+<p>使能 GPIO 对应的时钟<br>配置MUX寄存器，设置IO的复用功能，使其复用为GPIO功能<br>配置PAD寄存器，设置 IO 的上下拉、速度等<br>配置GPIO的各种寄存器（DR、GDIR、…），设置输入&#x2F;输出、是否使用中断、默认输出电平等</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/">http://example.com/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91/">裸机开发</a></div><div class="post_share"><div class="social-share" data-image="/img/wenzhang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/16/2023-2-16-imx6u%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/"><img class="prev-cover" src="/img/wenzhang.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">imx6u时钟配置</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/12/bsp%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/"><img class="next-cover" src="/img/wenzhang.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">bsp工程管理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/02/16/2023-2-16-imx6u%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/" title="imx6u时钟配置"><img class="cover" src="/img/wenzhang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-16</div><div class="title">imx6u时钟配置</div></div></a></div><div><a href="/2023/02/12/bsp%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/" title="bsp工程管理"><img class="cover" src="/img/wenzhang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-12</div><div class="title">bsp工程管理</div></div></a></div><div><a href="/2023/02/05/C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/" title="C语言点亮led"><img class="cover" src="/img/wenzhang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-05</div><div class="title">C语言点亮led</div></div></a></div><div><a href="/2023/02/05/%E6%B1%87%E7%BC%96%E7%82%B9%E4%BA%AEled/" title="汇编点亮led"><img class="cover" src="/img/wenzhang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-05</div><div class="title">汇编点亮led</div></div></a></div><div><a href="/2023/02/04/arm%E6%B1%87%E7%BC%96/" title="arm汇编"><img class="cover" src="/img/wenzhang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-04</div><div class="title">arm汇编</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#i-MX6ULL%E4%B9%9F%E6%9C%89%E5%A4%9A%E7%A7%8D%E7%82%B9%E7%81%AF%E6%96%B9%E5%BC%8F%EF%BC%9A%EF%BC%88%E7%A9%B6%E5%85%B6%E6%9C%AC%E8%B4%A8%EF%BC%8C%E6%9C%80%E7%BB%88%E9%83%BD%E6%98%AF%E8%A6%81%E6%93%8D%E4%BD%9Ci-MX6ULL%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">i.MX6ULL也有多种点灯方式：（究其本质，最终都是要操作i.MX6ULL的寄存器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IO%E4%B8%8EGPIO%E6%98%AF%E4%B8%A4%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%8CGPIO%E6%98%AF%E5%B1%9E%E4%BA%8EIO%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">IO与GPIO是两个概念，GPIO是属于IO的一部分。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#imx6ul%E7%9A%84GPIO%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">imx6ul的GPIO硬件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO%E9%85%8D%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">GPIO配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">时钟配置</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/16/2023-2-16-imx6u%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/" title="imx6u时钟配置"><img src="/img/wenzhang.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="imx6u时钟配置"/></a><div class="content"><a class="title" href="/2023/02/16/2023-2-16-imx6u%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/" title="imx6u时钟配置">imx6u时钟配置</a><time datetime="2023-02-16T07:30:27.000Z" title="发表于 2023-02-16 15:30:27">2023-02-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/" title="GPIO寄存器配置原理"><img src="/img/wenzhang.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="GPIO寄存器配置原理"/></a><div class="content"><a class="title" href="/2023/02/14/2023-2-14-GPIO%E5%AF%84%E5%AD%98%E5%99%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86/" title="GPIO寄存器配置原理">GPIO寄存器配置原理</a><time datetime="2023-02-14T07:20:27.000Z" title="发表于 2023-02-14 15:20:27">2023-02-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/12/bsp%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/" title="bsp工程管理"><img src="/img/wenzhang.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="bsp工程管理"/></a><div class="content"><a class="title" href="/2023/02/12/bsp%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/" title="bsp工程管理">bsp工程管理</a><time datetime="2023-02-12T13:30:27.000Z" title="发表于 2023-02-12 21:30:27">2023-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/05/C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/" title="C语言点亮led"><img src="/img/wenzhang.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="C语言点亮led"/></a><div class="content"><a class="title" href="/2023/02/05/C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/" title="C语言点亮led">C语言点亮led</a><time datetime="2023-02-05T13:30:27.000Z" title="发表于 2023-02-05 21:30:27">2023-02-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
