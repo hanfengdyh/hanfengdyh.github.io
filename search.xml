@@ -707,32 +707,6 @@
     
     
     <entry>
-      <title>Linux初学(三)</title>
-      <link href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%B8%89/"/>
-      <url>/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%B8%89/</url>
-      
-        <content type="html"><![CDATA[<p><u><strong>目录选项</strong></u></p><p>下列选项指定搜索路径，用于查头文件、库文件或编译器的某些成员。</p><p>(1)-Idir</p><p>在头文件的搜索路径列表中添加敌人目录。</p><p>(2)-I-</p><p>任何在“-I-” 前面用来指定的搜索路径只适用于“#include“file” ”这种情况，不适用于“#include&lt;stdio.h&gt;”</p><p>用-I-选项指定的搜索路径位于“-I-”选项后面，就可以搜索所有的#include指令</p><p>(3)-Ldir</p><p>在“-I”选项的搜索路径列表中添加dier目录。</p><p>(4)-Bprefix</p><p>这个选项指出在何处寻找可执行文件、库文件以及编译器自己的数据文件。编译器驱动程序需要使用某些工具，比如： cpp 、 ccl （或 C +＋的 cclplus )、 as 和 ld 。它把 prefix 当作欲执行的工具的前缀，这个前缀可以用来指定目录，也可以用来修改工具名字。</p><p>对于要运行的工具，编译器驱动程序首先试着加上“- B ”前缀（如果存在），如果没有找到文件或没有指定“- B ”选项，编译器接着会试验两个标准前缀 usr &#x2F; lib &#x2F; gcc ／和&#x2F; usr &#x2F; local &#x2F; lib &#x2F; gcc - lib &#x2F;。如果仍然没能够找到所需文件，编译器就在“ PATH ”环境变量指定的路径中寻找没加任何前缀的文件名。如果有需要，运行时（ run - time ）支持文件 libgcc . a 也在“- B ”前缀的搜索范围之内。如果这里没有找到，就在上面提到的两个标准前缀中寻找。如果上述方法没有找到这个文件，就不连接它了。多数情况的多数机器上， libgcc . a 并非必不可少。可以通过环境变量 GCCEXEC PREFIX 获得近似的效果：如果定义了这个变量，其值就和上面说的一样被用作前缀。如果同时指定了“- B ”选项和 GCC EXEC _ PREFIX 变量，编译器首先使用“- B ”选项，然后才尝试环境变量值。</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Linux初学(二)</title>
-      <link href="/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%BA%8C/"/>
-      <url>/2022/10/06/linux%E5%88%9D%E5%AD%A6%E4%BA%8C/</url>
-      
-        <content type="html"><![CDATA[<p><strong>连接器选项</strong></p><p>（1）object-file-name</p><p>文件没有特别明确后缀，使用如下操作，obj文件可以变成连接器的输入文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -o test main.o sub.o  ,main.o和sub.o就是输入文件</span><br></pre></td></tr></table></figure><p>（2）-llibrary</p><p>连接名为library的库文件，这个方法找到的是库文件——即由OBJ文件组成的归档文件</p><p>（3）-nostartfiles</p><p>不连接系统标准启动文件，而标准库文件仍能正常启动</p><p>（4）-nostdlib</p><p>不连接系统标准启动文件和标准库文件，只把指定文件传递给连接器。仍以options程序作为例子</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -v -nostdlib -o test main.o sub.o</span><br></pre></td></tr></table></figure><p>(5)-static</p><p>在支持动态连接的系统上阻止连接共享库</p><p>(6)-shared</p><p>生成一个共享OBJ文件，它可以和其他的OBJ文件连接产生可执行文件，只有部分系统支持，</p><p>不想用源代码发布程序时可以用它来生成库文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -c -o sub.o sub.c</span><br><span class="line"></span><br><span class="line">$ gcc -shared -o sub.a sub.o</span><br></pre></td></tr></table></figure><p>以后要使用sub.c 中的函数sub_fun时，连接程序时，将sub.a加入就行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -o test main.o ./sub.a</span><br></pre></td></tr></table></figure><p>也可以多个文件作为一个库文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -shared -o sub.a sub .o sub2.o sub3.o</span><br></pre></td></tr></table></figure><p>(7)-Xlinker opion</p><p>把选项option传递给连接器。可以用来传递系统特定的连接选项，gcc无法识别这些选项。必须使用两次-Xlinker，一次传递选项，另一次传递其他参数。</p><p>(8)-Wl,option</p><p>把选项option传递给连接器。如果option中有逗号，就在逗号处分割成多个选项。</p><p>(9)-u symbol</p><p>使连接器认为取消了symbol的符号定义，从而连接库模块以取得定义可以使用多个-u选项各自跟上不同的符号，使得连接器调入附加的库模块。</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Linux初学(一)</title>
       <link href="/2022/10/06/linux%E5%88%9D%E5%AD%A6/"/>
       <url>/2022/10/06/linux%E5%88%9D%E5%AD%A6/</url>
