@@ -5,8 +5,8 @@
     
     <entry>
       <title>imx6ull的RTC 实时时钟实验</title>
-      <link href="/2023/03/20/2023-3-20-imx6ull%E7%9A%84RTC-%E5%AE%9E%E6%97%B6%E6%97%B6%E9%92%9F%E5%AE%9E%E9%AA%8C/"/>
-      <url>/2023/03/20/2023-3-20-imx6ull%E7%9A%84RTC-%E5%AE%9E%E6%97%B6%E6%97%B6%E9%92%9F%E5%AE%9E%E9%AA%8C/</url>
+      <link href="/2023/03/10/2023-3-20-imx6ull%E7%9A%84RTC-%E5%AE%9E%E6%97%B6%E6%97%B6%E9%92%9F%E5%AE%9E%E9%AA%8C/"/>
+      <url>/2023/03/10/2023-3-20-imx6ull%E7%9A%84RTC-%E5%AE%9E%E6%97%B6%E6%97%B6%E9%92%9F%E5%AE%9E%E9%AA%8C/</url>
       
         <content type="html"><![CDATA[<h4 id="实时时钟实现原理"><a href="#实时时钟实现原理" class="headerlink" title="实时时钟实现原理"></a>实时时钟实现原理</h4><p>I.MX6U 系列的 RTC 是在 SNVS 里面，SNVS 直译过来就是安全的非易性存储，SNVS 里面主要是一些低功耗的外设，包括一个安全的实时计数器(RTC)、一个单调计数器(monotonic counter)和一些通用的寄存器。SNVS 有两部分：SNVS_HP 和 SNVS_LP，系统主电源断电以后 SNVS_HP 也会断电，但是在后备电源支持下，SNVS_LP 是不会断电的，而且 SNVS_LP是和芯片复位隔离开的，因此 SNVS_LP 相关的寄存器的值会一直保存着。</p><p>①、SNVS_LP：专用的always-powered-on电源域，系统主电源和备用电源都可以为其供电。<br>②、SNVS_HP：系统（芯片）电源。</p><p>SNVS_LP和SNVS_LP都有SRTC，为保证掉电后依旧可以执行，所以设置SNVS_LP中的SRTC来实现实时时钟。</p><p>在硬件方面，SRTC需要外界提供一个32.768KHz的时钟，寄存器 SNVS_LPSRTCMR 和 SNVS_LPSRTCLR 保存着秒数，直接读取这两个寄存器的值就知道过了多长时间了。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-10%20135947.png"></p><h4 id="使用的SNVS寄存器："><a href="#使用的SNVS寄存器：" class="headerlink" title="使用的SNVS寄存器："></a>使用的SNVS寄存器：</h4><p><strong>①</strong>SNVS_HPCOMR</p><p>NPSWA_EN(bit31)，这个位是非特权软件访问控制位，如果非特权软件要访问 SNVS 的话此位必须为 1</p><p><strong>②</strong>SNVS_LPCR</p><p>SRTC_ENV(bit0)，此位为 1 的话就使能 STC 计数器。</p><p><strong>③</strong>SNVS_SRTCMR</p><p>SNVS_SRTCMR 的 bit14:0 这 15 位是 SRTC 计数器的高 15 位。</p><p><strong>④</strong>SNVS_SRTCLR</p><p>SNVS_SRTCLR 的 bit31:bit15 这 17 位是 SRTC 计数器的低 17 位。</p><h4 id="使能SRTC的配置如下："><a href="#使能SRTC的配置如下：" class="headerlink" title="使能SRTC的配置如下："></a><strong>使能SRTC的配置如下：</strong></h4><p>（1）初始化SNVS_SRTC<br>     初始化SNVS_LP中的SRTC。<br>（2）设置RTC时间<br>     第一次使用RTC肯定要先设置时间。<br>（3）使能RTC<br>     配置好RTC并设置好初始时间以后就可以开启RTC了。</p>]]></content>
       
