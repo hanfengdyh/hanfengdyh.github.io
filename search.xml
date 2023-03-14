@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Imx6ull数据手册生词</title>
+      <link href="/2023/03/14/2023-3-14-Imx6ull%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C%E7%94%9F%E8%AF%8D/"/>
+      <url>/2023/03/14/2023-3-14-Imx6ull%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C%E7%94%9F%E8%AF%8D/</url>
+      
+        <content type="html"><![CDATA[<table><thead><tr><th>生词</th><th>汉译</th></tr></thead><tbody><tr><td>prescaler</td><td>预分频器</td></tr><tr><td>programmable</td><td>可编程</td></tr><tr><td>route</td><td>线路</td></tr><tr><td>formula</td><td>公式</td></tr><tr><td>subroutine</td><td>子程序</td></tr><tr><td>reprogram</td><td>重新编程</td></tr><tr><td>parameter</td><td>参数</td></tr><tr><td>slave</td><td>从机</td></tr><tr><td>arbitration</td><td>仲裁</td></tr><tr><td>addressed</td><td>解决</td></tr><tr><td>multiplexing</td><td>多路复用</td></tr><tr><td>acknowledge signal</td><td>确认信号</td></tr><tr><td>master drive high</td><td>主驱动器高</td></tr><tr><td>pending</td><td>待定</td></tr><tr><td>idle</td><td>闲置</td></tr><tr><td>muxe</td><td>多路复用器</td></tr><tr><td>peripheral</td><td>外设</td></tr><tr><td>dedicated software</td><td>专用软件</td></tr><tr><td>daisy chain</td><td>菊花链式结构</td></tr><tr><td>external</td><td>外部</td></tr><tr><td>diagram</td><td>图</td></tr><tr><td>synchronize</td><td>同步</td></tr><tr><td>field</td><td>场</td></tr><tr><td>initialize the counter</td><td>初始化计数器</td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 裸机开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>imx6ull的IIC实验</title>
       <link href="/2023/03/13/2023-3-13-imx6ull%E7%9A%84IIC%E5%AE%9E%E9%AA%8C/"/>
       <url>/2023/03/13/2023-3-13-imx6ull%E7%9A%84IIC%E5%AE%9E%E9%AA%8C/</url>
