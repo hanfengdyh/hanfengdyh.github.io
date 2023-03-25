@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Linux 内核分析 | 涵风 Blog</title><meta name="keywords" content="系统移植"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="内核源码分析详情参考Makefile.txt文件翻译 内核Makefile分类在Linux内核里，每个子目录都有一个makefile，它被称作Kbuilt-makefile，它将当前目录的文件编译成built-in.o、以及库文件、模块文件。然后顶层Makefile里指定这些built-in.o的路径，将它们连接在一起。 将makefile分为 5部分，Kernel Makefile、ARCH M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 内核分析">
+<meta property="og:url" content="http://example.com/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="内核源码分析详情参考Makefile.txt文件翻译 内核Makefile分类在Linux内核里，每个子目录都有一个makefile，它被称作Kbuilt-makefile，它将当前目录的文件编译成built-in.o、以及库文件、模块文件。然后顶层Makefile里指定这些built-in.o的路径，将它们连接在一起。 将makefile分为 5部分，Kernel Makefile、ARCH M">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-03-24T08:30:00.000Z">
+<meta property="article:modified_time" content="2023-03-24T02:21:39.249Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="系统移植">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 内核分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-24 10:21:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux 内核分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-24T08:30:00.000Z" title="发表于 2023-03-24 16:30:00">2023-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-24T02:21:39.249Z" title="更新于 2023-03-24 10:21:39">2023-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux 内核分析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="内核源码分析"><a href="#内核源码分析" class="headerlink" title="内核源码分析"></a>内核源码分析</h2><h3 id="详情参考"><a href="#详情参考" class="headerlink" title="详情参考"></a>详情参考</h3><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/lizuobin2/article/details/51447338">Makefile.txt文件翻译</a></p>
+<h3 id="内核Makefile分类"><a href="#内核Makefile分类" class="headerlink" title="内核Makefile分类"></a>内核Makefile分类</h3><p>在Linux内核里，每个子目录都有一个makefile，它被称作Kbuilt-makefile，它将当前目录的文件编译成built-in.o、以及库文件、模块文件。然后顶层Makefile里指定这些built-in.o的路径，将它们连接在一起。</p>
+<p><strong>将makefile分为 5部分，Kernel Makefile、ARCH Makefile、KBuild Makefile、.config文件以及scripts&#x2F;Makefile.</strong></p>
+<p>①kernel Makefile(Top Makefile)位于Linux内核源代码的顶层目录，主要编译Linux Kernel目标文件（vmlinux）和模块（module）路径。它根据.config文件决定了内核根目录下的那些文件、子目录被编译进内核，是所有文件核心，从总体控制内核编译、链接。</p>
+<p>②ARCH Makefile文件，是系统对应平台的Makefile。Kernel Top Makefile 会包含这个文件来指定平台相关信息。ARCH Makefile同样<strong>根据.config文件，决定了ARCH&#x2F;$(ARCH) 目录下 那些文件、子目录被编译进内核</strong> 只有平台开发人员会关心这个文件。</p>
+<p>③Kbuild Makefile，从Linux 内核2.6 开始，Linux 内核的编译采用Kbuild 系统 ，这同过去的编译系统有很大的不同，Kbuild 系统使用Kbuild Makefile 来编译内核或模块。当Kernel Makefile 被解析完成后，Kbuild 会读取相关的Kbuild Makefile 进行内核或模块的编译。Kbuild Makefile 有特定的语法指定哪些编译进内核中、哪些编译为模块、及对应的源文件是什么等。内核及驱动开发人员需要编写这个Kbuild Makefile 文件。<br>④**scripts&#x2F;Makefile.* ，Makefile共用的通用规则、脚本等</p>
+<p>⑤**.config**，来自配置过程，生成 auto.conf 以及 autoconf.h，被顶层Makefile所包含</p>
+<h3 id="5大文件作用"><a href="#5大文件作用" class="headerlink" title="5大文件作用"></a>5大文件作用</h3><p>首先是顶层Makefile决定内核根目录下的哪些子目录将被编进内核。</p>
+<p>arch&#x2F;$(ARCH)&#x2F;Makefile决定arch&#x2F;$(ARCH)目录下哪些文件、哪些目录被编进内核。</p>
+<p>各级子目录下的Makefile决定所在目录下的哪些文件将被编进内核，哪些被编写成模块（驱动模块），进入哪些子目录继续调用它们的Makefile。</p>
+<p>顶层Makefile和arch&#x2F;$(ARCH)&#x2F;Makefile设置了可以影响所有文件的编译、连接选项：CFLAGS、AFLAGS、LDFLAGS、ARFLAFGS。</p>
+<p>各级子目录下的Makefile中可以设置成能够影响当前目录下所有文件的编译 、连接选项：EXTRA_CFLAGS、EXTRA_AFLAGS、EXTRA_LDFLAGS、EXTRA_ARFLAGS,还可以设置影响某个文件的编译选项。</p>
+<p>顶层Makefile按照一定的顺序组织文件，根据连接脚本arch&#x2F;$(ARCH)&#x2F;kernel&#x2F;vmlinux.lds生成内核镜像文件vmlinux。</p>
+<p>①、 vmlinux 是编译出来的最原始的内核文件，是未压缩的，比如正点原子提供的 Linux 源码编译出来的 vmlinux 差不多有 16MB，<br>②、 Image 是 Linux 内核镜像文件，但是 Image 仅包含可执行的二进制数据。 Image 就是使用 objcopy 取消掉 vmlinux 中的一些其他信息，比如符号表什么的。但是 Image 是没有压缩过的， Image 保存在 arch&#x2F;arm&#x2F;boot 目录下，其大小大概在 12MB 左右相比 vmlinux 的 16MB， Image 缩小到了 12MB。<br>③、 zImage 是经过 gzip 压缩后的 Image，经过压缩以后其大小大概在 6MB 左右 </p>
+<h3 id="内核的配置"><a href="#内核的配置" class="headerlink" title="内核的配置"></a>内核的配置</h3><p> 1、Makefile：分布在 Linux 内核源代码根目录及各层目录中，定义 Linux 内核的编译规则；<br> 2、配置文件（config.in(2.4内核，2.6内核)）：给用户提供配置选择的功能；<br> 3、配置工具：包括配置命令解释器（对配置脚本中使用的配置命令进行解释）和配置用户界面</p>
+<p>make menuconfig过程：</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-23%20201421.png"></p>
+<p> 1、scripts文件夹存放的是跟make menuconfig配置界面的图形绘制相关的文件，我们作为使用者无需关心这个文件夹的内容<br> 2、读取arch&#x2F;arch&#x2F;$ARCH&#x2F;Kconfig以及各子目录下的Kcondig文件，生成配置条目。<br>        $ARCH由linux内核根目录下的makefile文件决定<br>        ARCH            ?&#x3D; arm<br>        CROSS_COMPILE   ?&#x3D; arm-linux-<br>        Kconfig文件中为配置信息的宏定义，与我们在make menuconfig图形界面看到的信息一致。<br>        例如：<br>        config CPU_S3C2410_DMA<br>                bool<br>                depends on S3C2410_DMA &amp;&amp; (CPU_S3C2410 || CPU_S3C2442)<br>                default y if CPU_S3C2410 || CPU_S3C2442<br>                help<br>                   DMA device selection for S3C2410 and compatible CPUs<br>    <strong>因此，Kconfig文件很重要的作用就是：定义配置宏、相关依赖关系、帮助信息</strong><br>3、<strong>读取内核根目录下.config文件，生成配置选项:[*]编译进内核 [M]编译为模块 [ ]不编译</strong><br>        arch&#x2F;arm&#x2F;configs&#x2F;文件夹下存放了一些配置模板<br>        我们可以通过cp &#x2F;arch&#x2F;arm&#x2F;configs&#x2F;xx_defconfig .config来使用这些配置模板<br>        通过图形界面变更配置选项会自动更新到.config文件中<br>        make disclean 会删除.config<br>4、<strong>编译过程根据.config生成 Linux内核根目录下的 include&#x2F;config&#x2F;auto.conf文件</strong><br>        CONFIG_EEPROM_93CX6&#x3D;m<br>        CONFIG_DM9000&#x3D;y<br>        根目录Makefile以及子目录的Makefile根据auto.conf生成编译条件<br>        obj-$(CONFIG_DM9000) +&#x3D; dm9000.o &#x2F;&#x2F;obj-m +&#x3D; dm9000.o<br>5、<strong>编译过程根据.config生成Linux内核根目录下的 include&#x2F;linux&#x2F;autoconf.h文件</strong><br>        .config 或 auto.conf 中定义要编译为 m 模块的项，如：<br>        CONFIG_DEBUG_NX_TEST&#x3D;m<br>        在 autoconf.h 中会被定义为：<br>        #define CONFIG_DEBUG_NX_TEST_MODULE 1    </p>
+<p>​	.config或auto.conf 中定义为编译为 y 的选项,如：<br>​        CONFIG_DM9000&#x3D; y<br>​        在 autoconf.h 中会被定义为：<br>​        #define CONFIG_DM9000 1<br>​        autoconf.h中是.config或者auto.conf中配置信息的另一种体现形式，它是站在源码的角度，供源码使用的C语言宏定义。<br>   6、总结<br>​        我们在使用make menuconfig时，首先会确定架构arch，然后读取arch目录的Kconfig中的配置宏定义，生成编译条目，然后读取Linux内核根目录下的.config选项， 将.config中的配置信息显示在图形界面上[*] [M] or []。我们在图形界面中更改配置选项会自动保存到.config文件中。编译过程根据.config随后生成auto.conf文件，它决定了makefile中各个文件的编译类型，静态编译进内核、编译成模块、不编译;同时生成autoconf.h，它以C语言宏定义的形式表达了 各个文件是否被编译，源码中会判断某文件是否被编译进行不同的处理。</p>
+<h2 id="内核启动流程"><a href="#内核启动流程" class="headerlink" title="内核启动流程"></a>内核启动流程</h2><p>linux启动前要求：</p>
+<p>①、关闭 MMU。<br>②、关闭 D-cache。<br>③、 I-Cache 无所谓。<br>④、 r0&#x3D;0。<br>⑤、 r1&#x3D;machine nr(也就是机器 ID)。<br>⑥、 r2&#x3D;atags 或者设备树(dtb)首地址。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/20170315225401860.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/">http://example.com/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/">系统移植</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/03/22/2023-3-22-bootcmd%E5%92%8Cbootargs%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">bootcmd和bootargs环境变量</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/03/22/2023-3-22-bootcmd%E5%92%8Cbootargs%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" title="bootcmd和bootargs环境变量"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-22</div><div class="title">bootcmd和bootargs环境变量</div></div></a></div><div><a href="/2023/03/21/2023-3-21-U-Boot%E7%A7%BB%E6%A4%8D/" title="U-Boot移植"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-21</div><div class="title">U-Boot移植</div></div></a></div><div><a href="/2023/03/17/2023-3-17-U-Boot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="U-Boot启动流程"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-17</div><div class="title">U-Boot启动流程</div></div></a></div><div><a href="/2023/03/01/2023-3-01-U-Boot%E4%BD%BF%E7%94%A8%E5%AE%9E%E9%AA%8C/" title="U-Boot使用实验"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-01</div><div class="title">U-Boot使用实验</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">内核源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E6%83%85%E5%8F%82%E8%80%83"><span class="toc-number">1.1.</span> <span class="toc-text">详情参考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8Makefile%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">内核Makefile分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E5%A4%A7%E6%96%87%E4%BB%B6%E4%BD%9C%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">5大文件作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">内核的配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">内核启动流程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/" title="Linux 内核分析"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="Linux 内核分析"/></a><div class="content"><a class="title" href="/2023/03/24/2023-3-24-Linux-%E5%86%85%E6%A0%B8%E5%88%86%E6%9E%90/" title="Linux 内核分析">Linux 内核分析</a><time datetime="2023-03-24T08:30:00.000Z" title="发表于 2023-03-24 16:30:00">2023-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/22/2023-3-22-bootcmd%E5%92%8Cbootargs%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" title="bootcmd和bootargs环境变量"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="bootcmd和bootargs环境变量"/></a><div class="content"><a class="title" href="/2023/03/22/2023-3-22-bootcmd%E5%92%8Cbootargs%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" title="bootcmd和bootargs环境变量">bootcmd和bootargs环境变量</a><time datetime="2023-03-22T11:30:00.000Z" title="发表于 2023-03-22 19:30:00">2023-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/21/2023-3-21-U-Boot%E7%A7%BB%E6%A4%8D/" title="U-Boot移植"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="U-Boot移植"/></a><div class="content"><a class="title" href="/2023/03/21/2023-3-21-U-Boot%E7%A7%BB%E6%A4%8D/" title="U-Boot移植">U-Boot移植</a><time datetime="2023-03-21T08:30:00.000Z" title="发表于 2023-03-21 16:30:00">2023-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/17/2023-3-17-U-Boot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="U-Boot启动流程"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="U-Boot启动流程"/></a><div class="content"><a class="title" href="/2023/03/17/2023-3-17-U-Boot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="U-Boot启动流程">U-Boot启动流程</a><time datetime="2023-03-17T06:30:00.000Z" title="发表于 2023-03-17 14:30:00">2023-03-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
