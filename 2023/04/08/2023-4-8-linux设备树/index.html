@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>linux设备树 | 涵风 Blog</title><meta name="keywords" content="驱动开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="设备树定义设备树（Device tree），描述设备树的文件叫做DTS（Tree Source），这个DTS采用树形结构描述板级设备（开发板上的设备信息）。树的主干就是系统总线， IIC 控制器、 GPIO 控制器、 SPI 控制器等都是接到系统主线上的分支。  设备树源文件扩展名为.dts， DTS 是设备树源码文件， DTB 是将DTS 编译以后得到的二进制文件。将.c 文件编译为.o 需要用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux设备树">
+<meta property="og:url" content="http://example.com/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="设备树定义设备树（Device tree），描述设备树的文件叫做DTS（Tree Source），这个DTS采用树形结构描述板级设备（开发板上的设备信息）。树的主干就是系统总线， IIC 控制器、 GPIO 控制器、 SPI 控制器等都是接到系统主线上的分支。  设备树源文件扩展名为.dts， DTS 是设备树源码文件， DTB 是将DTS 编译以后得到的二进制文件。将.c 文件编译为.o 需要用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-04-08T11:30:00.000Z">
+<meta property="article:modified_time" content="2023-04-09T10:58:28.554Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="驱动开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux设备树',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-09 18:58:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux设备树</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-08T11:30:00.000Z" title="发表于 2023-04-08 19:30:00">2023-04-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-09T10:58:28.554Z" title="更新于 2023-04-09 18:58:28">2023-04-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux设备树"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="设备树定义"><a href="#设备树定义" class="headerlink" title="设备树定义"></a>设备树定义</h3><p>设备树（Device tree），描述设备树的文件叫做DTS（Tree Source），这个DTS采用树形结构描述板级设备（开发板上的设备信息）。树的主干就是系统总线， IIC 控制器、 GPIO 控制器、 SPI 控制器等都是接到系统主线上的分支。 </p>
+<p>设备树源文件扩展名为.dts， DTS 是设备树源码文件， DTB 是将DTS 编译以后得到的二进制文件。将.c 文件编译为.o 需要用到 gcc 编译器，那么将.dts 编译为.dtb需要什么工具呢？需要用到 DTC 工具！ </p>
+<h3 id="DTS语法"><a href="#DTS语法" class="headerlink" title="DTS语法"></a>DTS语法</h3><p>设备树也支持头文件，设备树的头文件扩展名为.dtsi。例如：在imx6ull-14x14-evk.dts中有</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;imx6ulll-14x14-evk.dsti&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="设备点"><a href="#设备点" class="headerlink" title="设备点"></a>设备点</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">						示例代码 <span class="number">43.3</span><span class="number">.2</span><span class="number">.1</span> 设备树模板</span><br><span class="line"><span class="number">1</span> / &#123;</span><br><span class="line"><span class="number">2</span> 			aliases &#123;</span><br><span class="line"><span class="number">3</span> 				can0 = &amp;flexcan1;</span><br><span class="line"><span class="number">4</span> 			&#125;;</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">6</span> 			cpus &#123;</span><br><span class="line"><span class="number">7</span> 					<span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line"><span class="number">8</span> 					<span class="meta">#size-cells = <span class="string">&lt;0&gt;</span>;</span></span><br><span class="line"><span class="number">9</span></span><br><span class="line"><span class="number">10</span> 				cpu0: cpu@<span class="number">0</span> &#123;</span><br><span class="line"><span class="number">11</span> 						compatible = <span class="string">&quot;arm,cortex-a7&quot;</span>;</span><br><span class="line"><span class="number">12</span> 						device_type = <span class="string">&quot;cpu&quot;</span>;</span><br><span class="line"><span class="number">13</span> 						reg = &lt;<span class="number">0</span>&gt;;</span><br><span class="line"><span class="number">14</span> 				&#125;;</span><br><span class="line"><span class="number">15</span>			 &#125;;</span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="number">17</span>		 intc: interrupt-controller@<span class="number">00</span>a01000 &#123;</span><br><span class="line"><span class="number">18</span> 					compatible = <span class="string">&quot;arm,cortex-a7-gic&quot;</span>;</span><br><span class="line"><span class="number">19</span> 					<span class="meta">#interrupt-cells = <span class="string">&lt;3&gt;</span>;</span></span><br><span class="line"><span class="number">20</span> 					interrupt-controller;</span><br><span class="line"><span class="number">21</span> 					reg = &lt;<span class="number">0x00a01000</span> <span class="number">0x1000</span>&gt;,</span><br><span class="line"><span class="number">22</span> 					&lt;<span class="number">0x00a02000</span> <span class="number">0x100</span>&gt;;</span><br><span class="line"><span class="number">23</span> 			&#125;;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 2、6 和 17 行，aliases、cpus 和 intc 是三个子节点，在设备树中节点命名格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node-name@unit-address</span><br></pre></td></tr></table></figure>
+
+<p>其中“node-name”是节点名字，为 ASCII 字符串，节点名字应该能够清晰的描述出节点的功能，比如“uart1”就表示这个节点是 UART1 外设。“unit-address”一般表示设备的地址或寄存器首地址，如果某个节点没有地址或者寄存器的话“unit-address”可以不要，比如“cpu@0”、“interrupt-controller@00a01000”。</p>
+<p>但是我们在示例代码 43.3.2.1 中我们看到的节点命名却如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpu0:cpu@0</span><br></pre></td></tr></table></figure>
+
+<p>上述命令并不是“node-name@unit-address”这样的格式，而是用“：”隔开成了两部分，“：”<br>前面的是节点标签(label)，“：”后面的才是节点名字，格式如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">label: node-name@unit-address</span><br></pre></td></tr></table></figure>
+
+<h4 id="设备节点"><a href="#设备节点" class="headerlink" title="设备节点"></a>设备节点</h4><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-07%20201941.png"></p>
+<p>设备树源码中常用的几种数据形式如下所示：</p>
+<p>①、字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = &quot;arm,cortex-a7&quot;;</span><br></pre></td></tr></table></figure>
+<p>上述代码设置 compatible 属性的值为字符串“arm,cortex-a7”。<br>②、32 位无符号整数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg = &lt;0&gt;;</span><br></pre></td></tr></table></figure>
+<p>上述代码设置 reg 属性的值为 0，reg 的值也可以设置为一组值，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg = &lt;0 0x123456 100&gt;;</span><br></pre></td></tr></table></figure>
+<p>③、字符串列表<br>属性值也可以为字符串列表，字符串和字符串之间采用“,”隔开，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = &quot;fsl,imx6ull-gpmi-nand&quot;, &quot;fsl, imx6ul-gpmi-nand&quot;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="标准属性"><a href="#标准属性" class="headerlink" title="标准属性"></a>标准属性</h4><p>节点是由一堆的属性组成，节点都是具体的设备，不同的设备需要的属性不同，用户可以自定义属性。除了用户自定义属性，有很多属性是标准属性， Linux 下的很多外设驱动都会使用这些标准属性。</p>
+<p><strong>1、compatible属性</strong></p>
+<p>compatible 属性也叫做“兼容性”属性，这是非常重要的一个属性！ compatible 属性的值是一个字符串列表， compatible 属性用于将设备和驱动绑定起来。字符串列表用于选择设备所要使用的驱动程序， compatible 属性的值格式如下所示： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;manufacturer,model&quot;</span><br></pre></td></tr></table></figure>
+
+<p>其中 manufacturer 表示厂商， model 一般是模块对应的驱动名字。 </p>
+<p>I.MX6U-ALPHA 开发板上的音频芯片采用的欧胜(WOLFSON)出品的 WM8960， sound 节点的 compatible 属性值如下： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = &quot;fsl,imx6ul-evk-wm8960&quot;,&quot;fsl,imx-audio-wm8960&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>属性值有两个，分别为“fsl,imx6ul-evk-wm8960”和“fsl,imx-audio-wm8960” ,sound这个设备首先使用第一个兼容值在 Linux 内核里面查找，看看能不能找到与之匹配的驱动文件，如果没有找到的话就使用第二个兼容值查。 </p>
+<p><strong><u>一般驱动程序文件都会有一个 OF 匹配表，此 OF 匹配表保存着一些 compatible 值，如果设备节点的compatible 属性值和 OF 匹配表中的任何一个值相等，那么就表示设备可以使用这个驱动。</u></strong> </p>
+<p><strong>2、model属性</strong></p>
+<p>model属性值也是一个字符串，一般model属性描述设备模块信息，比如名字，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = &quot;wm8960-audio&quot;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、status属性</strong></p>
+<p>status 属性看名字就知道是和设备状态有关的， status 属性值也是字符串，字符串是设备的状态信息，可选的状态如表 :</p>
+<table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">”okey“</td>
+<td align="left">表明设备是可操作的。</td>
+</tr>
+<tr>
+<td align="center">”disabled“</td>
+<td align="left">表明设备当前是不可操作的，但是在未来可以变为可操作的，比如热插拔设备插入以后。具体含义看设备绑定的文档。</td>
+</tr>
+<tr>
+<td align="center">”fail“</td>
+<td align="left">表明设备不可操作，设备检测到了一系列的错误，而且设备也不大可能变得操作。</td>
+</tr>
+<tr>
+<td align="center">”fail-sss“</td>
+<td align="left">含义和“fail”相同，后面的 sss 部分是检测到的错误内容。</td>
+</tr>
+</tbody></table>
+<p><strong>4、#address-cells和#size-cells属性</strong></p>
+<p>这两个属性的值都是无符号 32 位整形， #address-cells 和#size-cells 这两个属性可以用在任何拥有子节点的设备中，用于描述子节点的地址信息。 #address-cells 属性值决定了子节点 reg 属性中地址信息所占用的字长(32 位)， </p>
+<p>#size-cells 属性值决定了子节点 reg 属性中长度信息所占的字长(32 位)。 #address-cells 和#size-cells 表明了子节点应该如何编写 reg 属性值，一般 reg 属性都是和地址有关的内容，和地址相关的信息有两种：起始地址和地址长度。reg格式一般为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg = &lt;address1 length1 address2 length2 address3 length3……&gt;</span><br></pre></td></tr></table></figure>
+
+<p>每个“address length”组合表示一个地址范围，其中 address 是起始地址， length 是地址长度， #address-cells 表明 address 这个数据所占用的字长， #size-cells 表明 length 这个数据所占用的字长 </p>
+<p><strong>5、reg属性</strong></p>
+<p>reg 属性的值一般是(address， length)对。 reg 属性一般用于描述设备地址空间资源信息，一般都是某个外设的寄存器地址范围信息。</p>
+<p><strong>6、 ranges 属性</strong><br>ranges属性值可以为空或者按照(child-bus-address,parent-bus-address,length)格式编写的数字矩阵， ranges 是一个地址映射&#x2F;转换表， ranges 属性每个项目由子地址、父地址和地址空间长度。<br>这三部分组成：<br>    child-bus-address：子总线地址空间的物理地址，由父节点的#address-cells 确定此物理地址所占用的字长。<br>    parent-bus-address： 父总线地址空间的物理地址，同样由父节点的#address-cells 确定此物理地址所占用的字长。<br>    length： 子地址空间的长度，由父节点的#size-cells 确定此地址长度所占用的字长 </p>
+<p><strong>7、 name 属性</strong><br>name 属性值为字符串， name 属性用于记录节点名字， name 属性已经被弃用，不推荐使用name 属性，一些老的设备树文件可能会使用此属性。<br><strong>8、 device_type 属性</strong><br>device_type 属性值为字符串， IEEE 1275 会用到此属性，用于描述设备的 FCode，但是设备树没有 FCode，所以此属性也被抛弃了。<u>此属性只能用于 cpu 节点或者 memory 节点</u>。imx6ull.dtsi 的 cpu0 节点用到了此属性 。</p>
+<h4 id="根节点-compatible-属性"><a href="#根节点-compatible-属性" class="headerlink" title="根节点 compatible 属性"></a>根节点 compatible 属性</h4><p>设备节点的 compatible 属性值是为了匹配 Linux 内核中的驱动程序，通过根节点的 compatible 属性可以知道我们所使用的设备，一般第<br>一个值描述了所使用的硬件设备名字，第二个值描述了设备所使用的 SOC。 <u>Linux 内核会通过根节点的 compoatible 属性查看是否支持此设备，如果支持的话设备就会启动 Linux 内核。</u> </p>
+<p><strong>1、使用设备树之前的设备匹配方法</strong></p>
+<p>在没有使用设备树以前， uboot 会向 Linux 内核传递一个叫做 machine id 的值， machine id也就是设备 ID，告诉 Linux 内核自己是个什么设备，看看 Linux 内核是否支持。 </p>
+<p>uboot 会给 Linux 内核传递 machine id 这个参数， Linux 内核会检查这个 machine id，其实就是将 machine id 与MACH_TYPE_XXX 宏进行对比，看看有没有相等的，如果相等的话就表示 Linux 内核支持这个设备，如果不支持的话那么这个设备就没法启动 Linux 内核。 </p>
+<p><strong>2、使用设备树以后的设备匹配方法</strong></p>
+<p>当 Linux 内 核 引 入 设 备 树 以 后 就 不 再 使 用 MACHINE_START 了 ， 而 是 换 为 了DT_MACHINE_START。 DT_MACHINE_START 也定义在文件 arch&#x2F;arm&#x2F;include&#x2F;asm&#x2F;mach&#x2F;arch.h里面，定义如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> DT_MACHINE_START(_name, _namestr) \</span></span><br><span class="line"><span class="meta">static const struct machine_desc __mach_desc_##_name \</span></span><br><span class="line"><span class="meta">__used \</span></span><br><span class="line"><span class="meta">__attribute__((__section__(<span class="string">&quot;.arch.info.init&quot;</span>))) = &#123; \</span></span><br><span class="line"><span class="meta">.nr = ~0, \</span></span><br><span class="line"><span class="meta">.name = _namestr,</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出， DT_MACHINE_START 和 MACHINE_START 基本相同，只是.nr 的设置不同，在 DT_MACHINE_START 里面直接将.nr 设置为~0。说明引入设备树以后不会再根据 machineid 来检查 Linux 内核是否支持某个设备了。 </p>
+<p>打开文件 arch&#x2F;arm&#x2F;mach-imx&#x2F;mach-imx6ul.c，有如下所示内容： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">208</span> <span class="type">static</span> <span class="type">const</span> <span class="type">char</span> *imx6ul_dt_compat[] __initconst = &#123;</span><br><span class="line"><span class="number">209</span> 	<span class="string">&quot;fsl,imx6ul&quot;</span>,</span><br><span class="line"><span class="number">210</span> 	<span class="string">&quot;fsl,imx6ull&quot;</span>,</span><br><span class="line"><span class="number">211</span> 	<span class="literal">NULL</span>,</span><br><span class="line"><span class="number">212</span> &#125;;</span><br><span class="line"><span class="number">213</span></span><br><span class="line"><span class="number">214</span> DT_MACHINE_START(IMX6UL, <span class="string">&quot;Freescale i.MX6 Ultralite (Device Tree)&quot;</span>)</span><br><span class="line"><span class="number">215</span> 	.map_io = imx6ul_map_io,</span><br><span class="line"><span class="number">216</span> 	.init_irq = imx6ul_init_irq,</span><br><span class="line"><span class="number">217</span> 	.init_machine = imx6ul_init_machine,</span><br><span class="line"><span class="number">218</span> 	.init_late = imx6ul_init_late,</span><br><span class="line"><span class="number">219</span> 	.dt_compat = imx6ul_dt_compat,</span><br><span class="line"><span class="number">220</span> MACHINE_END</span><br></pre></td></tr></table></figure>
+
+<p>machine_desc 结构体中有个.dt_compat 成员变量，此成员变量保存着本设备兼容属性，设置.dt_compat &#x3D; imx6ul_dt_compat， imx6ul_dt_compat 表里面有”fsl,imx6ul”和”fsl,imx6ull”这两个兼容值。只要某个设备(板子)根节点“ &#x2F;”的 compatible 属性值与imx6ul_dt_compat 表中的任何一个值相等，那么就表示 Linux 内核支持此设备。 </p>
+<p>imx6ull-alientekemmc.dts 中根节点的 compatible 属性值如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compatible = <span class="string">&quot;fsl,imx6ull-14x14-evk&quot;</span>, <span class="string">&quot;fsl,imx6ull&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中“fsl,imx6ull”与 imx6ul_dt_compat 中的“fsl,imx6ull”匹配，因此 I.MX6U-ALPHA 开发板可以正常启动 Linux 内核。 </p>
+<p>Linux 内核调用 start_kernel 函数来启动内核， start_kernel 函数会调用setup_arch 函数来匹配 machine_desc， setup_arch 函数定义在文件 arch&#x2F;arm&#x2F;kernel&#x2F;setup.c 中 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">913</span> <span class="type">void</span> __init <span class="title function_">setup_arch</span><span class="params">(<span class="type">char</span> **cmdline_p)</span></span><br><span class="line">914 &#123;</span><br><span class="line"><span class="number">915</span> 		<span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">machine_desc</span> *<span class="title">mdesc</span>;</span></span><br><span class="line"><span class="number">916</span></span><br><span class="line"><span class="number">917</span> 		setup_processor();</span><br><span class="line"><span class="number">918</span> 		mdesc = setup_machine_fdt(__atags_pointer);</span><br><span class="line"><span class="number">919</span> 		<span class="keyword">if</span> (!mdesc)</span><br><span class="line"><span class="number">920</span> 			mdesc = setup_machine_tags(__atags_pointer, __machine_arch_type);</span><br><span class="line"><span class="number">921</span> 		machine_desc = mdesc;</span><br><span class="line"><span class="number">922</span> 		machine_name = mdesc-&gt;name;</span><br><span class="line">......</span><br><span class="line"><span class="number">986</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 918 行，调用 setup_machine_fdt 函数来获取匹配的 machine_desc，参数就是 atags 的首地址，也就是 uboot 传递给 Linux 内核的 dtb 文件首地址， setup_machine_fdt 函数的返回值就是找到的最匹配的 machine_desc。 </p>
+<p>函数 setup_machine_fdt 定义在文件 arch&#x2F;arm&#x2F;kernel&#x2F;devtree.c 中，内容如下 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">204</span> <span class="type">const</span> <span class="keyword">struct</span> machine_desc * __init <span class="title function_">setup_machine_fdt</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> dt_phys)</span></span><br><span class="line">205 &#123;</span><br><span class="line"><span class="number">206</span> 	<span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">machine_desc</span> *<span class="title">mdesc</span>, *<span class="title">mdesc_best</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">......</span><br><span class="line"><span class="number">214</span></span><br><span class="line"><span class="number">215</span> <span class="keyword">if</span> (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys)))</span><br><span class="line"><span class="number">216</span> <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"><span class="number">217</span></span><br><span class="line"><span class="number">218</span> mdesc = of_flat_dt_match_machine(mdesc_best,arch_get_next_mach);</span><br><span class="line"><span class="number">219</span></span><br><span class="line">......</span><br><span class="line"><span class="number">247</span> __machine_arch_type = mdesc-&gt;nr;</span><br><span class="line"><span class="number">248</span></span><br><span class="line"><span class="number">249</span> <span class="keyword">return</span> mdesc;</span><br><span class="line"><span class="number">250</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 218 行，调用函数 of_flat_dt_match_machine 来获取匹配的 machine_desc，参数 mdesc_best是 默 认 的 machine_desc ， 参 数 arch_get_next_mach 是 个 函 数 ， 此 函 数 定 义 在 定 义 在arch&#x2F;arm&#x2F;kernel&#x2F;devtree.c 文件中。找到匹配的 machine_desc 的过程就是用设备树根节点的compatible 属性值和 Linux 内核中 machine_desc 下.dt_compat 的值比较，看看那个相等，如果相等的话就表示找到匹配的 machine_desc， arch_get_next_mach 函数的工作就是获取 Linux 内核中下一个 machine_desc 结构体。 </p>
+<p>最后再来看一下 of_flat_dt_match_machine 函数，此函数定义在文件 drivers&#x2F;of&#x2F;fdt.c 中 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">705</span> <span class="type">const</span> <span class="type">void</span> * __init <span class="title function_">of_flat_dt_match_machine</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *default_match,</span></span><br><span class="line"><span class="params"><span class="number">706</span> <span class="type">const</span> <span class="type">void</span> * (*get_next_compat)(<span class="type">const</span> <span class="type">char</span> * <span class="type">const</span>**))</span></span><br><span class="line">707 &#123;</span><br><span class="line"><span class="number">708</span> 	<span class="type">const</span> <span class="type">void</span> *data = <span class="literal">NULL</span>;</span><br><span class="line"><span class="number">709</span> 	<span class="type">const</span> <span class="type">void</span> *best_data = default_match;</span><br><span class="line"><span class="number">710</span> 	<span class="type">const</span> <span class="type">char</span> *<span class="type">const</span> *compat;</span><br><span class="line"><span class="number">711</span> 	<span class="type">unsigned</span> <span class="type">long</span> dt_root;</span><br><span class="line"><span class="number">712</span> 	<span class="type">unsigned</span> <span class="type">int</span> best_score = ~<span class="number">1</span>, score = <span class="number">0</span>;</span><br><span class="line"><span class="number">713</span></span><br><span class="line"><span class="number">714</span> 	dt_root = of_get_flat_dt_root();</span><br><span class="line"><span class="number">715</span> 	<span class="keyword">while</span> ((data = get_next_compat(&amp;compat))) &#123;</span><br><span class="line"><span class="number">716</span> 		score = of_flat_dt_match(dt_root, compat);</span><br><span class="line"><span class="number">717</span> 		<span class="keyword">if</span> (score &gt; <span class="number">0</span> &amp;&amp; score &lt; best_score) &#123;</span><br><span class="line"><span class="number">718</span> 			best_data = data;</span><br><span class="line"><span class="number">719</span> 			best_score = score;</span><br><span class="line"><span class="number">720</span> 		&#125;</span><br><span class="line"><span class="number">721</span> &#125;</span><br><span class="line">......</span><br><span class="line"><span class="number">739</span></span><br><span class="line"><span class="number">740</span> 	pr_info(<span class="string">&quot;Machine model: %s\n&quot;</span>, of_flat_dt_get_machine_name());</span><br><span class="line"><span class="number">741</span></span><br><span class="line"><span class="number">742</span> 	<span class="keyword">return</span> best_data;</span><br><span class="line"><span class="number">743</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 714 行，通过函数 of_get_flat_dt_root 获取设备树根节点。<br>第 715~720 行，此循环就是查找匹配的 machine_desc 过程，第 716 行的 of_flat_dt_match 函数会将根节点 compatible 属性的值和每个 machine_desc 结构体中. dt_compat 的值进行比较，直至找到匹配的那个 machine_desc。 </p>
+<p>Linux 内核通过根节点 compatible 属性找到对应的设备的函数调用过程 如下：</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-08%20105607.png"></p>
+<h4 id="向节点追加或修改内容"><a href="#向节点追加或修改内容" class="headerlink" title="向节点追加或修改内容"></a>向节点追加或修改内容</h4><p>打开imx6ull.dtsi文件进行追加内容，因为imx6ull.dtsi是设备头文件，所有使用IMX6ULL这个soc的板子都会引用这个文件，向文件中添加一个设备节点，相当于所有的板子都会添加这个设备，所以要在自己板子的.dts文件进行数据追加内容。</p>
+<p>比如要向I2C1节点追加一个fxls8471的子节点，需要在imx6ull-alientek-emmc.dts 文件中完成数据追加的内容，方式如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> &amp;i2c1 &#123;</span><br><span class="line"><span class="number">2</span> 	<span class="comment">/* 要追加或修改的内容 */</span></span><br><span class="line"><span class="number">3</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>第 1 行， &amp;i2c1 表示要访问 i2c1 这个 label 所对应的节点，也就是 imx6ull.dtsi 中的“i2c1:i2c@021a0000”。<br>第 2 行，花括号内就是要向 i2c1 这个节点添加的内容，包括修改某些属性的值。 </p>
+<p>打开 imx6ull-alientek-emmc.dts，找到如下所示内容： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">224</span> &amp;i2c1 &#123;</span><br><span class="line"><span class="number">225</span> 		clock-frequency = &lt;<span class="number">100000</span>&gt;;</span><br><span class="line"><span class="number">226</span> 		pinctrl-names = <span class="string">&quot;default&quot;</span>;</span><br><span class="line"><span class="number">227</span> 		pinctrl<span class="number">-0</span> = &lt;&amp;pinctrl_i2c1&gt;;</span><br><span class="line"><span class="number">228</span> 		status = <span class="string">&quot;okay&quot;</span>;</span><br><span class="line"><span class="number">229</span></span><br><span class="line"><span class="number">230</span> 		mag3110@<span class="number">0</span>e &#123;</span><br><span class="line"><span class="number">231</span> 			compatible = <span class="string">&quot;fsl,mag3110&quot;</span>;</span><br><span class="line"><span class="number">232</span> 			reg = &lt;<span class="number">0x0e</span>&gt;;</span><br><span class="line"><span class="number">233</span> 			position = &lt;<span class="number">2</span>&gt;;</span><br><span class="line"><span class="number">234</span> 	&#125;;</span><br><span class="line"><span class="number">235</span></span><br><span class="line"><span class="number">236</span> 		fxls8471@<span class="number">1</span>e &#123;</span><br><span class="line"><span class="number">237</span> 			compatible = <span class="string">&quot;fsl,fxls8471&quot;</span>;</span><br><span class="line"><span class="number">238</span> 			reg = &lt;<span class="number">0x1e</span>&gt;;</span><br><span class="line"><span class="number">239</span> 			position = &lt;<span class="number">0</span>&gt;;</span><br><span class="line"><span class="number">240</span> 			interrupt-parent = &lt;&amp;gpio5&gt;;</span><br><span class="line"><span class="number">241</span> 			interrupts = &lt;<span class="number">0</span> <span class="number">8</span>&gt;;</span><br><span class="line"><span class="number">242</span> 	&#125;;</span><br><span class="line"><span class="number">243</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本代码就是向 i2c1 节点添加&#x2F;修改数据，比如第 225 行的属性“clock-frequency”就表示 i2c1 时钟为 100KHz。“clock-frequency”就是新添加的属性。<br>第 228 行，将 status 属性的值由原来的 disabled 改为 okay。<br>第 230<del>234 行， i2c1 子节点 mag3110，因为 NXP 官方开发板在 I2C1 上接了一个磁力计芯片 mag3110，正点原子的 I.MX6U-ALPHA 开发板并没有使用 mag3110。<br>第 236</del>242 行， i2c1 子节点 fxls8471，同样是因为 NXP 官方开发板在 I2C1 上接了 fxls8471这颗六轴芯片 。</p>
+<h3 id="创建小型模板设备树"><a href="#创建小型模板设备树" class="headerlink" title="创建小型模板设备树"></a>创建小型模板设备树</h3><p>以 I.MX6ULL 这个 SOC 为例，我们需要在设备树里面描述的内容如下：<br>①、 I.MX6ULL 这个 Cortex-A7 架构的 32 位 CPU。<br>②、 I.MX6ULL 内部 ocram，起始地址 0x00900000，大小为 128KB(0x20000)。<br>③、 I.MX6ULL 内部 aips1 域下的 ecspi1 外设控制器，寄存器起始地址为 0x02008000，大小为 0x4000。<br>④、 I.MX6ULL 内部 aips2 域下的 usbotg1 外设控制器，寄存器起始地址为 0x02184000，大小为 0x4000。<br>⑤、 I.MX6ULL 内部 aips3 域下的 rngb 外设控制器，寄存器起始地址为 0x02284000，大小为 0x4000。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-09%20151328.png"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">/&#123;</span><br><span class="line">		compatible = <span class="string">&quot;fsl, imx6ull-alientek-evk&quot;</span>, <span class="string">&quot;fsl, imx6ull&quot;</span>;</span><br><span class="line">		cpus &#123;</span><br><span class="line">    	<span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;<span class="comment">//基地址、片选号等绝对起始地址所占字长</span></span></span><br><span class="line">      <span class="meta">#size-cells = <span class="string">&lt;0&gt;</span>;<span class="comment">//长度所占字长</span></span></span><br><span class="line">    	cpu0 : cpu@<span class="number">0</span>&#123;</span><br><span class="line">      	compatible = <span class="string">&quot;arm ,cortex-a7&quot;</span>;</span><br><span class="line">        device_type = <span class="string">&quot;cpu&quot;</span>;</span><br><span class="line">        reg = &lt;<span class="number">0</span>&gt;;</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">  	soc &#123;</span><br><span class="line">    	<span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">      <span class="meta">#size-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">      compatible = <span class="string">&quot;simple-bus&quot;</span>;</span><br><span class="line">      ranges;</span><br><span class="line">      ocram: sram@<span class="number">00900000</span> &#123;</span><br><span class="line">      	compatible = <span class="string">&quot;fsl, lpm-sram&quot;</span>;</span><br><span class="line">      	reg = &lt;<span class="number">0x00900000</span> <span class="number">0x20000</span>&gt;;</span><br><span class="line">      &#125;;</span><br><span class="line">      </span><br><span class="line">      apis1: aips-bus@<span class="number">02000000</span> &#123;</span><br><span class="line">      	compatible = <span class="string">&quot;fsl, aip-bus&quot;</span>, <span class="string">&quot;simble-bus&quot;</span>;</span><br><span class="line">        <span class="meta">#address-cells  = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">        <span class="meta">#size-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">        reg = &lt;<span class="number">0x2000000</span> <span class="number">0x100000</span>&gt;;</span><br><span class="line">        ranges;</span><br><span class="line">      	</span><br><span class="line">        ecspi1: ecspi@<span class="number">02008000</span> &#123;</span><br><span class="line">        	<span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">          <span class="meta">#size-cells = <span class="string">&lt;0&gt;</span>;</span></span><br><span class="line">          compatible = <span class="string">&quot;fsl, imx6ul-ecspi&quot;</span>, <span class="string">&quot;fsl, imx5-ecspi&quot;</span>;</span><br><span class="line">          reg = &lt;<span class="number">0x02008000</span> <span class="number">0x4000</span>&gt;;</span><br><span class="line">          status = <span class="string">&quot;disabled&quot;</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">      apis2: aips-bus@<span class="number">02100000</span> &#123;</span><br><span class="line">      	compatible = <span class="string">&quot;fsl, apis-bus&quot;</span>, <span class="string">&quot;simple-bus&quot;</span>;</span><br><span class="line">        <span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">        <span class="meta">#size-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">        reg = &lt;<span class="number">0x02100000</span> <span class="number">0x100000</span>&gt;;</span><br><span class="line">        ranges;</span><br><span class="line">        </span><br><span class="line">        usbotg1: usb@<span class="number">02184000</span> &#123;</span><br><span class="line">        	compatible = <span class="string">&quot;fsl, imx6ul-usb&quot;</span> , <span class="string">&quot;fsl, imx27-usb&quot;</span>;</span><br><span class="line">          reg = &lt;<span class="number">0x02184000</span> <span class="number">0x4000</span>&gt;;</span><br><span class="line">          status  = <span class="string">&quot;disabled&quot;</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">      aips3: aips-bus@<span class="number">02200000</span> &#123;</span><br><span class="line">					compatible = <span class="string">&quot;fsl,aips-bus&quot;</span>, <span class="string">&quot;simple-bus&quot;</span>;</span><br><span class="line">					<span class="meta">#address-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">					<span class="meta">#size-cells = <span class="string">&lt;1&gt;</span>;</span></span><br><span class="line">					reg = &lt;<span class="number">0x02200000</span> <span class="number">0x100000</span>&gt;;</span><br><span class="line">					ranges;</span><br><span class="line"></span><br><span class="line">					rngb: rngb@<span class="number">02284000</span> &#123;</span><br><span class="line">						compatible = <span class="string">&quot;fsl,imx6sl-rng&quot;</span>, <span class="string">&quot;fsl,imx-rng&quot;</span>, <span class="string">&quot;imxrng&quot;</span>;</span><br><span class="line">						reg = &lt;<span class="number">0x02284000</span> <span class="number">0x4000</span>&gt;;</span><br><span class="line">					&#125;;</span><br><span class="line">      &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="设备树在系统中的体现"><a href="#设备树在系统中的体现" class="headerlink" title="设备树在系统中的体现"></a>设备树在系统中的体现</h3><p>Linux 内核启动的时候会解析设备树中各个节点的信息，并且在根文件系统的&#x2F;proc&#x2F;devicetree 目录下根据节点名字创建不同文件夹， 可以使用cat命令来查看model和compatible文件信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd proc/devicetree</span><br><span class="line">cat model</span><br><span class="line">cat compatible</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;proc&#x2F;device-tree 目录就是设备树在根文件系统中的体现，同样是按照树形结构组织的，进入&#x2F;proc&#x2F;device-tree&#x2F;soc 目录中就可以看到 soc 节点的所有子节点 。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd soc</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
+
+<h3 id="Linux内核解析DTB文件"><a href="#Linux内核解析DTB文件" class="headerlink" title="Linux内核解析DTB文件"></a>Linux内核解析DTB文件</h3><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-09%20154941.png"></p>
+<h3 id="如何添加节点"><a href="#如何添加节点" class="headerlink" title="如何添加节点"></a>如何添加节点</h3><p>可以查看Linux的源码下的&#x2F;Documentation&#x2F;devicetree&#x2F;bindings，添加哪个就看哪个文件。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-09%20155142.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/">http://example.com/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">驱动开发</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/"><img class="prev-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">设备树常用的of操作树</div></div></a></div><div class="next-post pull-right"><a href="/2023/04/06/2023-4-7-%E6%96%B0%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">新字符设备驱动开发</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/" title="设备树常用的of操作树"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-09</div><div class="title">设备树常用的of操作树</div></div></a></div><div><a href="/2023/04/06/2023-4-7-%E6%96%B0%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="新字符设备驱动开发"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-06</div><div class="title">新字符设备驱动开发</div></div></a></div><div><a href="/2023/04/04/2023-4-4-LED%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="LED驱动开发"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-04</div><div class="title">LED驱动开发</div></div></a></div><div><a href="/2023/04/01/2023-4-1-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="字符设备驱动开发"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-01</div><div class="title">字符设备驱动开发</div></div></a></div><div><a href="/2023/03/31/2023-3-31-%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" title="驱动开发流程"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-31</div><div class="title">驱动开发流程</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">设备树定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTS%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">DTS语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E7%82%B9"><span class="toc-number">3.</span> <span class="toc-text">设备点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E8%8A%82%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">设备节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%B1%9E%E6%80%A7"><span class="toc-number">3.2.</span> <span class="toc-text">标准属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E8%8A%82%E7%82%B9-compatible-%E5%B1%9E%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">根节点 compatible 属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%91%E8%8A%82%E7%82%B9%E8%BF%BD%E5%8A%A0%E6%88%96%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9"><span class="toc-number">3.4.</span> <span class="toc-text">向节点追加或修改内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%B0%8F%E5%9E%8B%E6%A8%A1%E6%9D%BF%E8%AE%BE%E5%A4%87%E6%A0%91"><span class="toc-number">4.</span> <span class="toc-text">创建小型模板设备树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E5%9C%A8%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">设备树在系统中的体现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90DTB%E6%96%87%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">Linux内核解析DTB文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">如何添加节点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/" title="设备树常用的of操作树"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="设备树常用的of操作树"/></a><div class="content"><a class="title" href="/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/" title="设备树常用的of操作树">设备树常用的of操作树</a><time datetime="2023-04-09T12:30:00.000Z" title="发表于 2023-04-09 20:30:00">2023-04-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/" title="linux设备树"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux设备树"/></a><div class="content"><a class="title" href="/2023/04/08/2023-4-8-linux%E8%AE%BE%E5%A4%87%E6%A0%91/" title="linux设备树">linux设备树</a><time datetime="2023-04-08T11:30:00.000Z" title="发表于 2023-04-08 19:30:00">2023-04-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/06/2023-4-7-%E6%96%B0%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="新字符设备驱动开发"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="新字符设备驱动开发"/></a><div class="content"><a class="title" href="/2023/04/06/2023-4-7-%E6%96%B0%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="新字符设备驱动开发">新字符设备驱动开发</a><time datetime="2023-04-06T11:30:00.000Z" title="发表于 2023-04-06 19:30:00">2023-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/04/2023-4-4-LED%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="LED驱动开发"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="LED驱动开发"/></a><div class="content"><a class="title" href="/2023/04/04/2023-4-4-LED%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="LED驱动开发">LED驱动开发</a><time datetime="2023-04-04T11:30:00.000Z" title="发表于 2023-04-04 19:30:00">2023-04-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
