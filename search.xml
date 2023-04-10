@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>nfs挂载设备树失败</title>
+      <link href="/2023/04/10/2023-4-10-nfs%E6%8C%82%E8%BD%BD%E8%AE%BE%E5%A4%87%E6%A0%91%E5%A4%B1%E8%B4%A5/"/>
+      <url>/2023/04/10/2023-4-10-nfs%E6%8C%82%E8%BD%BD%E8%AE%BE%E5%A4%87%E6%A0%91%E5%A4%B1%E8%B4%A5/</url>
+      
+        <content type="html"><![CDATA[<h3 id="VFS-Cannot-open-root-device-“nfs”-or-unknown-block-2-0"><a href="#VFS-Cannot-open-root-device-“nfs”-or-unknown-block-2-0" class="headerlink" title="VFS: Cannot open root device “nfs” or unknown-block(2,0)"></a>VFS: Cannot open root device “nfs” or unknown-block(2,0)</h3><p>首先说明一下问题，之前根文件系统一直正常使用，突然今天进行了以上报错，首先是搜索了一下问题，说是开发板内核和Ubuntu的nfs版本不匹配，之前遇到过，系统换成Ubuntu16版本的了，应该可以排除，但是也试了一下不好使。</p><p>感觉是ip地址的变化将bootargs变量里的服务器ip地址的数值进行了相应的改变，但是还是没有变化。</p><p>查了相关的问题搜索发现，没有解决方案，我先是进行了开发板的固化系统，使用了emmc中的根文件系统，发现没有问题，但是使用网络nfs挂载还是出现了问题，最后通过装载了第二个系统进行挂载发现了问题所在。</p><p>问题是：板子的ip地址和别的设备的ip地址冲突了（虽然之前也dhcp了但当时没好使），加上了服务器ip地址的变化导致的。</p><p>所以为了一劳永逸，将Ubuntu的动态分配ip地址进行了更改，改为静态分配ip地址。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipaddr</span><br></pre></td></tr></table></figure><p>可以查看发现网卡的名字。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-10%20210629.png"></p><p>网卡名字叫做ens33</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/network/interfaces</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line"> </span><br><span class="line">iface lo inet loopback</span><br><span class="line"> </span><br><span class="line">auto ens33</span><br><span class="line"> </span><br><span class="line">iface ens33 inet static</span><br><span class="line">address  192.168.1.128</span><br><span class="line">netmask  255.255.255.0</span><br><span class="line">gateway  192.168.1.1</span><br></pre></td></tr></table></figure><p>之后进行重启网卡</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/networking start</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 驱动开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>设备树常用的of操作树</title>
       <link href="/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/"/>
       <url>/2023/04/09/2023-4-9-%E8%AE%BE%E5%A4%87%E6%A0%91%E5%B8%B8%E7%94%A8%E7%9A%84of%E6%93%8D%E4%BD%9C%E6%A0%91/</url>
