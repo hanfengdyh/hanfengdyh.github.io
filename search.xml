@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>研电赛</title>
+      <link href="/2023/04/22/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/"/>
+      <url>/2023/04/22/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="题目：超声接近感知系统"><a href="#题目：超声接近感知系统" class="headerlink" title="题目：超声接近感知系统"></a>题目：超声接近感知系统</h2><p>（1）赛题主要考察接近感知系统的实现，可使用指示灯的亮灭来表征接近态和远离态</p><p>（2）以超声波技术为基础实现接近感知。可辅助使用加速度、陀螺仪或等其他传感器，来提高准确率（如提取接听电话动作中的距离、姿态、运动轨迹…等信息的变化）。</p><h4 id="设计stm32pcb"><a href="#设计stm32pcb" class="headerlink" title="设计stm32pcb"></a>设计stm32pcb</h4><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-22%20184125.png"></p><h4 id="设计姿态传感器pcb"><a href="#设计姿态传感器pcb" class="headerlink" title="设计姿态传感器pcb"></a>设计姿态传感器pcb</h4><p>由磁力计IST8310和陀螺仪BMI088组成。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-21%20214647.png"></p><p>由于先设计的硬件，并没确定使用的IO口，所以分为了两个板子，为了符合题目要求，pcb上打上通孔，便于使用螺丝连接。</p><p>预计使用两个超声波模块，使用spi和iic通信来读取姿态传感器的数据。</p><p>待续。。。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 实战 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>linux并发与竞争</title>
       <link href="/2023/04/20/2023-4-21-linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/"/>
       <url>/2023/04/20/2023-4-21-linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/</url>
