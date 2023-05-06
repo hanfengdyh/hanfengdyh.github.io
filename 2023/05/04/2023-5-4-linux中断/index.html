@@ -1,0 +1,371 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>linux中断 | 涵风 Blog</title><meta name="keywords" content="驱动开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="linux中断request_irq函数request_irq 函数用于申请中断， request_irq函数可能会导致睡眠，因此不能在中断上下文或者其他禁止睡眠的代码段中使用 request_irq 函数。 request_irq 函数会激活(使能)中断，所以不需要我们手动去使能中断。 12345int request_irq(unsigned int irq,		irq_handler_t h">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux中断">
+<meta property="og:url" content="http://example.com/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="linux中断request_irq函数request_irq 函数用于申请中断， request_irq函数可能会导致睡眠，因此不能在中断上下文或者其他禁止睡眠的代码段中使用 request_irq 函数。 request_irq 函数会激活(使能)中断，所以不需要我们手动去使能中断。 12345int request_irq(unsigned int irq,		irq_handler_t h">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-05-04T11:30:00.000Z">
+<meta property="article:modified_time" content="2023-05-06T06:33:42.937Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="驱动开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux中断',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-06 14:33:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">71</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux中断</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-04T11:30:00.000Z" title="发表于 2023-05-04 19:30:00">2023-05-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-06T06:33:42.937Z" title="更新于 2023-05-06 14:33:42">2023-05-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux中断"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="linux中断"><a href="#linux中断" class="headerlink" title="linux中断"></a>linux中断</h2><h4 id="request-irq函数"><a href="#request-irq函数" class="headerlink" title="request_irq函数"></a>request_irq函数</h4><p>request_irq 函数用于申请中断， request_irq函数可能会导致睡眠，因此不能在中断上下文或者其他禁止睡眠的代码段中使用 request_irq 函数。 request_irq 函数会激活(使能)中断，所以不需要我们手动去使能中断。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">request_irq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> irq,</span></span><br><span class="line"><span class="params">		<span class="type">irq_handler_t</span> handler,</span></span><br><span class="line"><span class="params">		<span class="type">unsigned</span> <span class="type">long</span> flags,</span></span><br><span class="line"><span class="params">		<span class="type">const</span> <span class="type">char</span> *name,</span></span><br><span class="line"><span class="params">		<span class="type">void</span> *dev)</span></span><br></pre></td></tr></table></figure>
+
+<p>irq：要申请中断的中断号。</p>
+<p>每个中断都有一个中断号，通过中断号即可区分不同的中断 。</p>
+<p>handler：中断处理函数，当中断发生以后就会执行此中断处理函数。<br>flags：中断标志，可以在文件 include&#x2F;linux&#x2F;interrupt.h 里面查看所有的中断标志 </p>
+<p>name：中断名字，设置以后可以在&#x2F;proc&#x2F;interrupts 文件中看到对应的中断名字。<br>dev： 如果将 flags 设置为 IRQF_SHARED 的话， dev 用来区分不同的中断，一般情况下将<br>dev 设置为设备结构体， dev 会传递给中断处理函数 irq_handler_t 的第二个参数。<br>返回值： 0 中断申请成功，其他负值 中断申请失败，如果返回-EBUSY 的话表示中断已经被申请了。 </p>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IRQF_SHARED</td>
+<td>多个设备共享一个中断线，共享的所有中断都必须指定此标志。如果使用共享中断的话， request_irq 函数的 dev 参数就是唯一区分的标志</td>
+</tr>
+<tr>
+<td>IRQF_ONESHOT</td>
+<td>单次中断，中断执行一次就结束。</td>
+</tr>
+<tr>
+<td>IRQF_TRIGGER_NONE</td>
+<td>无触发</td>
+</tr>
+<tr>
+<td>IRQF_TRIGGER_RISING</td>
+<td>上升沿触发</td>
+</tr>
+<tr>
+<td>IRQF_TRIGGER_FALLING</td>
+<td>下降沿触发</td>
+</tr>
+<tr>
+<td>IRQF_TRIGGER_HIGH</td>
+<td>高电平触发</td>
+</tr>
+<tr>
+<td>IRQF_TRIGGER_LOW</td>
+<td>低电平触发</td>
+</tr>
+</tbody></table>
+<h4 id="free-irq-函数"><a href="#free-irq-函数" class="headerlink" title="free_irq 函数"></a>free_irq 函数</h4><p>通过 free_irq 函数释放掉相应的中断。 如果中断不是共享的，那么 free_irq 会删除中断处理函数并且禁止中断。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">free_irq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> irq, <span class="type">void</span> *dev)</span></span><br></pre></td></tr></table></figure>
+
+<p>第一个参数是要中断处理函数要相应的中断号。第二个参数是一个指向 void 的指针，也就是个通用指针，需要与 request_irq 函数的 dev 参数保持一致。用于区分共享中断的不同设备，dev 也可以指向设备数据结构。 </p>
+<p>中断处理函数的返回值为 irqreturn_t 类型， irqreturn_t 类型定义如下所示： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">irqreturn</span> &#123;</span></span><br><span class="line">	IRQ_NONE = (<span class="number">0</span> &lt;&lt; <span class="number">0</span>),</span><br><span class="line">	IRQ_HANDLED = (<span class="number">1</span> &lt;&lt; <span class="number">0</span>),</span><br><span class="line">	IRQ_WAKE_THREAD = (<span class="number">1</span> &lt;&lt; <span class="number">1</span>),	</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> <span class="title">irqreturn</span> <span class="title">irqreturn_t</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出 irqreturn_t 是个枚举类型，一共有三种返回值。一般中断服务函数返回值使用如下形式：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> IRQ_RETVAL(IRQ_HANDLED) </span><br></pre></td></tr></table></figure>
+
+<h4 id="中断使能与禁止函数"><a href="#中断使能与禁止函数" class="headerlink" title="中断使能与禁止函数"></a>中断使能与禁止函数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">enable_irq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> irq)</span><span class="comment">//使能中断irq为中断号</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">disable_irq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> irq)</span><span class="comment">//禁止中断</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">disable_irq_nosync</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> irq)</span><span class="comment">//需要保证不会产生新的中断，并且确保所有已经开始执行的中断处理程序已经全部退出,调用以后立即返回，不会等待当前中断处理程序执行完毕</span></span><br><span class="line"><span class="title function_">local_irq_enable</span><span class="params">()</span><span class="comment">//使能当前处理器中断系统</span></span><br><span class="line"><span class="title function_">local_irq_disable</span><span class="params">()</span><span class="comment">//禁止当前中断系统</span></span><br><span class="line"><span class="title function_">local_irq_save</span><span class="params">(flags)</span><span class="comment">//用于禁止中断，并且将中断状态保存在 flags 中</span></span><br><span class="line"><span class="title function_">local_irq_restore</span><span class="params">(flags)</span><span class="comment">//用于恢复中断，将中断到 flags 状态</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="中断上下部"><a href="#中断上下部" class="headerlink" title="中断上下部"></a>中断上下部</h4><p>中断处理过程就分为了两部分：<br>上半部：上半部就是中断处理函数，那些处理过程比较快，不会占用很长时间的处理就可以放在上半部完成。<br>下半部：如果中断处理过程比较耗时，那么就将这些比较耗时的代码提出来，交给下半部去执行，这样中断处理函数就会快进快出。 </p>
+<p>对于网卡的中断处理，上半部会执行通知硬件、拷贝网络数据报到内存并继续读取新数据包，这些重要、紧急且与硬件相关的工作，因为网卡接收的网络数据包的缓存大小通常是固定的、有限的，一旦被延迟可能造成缓存溢出。而数据包的处理等操作，则由下半部来完成。</p>
+<p>Linux 内核将中断分为上半部和下半部的主要目的就是实现中断处理函数的快进快出，那些对时间敏感、执行速度快的操作可以放到中断处理函数中，也就是上半部。剩下的所有工作都可以放到下半部去执行，比如在上半部将数据拷贝到内存中，关于数据的具体处理就可以放到下半部去执行。至于哪些代码属于上半部，哪些代码属于下半部并没有明确的规定 。</p>
+<ol>
+<li>如果要处理的内容不希望被其他中断打断，那么可以放到上半部。</li>
+<li>如果要处理的任务对时间敏感，可以放到上半部。</li>
+<li>如果要处理的任务与硬件有关，可以放到上半部</li>
+<li>除了上述三点以外的其他任务，优先考虑放到下半部。</li>
+</ol>
+<h4 id="软中断"><a href="#软中断" class="headerlink" title="软中断"></a>软中断</h4><p>2.5版本以前使用BH(bottom half)实现下半部分，之后都是使用软中断核tasklet代替BH机制。Linux内核使用结构体softirq_action表示软中断。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">softirq_action</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">void</span>	(*action)(<span class="keyword">struct</span> softirq_action *);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在kernel&#x2F;softirq.c文件中一共定义了10个软中断</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">softirq_action</span> <span class="title">softirq_vec</span>[<span class="title">NR_SOFTIRQS</span>];</span></span><br></pre></td></tr></table></figure>
+
+<p>NR_SOFTIRQS是枚举类型，定义在文件include&#x2F;linux&#x2F;interrupt.h中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">		HI_SOFTIRQ=<span class="number">0</span>, <span class="comment">/* 高优先级软中断 */</span></span><br><span class="line">		TIMER_SOFTIRQ, <span class="comment">/* 定时器软中断 */</span></span><br><span class="line">		NET_TX_SOFTIRQ, <span class="comment">/* 网络数据发送软中断 */</span></span><br><span class="line">		NET_RX_SOFTIRQ, <span class="comment">/* 网络数据接收软中断 */</span></span><br><span class="line">		BLOCK_SOFTIRQ,</span><br><span class="line">		BLOCK_IOPOLL_SOFTIRQ,</span><br><span class="line">		TASKLET_SOFTIRQ, <span class="comment">/* tasklet 软中断 */</span></span><br><span class="line">		SCHED_SOFTIRQ, <span class="comment">/* 调度软中断 */</span></span><br><span class="line">		HRTIMER_SOFTIRQ, <span class="comment">/* 高精度定时器软中断 */</span></span><br><span class="line">		RCU_SOFTIRQ, <span class="comment">/* RCU 软中断 */</span></span><br><span class="line">		NR_SOFTIRQS</span><br><span class="line">&#125;；</span><br></pre></td></tr></table></figure>
+
+<p>softirq_action 结构体中的 action 成员变量就是软中断的服务函数，数组 softirq_vec 是个全局数组，因此所有的 CPU(对于 SMP 系统而言)都可以访问到，每个 CPU 都有自己的触发和控制机制，并且只执行自己所触发的软中断。但是各个 CPU 所执行的软中断服务函数确是相同的，都是数组 softirq_vec 中定义的 action 函数。 </p>
+<p>要使用软中断，必须先使用 open_softirq 函数注册对应的软中断处理函数 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">open_softirq</span><span class="params">(<span class="type">int</span> nr, <span class="type">void</span> (*action)(<span class="keyword">struct</span> softirq_action *))</span></span><br><span class="line"><span class="comment">//nr：要开启的软中断，</span></span><br><span class="line"><span class="comment">//action：软中断对应的处理函数。</span></span><br><span class="line"><span class="comment">//返回值： 没有返回值。</span></span><br></pre></td></tr></table></figure>
+
+<p>注册好软中断以后需要通过 raise_softirq 函数触发 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">raise_softirq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> nr)</span></span><br><span class="line"><span class="comment">//nr：要触发的软中断</span></span><br><span class="line"><span class="comment">//返回值： 没有返回值。</span></span><br></pre></td></tr></table></figure>
+
+<p>软中断必须在编译的时候静态注册！ Linux 内核使用 softirq_init 函数初始化软中断，softirq_init 函数定义在 kernel&#x2F;softirq.c 文件里面， </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __init <span class="title function_">softirq_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> cpu;</span><br><span class="line"></span><br><span class="line">	for_each_possible_cpu(cpu) &#123;</span><br><span class="line">		per_cpu(tasklet_vec, cpu).tail =	&amp;per_cpu(tasklet_vec, cpu).head;</span><br><span class="line">		per_cpu(tasklet_hi_vec, cpu).tail =	&amp;per_cpu(tasklet_hi_vec, cpu).head;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	open_softirq(TASKLET_SOFTIRQ, tasklet_action);</span><br><span class="line">	open_softirq(HI_SOFTIRQ, tasklet_hi_action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>tasklet 是利用软中断来实现的另外一种下半部机制</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tasklet_struct</span>//结构体</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">tasklet_struct</span> *<span class="title">next</span>;</span> <span class="comment">/* 下一个 tasklet */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> state; <span class="comment">/* tasklet 状态 */</span></span><br><span class="line">	<span class="type">atomic_t</span> count; <span class="comment">/* 计数器，记录对 tasklet 的引用数 */</span></span><br><span class="line">	<span class="type">void</span> (*func)(<span class="type">unsigned</span> <span class="type">long</span>); <span class="comment">/* tasklet 执行的函数 */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> data; <span class="comment">/* 函数 func 的参数 */</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">void</span> <span class="title function_">tasklet_init</span><span class="params">(<span class="keyword">struct</span> tasklet_struct *t, <span class="type">void</span> (*func)(<span class="type">unsigned</span> <span class="type">long</span>), <span class="type">unsigned</span> <span class="type">long</span> data)</span></span><br><span class="line"><span class="comment">//t：要初始化的 tasklet</span></span><br><span class="line"><span class="comment">//func： tasklet 的处理函数。</span></span><br><span class="line"><span class="comment">//data： 要传递给 func 函数的参数</span></span><br><span class="line"><span class="comment">//返回值： 没有返回值。</span></span><br></pre></td></tr></table></figure>
+
+<p>在上半部，也就是中断处理函数中调用 tasklet_schedule 函数就能使 tasklet 在合适的时间运行 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">tasklet_schedule</span><span class="params">(<span class="keyword">struct</span> tasklet_struct *t)</span></span><br><span class="line"><span class="comment">//t：要调度的 tasklet，也就是 DECLARE_TASKLET 宏里面的 name。</span></span><br></pre></td></tr></table></figure>
+
+<p>tasklet的使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义 taselet */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tasklet_struct</span> <span class="title">testtasklet</span>;</span></span><br><span class="line"><span class="comment">/* tasklet 处理函数 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">testtasklet_func</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> data)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/* tasklet 具体处理内容 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 中断处理函数 */</span></span><br><span class="line"><span class="type">irqreturn_t</span> <span class="title function_">test_handler</span><span class="params">(<span class="type">int</span> irq, <span class="type">void</span> *dev_id)</span></span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line"><span class="comment">/* 调度 tasklet */</span></span><br><span class="line">tasklet_schedule(&amp;testtasklet);</span><br><span class="line">......</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 驱动入口函数 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">xxxx_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line"><span class="comment">/* 初始化 tasklet */</span></span><br><span class="line">tasklet_init(&amp;testtasklet, testtasklet_func, data);</span><br><span class="line"><span class="comment">/* 注册中断处理函数 */</span></span><br><span class="line">request_irq(xxx_irq, test_handler, <span class="number">0</span>, <span class="string">&quot;xxx&quot;</span>, &amp;xxx_dev);</span><br><span class="line">......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="工作队列"><a href="#工作队列" class="headerlink" title="工作队列"></a>工作队列</h4><p>工作队列是另外一种下半部执行方式，工作队列在进程上下文执行，工作队列将要推后的工作交给一个内核线程去执行，因为工作队列工作在进程上下文，因此工作队列允许睡眠或重新调度。因此如果你要推后的工作可以睡眠那么就可以选择工作队列，否则的话就只能选择软中断或 tasklet。 </p>
+<p>工作队列结构体workqueue_struct结构体</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">workqueue_struct</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">pwqs</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mutex</span> <span class="title">mutex</span>;</span></span><br><span class="line">	<span class="type">int</span> work_color;</span><br><span class="line">	<span class="type">int</span> flush_color;</span><br><span class="line">	<span class="type">atomic_t</span> nr_pwqs_to_flush;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">wq_flusher</span> *<span class="title">first_flusher</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">flusher_queue</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">flusher_overflow</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">maydays</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker</span> *<span class="title">rescuer</span>;</span></span><br><span class="line">	<span class="type">int</span> nr_drainers;</span><br><span class="line">	<span class="type">int</span> saved_max_active;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">workqueue_attrs</span> *<span class="title">unbound_attrs</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> *<span class="title">dfl_pwq</span>;</span></span><br><span class="line">	<span class="type">char</span> name[WQ_NAME_LEN];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">rcu_head</span> <span class="title">rcu</span>;</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> flags ____cacheline_aligned;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> __<span class="title">percpu</span> *<span class="title">cpu_pwqs</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> __<span class="title">rcu</span> *<span class="title">numa_pwq_tbl</span>[];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>内核使用工作者线程(worker thread)来处理工作队列的各个工作，Linux使用worker结构体表示工作者线程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">worker</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">entry</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">hlist_node</span> <span class="title">hentry</span>;</span></span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">work_struct</span> *<span class="title">current_work</span>;</span></span><br><span class="line">	<span class="type">work_func_t</span> current_func;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> *<span class="title">current_pwq</span>;</span></span><br><span class="line">	<span class="type">bool</span> desc_valid;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">scheduled</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">node</span>;</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> last_active;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> flags;</span><br><span class="line">	<span class="type">int</span> id;</span><br><span class="line">	<span class="type">char</span> desc[WORKER_DESC_LEN];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">workqueue_struct</span> *<span class="title">rescue_wq</span>;</span><span class="comment">//工作队列</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>简单创建工作很简单，直接定义一个 work_struct 结构体变量即可，然后使用 INIT_WORK 宏来初始化工作， INIT_WORK 宏定义如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> INIT_WORK(_work, _func)</span></span><br><span class="line"><span class="comment">//work 表示要初始化的工作， _func 是工作对应的处理函数。</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以使用 DECLARE_WORK 宏一次性完成工作的创建和初始化，宏定义如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> DECLARE_WORK(n, f)</span></span><br><span class="line"><span class="comment">//n 表示定义的工作(work_struct)， f 表示工作对应的处理函数。</span></span><br></pre></td></tr></table></figure>
+
+<p>和 tasklet 一样，工作也是需要调度才能运行的，工作的调度函数为 schedule_work，函数原型如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">schedule_work</span><span class="params">(<span class="keyword">struct</span> work_struct *work)</span></span><br><span class="line"><span class="comment">//work： 要调度的工作。</span></span><br><span class="line"><span class="comment">//返回值： 0 成功，其他值 失败。 </span></span><br></pre></td></tr></table></figure>
+
+<p>工作队列的使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义工作(work) */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">work_struct</span> <span class="title">testwork</span>;</span></span><br><span class="line"><span class="comment">/* work 处理函数 */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">testwork_func_t</span><span class="params">(<span class="keyword">struct</span> work_struct *work)</span>;</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">/* work 具体处理内容 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 中断处理函数 */</span></span><br><span class="line">	<span class="type">irqreturn_t</span> <span class="title function_">test_handler</span><span class="params">(<span class="type">int</span> irq, <span class="type">void</span> *dev_id)</span></span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line"><span class="comment">/* 调度 work */</span></span><br><span class="line">	schedule_work(&amp;testwork);</span><br><span class="line">......</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 驱动入口函数 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">xxxx_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line"><span class="comment">/* 初始化 work */</span></span><br><span class="line">	INIT_WORK(&amp;testwork, <span class="type">testwork_func_t</span>);</span><br><span class="line"><span class="comment">/* 注册中断处理函数 */</span></span><br><span class="line">	request_irq(xxx_irq, test_handler, <span class="number">0</span>, <span class="string">&quot;xxx&quot;</span>, &amp;xxx_dev);</span><br><span class="line">......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-05-06%20143233.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/">http://example.com/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">驱动开发</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux内核定时器</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-25</div><div class="title">linux内核定时器</div></div></a></div><div><a href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-23</div><div class="title">globalmem设备驱动</div></div></a></div><div><a href="/2023/04/20/2023-4-21-linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" title="linux并发与竞争"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-20</div><div class="title">linux并发与竞争</div></div></a></div><div><a href="/2023/04/14/2023-4-14-pinctrl%E5%92%8Cgpio%E5%AD%90%E7%B3%BB%E7%BB%9F/" title="gpio子系统"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-14</div><div class="title">gpio子系统</div></div></a></div><div><a href="/2023/04/11/2023-4-11-%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%8A%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="设备树上的驱动开发"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-11</div><div class="title">设备树上的驱动开发</div></div></a></div><div><a href="/2023/04/10/2023-4-10-nfs%E6%8C%82%E8%BD%BD%E8%AE%BE%E5%A4%87%E6%A0%91%E5%A4%B1%E8%B4%A5/" title="nfs挂载设备树失败"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-10</div><div class="title">nfs挂载设备树失败</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">71</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux%E4%B8%AD%E6%96%AD"><span class="toc-number">1.</span> <span class="toc-text">linux中断</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#request-irq%E5%87%BD%E6%95%B0"><span class="toc-number">1.0.1.</span> <span class="toc-text">request_irq函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#free-irq-%E5%87%BD%E6%95%B0"><span class="toc-number">1.0.2.</span> <span class="toc-text">free_irq 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD%E4%B8%8E%E7%A6%81%E6%AD%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.0.3.</span> <span class="toc-text">中断使能与禁止函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8A%E4%B8%8B%E9%83%A8"><span class="toc-number">1.0.4.</span> <span class="toc-text">中断上下部</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="toc-number">1.0.5.</span> <span class="toc-text">软中断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97"><span class="toc-number">1.0.6.</span> <span class="toc-text">工作队列</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/" title="linux中断"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux中断"/></a><div class="content"><a class="title" href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/" title="linux中断">linux中断</a><time datetime="2023-05-04T11:30:00.000Z" title="发表于 2023-05-04 19:30:00">2023-05-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux内核定时器"/></a><div class="content"><a class="title" href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器">linux内核定时器</a><time datetime="2023-04-25T11:30:00.000Z" title="发表于 2023-04-25 19:30:00">2023-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="globalmem设备驱动"/></a><div class="content"><a class="title" href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动">globalmem设备驱动</a><time datetime="2023-04-23T11:30:00.000Z" title="发表于 2023-04-23 19:30:00">2023-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/22/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/" title="研电赛"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="研电赛"/></a><div class="content"><a class="title" href="/2023/04/22/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/" title="研电赛">研电赛</a><time datetime="2023-04-22T11:30:00.000Z" title="发表于 2023-04-22 19:30:00">2023-04-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
