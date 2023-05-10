@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>linux阻塞与非阻塞 | 涵风 Blog</title><meta name="keywords" content="驱动开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="阻塞和非阻塞IO阻塞式 当应用程序对设备驱动进行操作的时候，如果不能获取到设备资源，那么阻塞式 IO 就会将应用程序对应的线程挂起，直到设备资源可以获取为止。   非阻塞式 对于非阻塞 IO，应用程序对应的线程不会挂起，它要么一直轮询等待，直到设备资源可以使用，要么就直接放弃。   等待队列等待队列头阻塞式的好处就是，当无法获取资源的时候进程进入休眠状态，让出cpu来干别的事情，可以操作的时候再进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux阻塞与非阻塞">
+<meta property="og:url" content="http://example.com/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="阻塞和非阻塞IO阻塞式 当应用程序对设备驱动进行操作的时候，如果不能获取到设备资源，那么阻塞式 IO 就会将应用程序对应的线程挂起，直到设备资源可以获取为止。   非阻塞式 对于非阻塞 IO，应用程序对应的线程不会挂起，它要么一直轮询等待，直到设备资源可以使用，要么就直接放弃。   等待队列等待队列头阻塞式的好处就是，当无法获取资源的时候进程进入休眠状态，让出cpu来干别的事情，可以操作的时候再进">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-05-10T11:30:00.000Z">
+<meta property="article:modified_time" content="2023-05-10T13:26:08.426Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="驱动开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux阻塞与非阻塞',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-10 21:26:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux阻塞与非阻塞</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-10T11:30:00.000Z" title="发表于 2023-05-10 19:30:00">2023-05-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T13:26:08.426Z" title="更新于 2023-05-10 21:26:08">2023-05-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux阻塞与非阻塞"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="阻塞和非阻塞IO"><a href="#阻塞和非阻塞IO" class="headerlink" title="阻塞和非阻塞IO"></a>阻塞和非阻塞IO</h2><p>阻塞式</p>
+<p>当应用程序对设备驱动进行操作的时候，如果不能获取到设备资源，那么阻塞式 IO 就会将应用程序对应的线程挂起，直到设备资源可以获取为止。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-05-10%20115842.png"></p>
+<p>非阻塞式</p>
+<p>对于非阻塞 IO，应用程序对应的线程不会挂<br>起，它要么一直轮询等待，直到设备资源可以使用，要么就直接放弃。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-05-10%20115857.png"></p>
+<h2 id="等待队列"><a href="#等待队列" class="headerlink" title="等待队列"></a>等待队列</h2><h4 id="等待队列头"><a href="#等待队列头" class="headerlink" title="等待队列头"></a>等待队列头</h4><p>阻塞式的好处就是，当无法获取资源的时候进程进入休眠状态，让出cpu来干别的事情，可以操作的时候再进行唤醒（<strong>一般在中断里唤醒</strong>）。</p>
+<p>Linux内核提供了等待队列来实现阻塞进程的唤醒工作，首先要创建并初始化一个等待队列头，等待队列头使用结构体wait_queue_head_t表示。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">wait_queue_head</span>&#123;</span></span><br><span class="line">    <span class="type">spinlock_t</span> lock;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>	<span class="title">task_list</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> __<span class="title">wait_queue_head</span> <span class="title">wait_queue_head_t</span>;</span></span><br><span class="line"><span class="comment">//使用init_waitqueue_head初始化等待队列头</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">init_waitqueue_head</span><span class="params">(<span class="type">wait_queue_head_t</span> *q)</span><span class="comment">//q为初始化的等待队列头</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="等待队列项"><a href="#等待队列项" class="headerlink" title="等待队列项"></a>等待队列项</h4><p>每个访问设备的进程都是一个队列项，当设备不可用的时候就要将这些进程对应的等待队列项添加到等待队列里面。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">wait_queue</span>&#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span>		flags;</span><br><span class="line">    <span class="type">void</span>				*private;</span><br><span class="line">    <span class="type">wait_queue_func_t</span>	func;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>	<span class="title">task_list</span>;</span>  </span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> __<span class="title">wait_queue</span> <span class="title">wait_queue_t</span>;</span></span><br><span class="line"><span class="comment">//使用宏DECLARE_WAITQUEUE定义初始化一个等待队列项</span></span><br><span class="line">DECLARE_WAITQUEUE(name, tsk)<span class="comment">//name等待队列项的名字，tsk表示等待队列项属于哪个进程</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="添加或移除等待队列头"><a href="#添加或移除等待队列头" class="headerlink" title="添加或移除等待队列头"></a>添加或移除等待队列头</h4><p>当设备不可访问的时候就需要将进程对应的等待队列项添加到前面创建的等待队列头中，只有添加到等待队列头中以后进程才能进入休眠态。当设备可以访问以后再将进程对应的等待队列项从等待队列头中移除即可 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">add_wait_queue</span><span class="params">(<span class="type">wait_queue_head_t</span> *q, <span class="type">wait_queue_t</span>	*wait)</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">remove_wait_queue</span><span class="params">(<span class="type">wait_queue_head_t</span> *q, <span class="type">wait_queue_t</span> *wait)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="等待唤醒"><a href="#等待唤醒" class="headerlink" title="等待唤醒"></a>等待唤醒</h4><p>当设备可以使用的时候就要唤醒进入休眠态的进程 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">wake_up</span><span class="params">(<span class="type">wait_queue_head_t</span> *q)</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">wake_up_interruptible</span><span class="params">(<span class="type">wait_queue_head_t</span> *q)</span></span><br></pre></td></tr></table></figure>
+
+<p>两个函数会将这个等待队列头中的所有进程都唤醒。wake_up 函数可以唤醒处于 TASK_INTERRUPTIBLE 和 TASK_UNINTERRUPTIBLE 状态的进程，而 wake_up_interruptible 函数只能唤醒处于 TASK_INTERRUPTIBLE 状态的进程。 </p>
+<h4 id="等待事件"><a href="#等待事件" class="headerlink" title="等待事件"></a>等待事件</h4><p>除了主动唤醒以外，也可以设置等待队列等待某个事件，当这个事件满足以后就自动唤醒等待队列中的进程 </p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>wait_event(wq, condition)</td>
+<td>等待以 wq 为等待队列头的等待队列被唤醒，前提是 condition 条件必须满足(为真)，否则一直阻塞 此 函 数 会 将 进 程 设 置 为TASK_UNINTERRUPTIBLE 状态</td>
+</tr>
+<tr>
+<td>wait_event_timeout(wq,condition,timeout)</td>
+<td>功能和 wait_event 类似，但是此函数可以添加超时时间，以 jiffies 为单位。此函数有返回值，如果返回 0 的话表示超时时间到，而且 condition为假。为 1 的话表示 condition 为真，也就是条件满足了。</td>
+</tr>
+<tr>
+<td>wait_event_interruptible(wq, condition)</td>
+<td>与 wait_event 函数类似，但是此函数将进程设置为 TASK_INTERRUPTIBLE，就是可以被信号打断。</td>
+</tr>
+<tr>
+<td>wait_event_interruptible_timeout(wq,condition, timeout)</td>
+<td>与 wait_event_timeout 函数类似，此函数也将进程设置为 TASK_INTERRUPTIBLE，可以被信号打断</td>
+</tr>
+</tbody></table>
+<h3 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h3><p>如果用户应用程序以非阻塞的方式访问设备，设备驱动程序就要提供非阻塞的处理方式，也就是轮询。 poll、 epoll 和 select 可以用于处理轮询，应用程序通过 select、 epoll 或 poll 函数来查询设备是否可以操作，如果可以操作的话就从设备读取或者向设备写入数据。 </p>
+<p><strong>select函数</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">select</span><span class="params">(<span class="type">int</span> nfds,</span></span><br><span class="line"><span class="params">           fd_set *readfds,</span></span><br><span class="line"><span class="params">           fd_set *writefds,</span></span><br><span class="line"><span class="params">           fd_set *exceptfds,</span></span><br><span class="line"><span class="params">           <span class="keyword">struct</span> timeval *timeout)</span></span><br></pre></td></tr></table></figure>
+
+<p>nfds:	所要监视的这三类文件描述集合中， 最大文件描述符加 1。 </p>
+<p>readfds、 writefds 和 exceptfds ：readfds 用于监视指定描述符集的读变化，也就是监视这些文件是否可以读取，只要这些集合里面有一个文件可以读取那么 seclect 就会返回一个大于 0 的值表示文件可以读取。如果没有文件可以读取，那么就会根据 timeout 参数来判断是否超时。可以将 readfs设置为 NULL，表示不关心任何文件的读变化。 </p>
+<p>exceptfds 用于监视这些文件的异常 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">FD_ZERO</span><span class="params">(fd_set *<span class="built_in">set</span>)</span>				<span class="comment">//所有位清零</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">FD_SET</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>		<span class="comment">//将某个位置1，也就是向 fd_set 添加一个文件描述符</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">FD_CLR</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>		<span class="comment">//将某个位清0，也就是将一个文件描述符从 fd_set 中删除</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">FD_ISSET</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>		<span class="comment">//用于测试一个文件是否属于某个集合</span></span><br></pre></td></tr></table></figure>
+
+<p>timeout:超时时间，调用select等待某些文件描述符可以设置超时时间</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>	<span class="title">timeval</span>&#123;</span></span><br><span class="line">   <span class="type">long</span>	tv_sec ;	<span class="comment">//秒</span></span><br><span class="line">   <span class="type">long</span> tv_usec;	<span class="comment">//微秒</span></span><br><span class="line">&#125;；</span><br></pre></td></tr></table></figure>
+
+<p>返回值： 0，表示的话就表示超时发生，但是没有任何文件描述符可以进行操作； -1，发生错误；其他值，可以进行操作的文件描述符个数。 </p>
+<h4 id="select系统阻塞状态判断"><a href="#select系统阻塞状态判断" class="headerlink" title="select系统阻塞状态判断"></a>select系统阻塞状态判断</h4><p>1、timeout传入NULL，则select为阻塞状态，即需要等到监视文件描述符集合中某个文件描述符发生变化才会返回；相当于无穷大的时间，一直等<br>2、timeout置为0秒、0微秒，则select为非阻塞状态，不管文件描述符是否有变化，都立刻返回继续执行，文件无变化返回0，有变化返回一个正值；<br>3、timeout置为大于0的值，即等待的超时时间，select在timeout时间内阻塞，超时时间之内有事件到来就返回，否则在超时后不管怎样一定返回，返回值同上述。 </p>
+<p><u>使用 select 函数对某个设备驱动文件进行读非阻塞访问的操作</u> </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> ret,fd;</span><br><span class="line">    fd_set readfd;</span><br><span class="line">    </span><br><span class="line">    fd = open(<span class="string">&quot;dev_xx&quot;</span>, O_RDWR|)_NONBLOCK);<span class="comment">//非阻塞打开</span></span><br><span class="line">    <span class="keyword">if</span>(fd &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;can&#x27;t open file\r\n&quot;</span>);</span><br><span class="line">    &#125;    </span><br><span class="line">	FD_ZERO(readfd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Poll函数"><a href="#Poll函数" class="headerlink" title="Poll函数"></a>Poll函数</h4><p>在单个线程中， select 函数能够监视的文件描述符数量有最大的限制，一般为 1024，但是 poll 函数没有最大文件描述符限制。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">poll</span><span class="params">(<span class="keyword">struct</span> pollfd *fds,</span></span><br><span class="line"><span class="params">			<span class="type">nfds_t</span> nfds,</span></span><br><span class="line"><span class="params">			<span class="type">int</span> timeout)</span></span><br></pre></td></tr></table></figure>
+
+<p>fds： 要监视的文件描述符集合以及要监视的事件,为一个数组，数组元素都是结构体 pollfd类型的， pollfd 结构体如下所示： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> &#123;</span></span><br><span class="line">		<span class="type">int</span> fd; <span class="comment">/* 文件描述符 */</span></span><br><span class="line">		<span class="type">short</span> events; <span class="comment">/* 请求的事件 */</span></span><br><span class="line">		<span class="type">short</span> revents; <span class="comment">/* 返回的事件 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>fd 是要监视的文件描述符，如果 fd 无效的话那么 events 监视事件也就无效，并且 revents返回 0。 events 是要监视的事件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">可监视事件</span><br><span class="line">POLLIN 有数据可以读取。</span><br><span class="line">POLLPRI 有紧急的数据需要读取。</span><br><span class="line">POLLOUT 可以写数据。</span><br><span class="line">POLLERR 指定的文件描述符发生错误。</span><br><span class="line">POLLHUP 指定的文件描述符挂起。</span><br><span class="line">POLLNVAL 无效的请求。</span><br><span class="line">POLLRDNORM 等同于 POLLIN</span><br></pre></td></tr></table></figure>
+
+<p>revents 是返回参数，也就是返回的事件， 由 Linux 内核设置具体的返回事件 </p>
+<p>nfds： poll 函数要监视的文件描述符数量。<br>timeout： 超时时间，单位为 ms。 </p>
+<p>返回值：返回 revents 域中不为 0 的 pollfd 结构体个数，也就是发生事件或错误的文件描述符数量； 0，超时； -1，发生错误，并且设置 errno 为错误类型。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line">	<span class="type">int</span> fd; <span class="comment">/* 要监视的文件描述符 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> <span class="title">fds</span>;</span></span><br><span class="line"></span><br><span class="line">	fd = open(filename, O_RDWR | O_NONBLOCK); <span class="comment">/* 非阻塞式访问 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 构造结构体 */</span></span><br><span class="line">	fds.fd = fd;</span><br><span class="line">	fds.events = POLLIN; <span class="comment">/* 监视数据是否可以读取 */</span></span><br><span class="line">	ret = poll(&amp;fds, <span class="number">1</span>, <span class="number">500</span>); <span class="comment">/* 轮询文件是否可操作，超时 500ms */</span></span><br><span class="line">	<span class="keyword">if</span> (ret) &#123; <span class="comment">/* 数据有效 */</span></span><br><span class="line">	 ......</span><br><span class="line">	<span class="comment">/* 读取数据 */</span></span><br><span class="line">	 ......</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (ret == <span class="number">0</span>) &#123; <span class="comment">/* 超时 */</span></span><br><span class="line">	 ......</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (ret &lt; <span class="number">0</span>) &#123; <span class="comment">/* 错误 */</span></span><br><span class="line">	 ......</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="epoll函数"><a href="#epoll函数" class="headerlink" title="epoll函数"></a>epoll函数</h4><p>epoll 就是为处理大并发而准备的，一般常常在网络编程中使用 epoll 函数。应用程序需要先使用 epoll_create 函数创建一个 epoll 句柄 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span></span><br></pre></td></tr></table></figure>
+
+<p>size： 从 Linux2.6.8 开始此参数已经没有意义了，随便填写一个大于 0 的值就可以。<br>返回值： epoll 句柄，如果为-1 的话表示创建失败。 </p>
+<p>epoll 句柄创建成功以后使用 epoll_ctl 函数向其中添加要监视的文件描述符以及监视的事件 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd,</span></span><br><span class="line"><span class="params">              <span class="type">int</span> op,</span></span><br><span class="line"><span class="params">	          <span class="type">int</span> fd,</span></span><br><span class="line"><span class="params">	          <span class="keyword">struct</span> epoll_event *event)</span></span><br></pre></td></tr></table></figure>
+
+<p>epfd： 要操作的 epoll 句柄，也就是使用 epoll_create 函数创建的 epoll 句柄。<br>op： 表示要对 epfd(epoll 句柄)进行的操作，可以设置为： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EPOLL_CTL_ADD 向 epfd 添加文件参数 fd 表示的描述符。</span><br><span class="line">EPOLL_CTL_MOD 修改参数 fd 的 event 事件。</span><br><span class="line">EPOLL_CTL_DEL 从 epfd 中删除 fd 描述符。</span><br></pre></td></tr></table></figure>
+
+<p>fd：要监视的文件描述符。<br>event： 要监视的事件类型，为 epoll_event 结构体类型指针 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> &#123;</span></span><br><span class="line">	<span class="type">uint32_t</span> events; <span class="comment">/* epoll 事件 */</span></span><br><span class="line">	<span class="type">epoll_data_t</span> data; <span class="comment">/* 用户数据 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>结构体 epoll_event 的 events 成员变量表示要监视的事件 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">EPOLLIN 有数据可以读取。</span><br><span class="line">EPOLLOUT 可以写数据。</span><br><span class="line">EPOLLPRI 有紧急的数据需要读取。</span><br><span class="line">EPOLLERR 指定的文件描述符发生错误。</span><br><span class="line">EPOLLHUP 指定的文件描述符挂起。</span><br><span class="line">EPOLLET 设置 epoll 为边沿触发，默认触发模式为水平触发。</span><br><span class="line">EPOLLONESHOT 一次性的监视，当监视完成以后还需要再次监视某个 fd，那么就需要将</span><br><span class="line">fd 重新添加到 epoll 里面。</span><br></pre></td></tr></table></figure>
+
+<p>上面这些事件可以进行“或”操作，也就是说可以设置监视多个事件。 </p>
+<p>返回值： 0，成功； -1，失败，并且设置 errno 的值为相应的错误码。 </p>
+<p>一切都设置好以后应用程序就可以通过 epoll_wait 函数来等待事件的发生，类似 select 函数。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int epoll_wait(int epfd,</span><br><span class="line">			   struct epoll_event *events,</span><br><span class="line">               int maxevents,</span><br><span class="line">               int timeout)</span><br></pre></td></tr></table></figure>
+
+<p>epfd： 要等待的 epoll。 </p>
+<p>events： 指向 epoll_event 结构体的数组，当有事件发生的时候 Linux 内核会填写 events，调<br>用者可以根据 events 判断发生了哪些事件。<br>maxevents： events 数组大小，必须大于 0。<br>timeout： 超时时间，单位为 ms。<br>返回值： 0，超时； -1，错误；其他值，准备就绪的文件描述符数量。 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/">http://example.com/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">驱动开发</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux中断</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/" title="linux中断"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-04</div><div class="title">linux中断</div></div></a></div><div><a href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-25</div><div class="title">linux内核定时器</div></div></a></div><div><a href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-23</div><div class="title">globalmem设备驱动</div></div></a></div><div><a href="/2023/04/20/2023-4-21-linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" title="linux并发与竞争"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-20</div><div class="title">linux并发与竞争</div></div></a></div><div><a href="/2023/04/14/2023-4-14-pinctrl%E5%92%8Cgpio%E5%AD%90%E7%B3%BB%E7%BB%9F/" title="gpio子系统"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-14</div><div class="title">gpio子系统</div></div></a></div><div><a href="/2023/04/11/2023-4-11-%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%8A%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="设备树上的驱动开发"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-11</div><div class="title">设备树上的驱动开发</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E5%92%8C%E9%9D%9E%E9%98%BB%E5%A1%9EIO"><span class="toc-number">1.</span> <span class="toc-text">阻塞和非阻塞IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E9%98%9F%E5%88%97"><span class="toc-number">2.</span> <span class="toc-text">等待队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E9%98%9F%E5%88%97%E5%A4%B4"><span class="toc-number">2.0.1.</span> <span class="toc-text">等待队列头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E9%98%9F%E5%88%97%E9%A1%B9"><span class="toc-number">2.0.2.</span> <span class="toc-text">等待队列项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%88%96%E7%A7%BB%E9%99%A4%E7%AD%89%E5%BE%85%E9%98%9F%E5%88%97%E5%A4%B4"><span class="toc-number">2.0.3.</span> <span class="toc-text">添加或移除等待队列头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E5%94%A4%E9%86%92"><span class="toc-number">2.0.4.</span> <span class="toc-text">等待唤醒</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.0.5.</span> <span class="toc-text">等待事件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AE%E8%AF%A2"><span class="toc-number">2.1.</span> <span class="toc-text">轮询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#select%E7%B3%BB%E7%BB%9F%E9%98%BB%E5%A1%9E%E7%8A%B6%E6%80%81%E5%88%A4%E6%96%AD"><span class="toc-number">2.1.1.</span> <span class="toc-text">select系统阻塞状态判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Poll%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.2.</span> <span class="toc-text">Poll函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#epoll%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.3.</span> <span class="toc-text">epoll函数</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/" title="linux阻塞与非阻塞"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux阻塞与非阻塞"/></a><div class="content"><a class="title" href="/2023/05/10/2023-5-10-linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E/" title="linux阻塞与非阻塞">linux阻塞与非阻塞</a><time datetime="2023-05-10T11:30:00.000Z" title="发表于 2023-05-10 19:30:00">2023-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/" title="linux中断"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux中断"/></a><div class="content"><a class="title" href="/2023/05/04/2023-5-4-linux%E4%B8%AD%E6%96%AD/" title="linux中断">linux中断</a><time datetime="2023-05-04T11:30:00.000Z" title="发表于 2023-05-04 19:30:00">2023-05-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux内核定时器"/></a><div class="content"><a class="title" href="/2023/04/25/2023-4-25-linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="linux内核定时器">linux内核定时器</a><time datetime="2023-04-25T11:30:00.000Z" title="发表于 2023-04-25 19:30:00">2023-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="globalmem设备驱动"/></a><div class="content"><a class="title" href="/2023/04/23/2023-4-25-globalmem%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/" title="globalmem设备驱动">globalmem设备驱动</a><time datetime="2023-04-23T11:30:00.000Z" title="发表于 2023-04-23 19:30:00">2023-04-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
