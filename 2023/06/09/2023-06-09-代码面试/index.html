@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>代码面试 | 涵风 Blog</title><meta name="keywords" content="实战"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="一. 用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）12#define a_year (365*24*60*60)UL&#x2F;&#x2F;UL无符号整形  二. 写一个”标准”宏MIN ，这个宏输入两个参数并返回较小的一个1#define	MIN( a, b)	((a&lt;&#x3D;b)?(a):(b))  三. 嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？123456w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码面试">
+<meta property="og:url" content="http://example.com/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="一. 用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）12#define a_year (365*24*60*60)UL&#x2F;&#x2F;UL无符号整形  二. 写一个”标准”宏MIN ，这个宏输入两个参数并返回较小的一个1#define	MIN( a, b)	((a&lt;&#x3D;b)?(a):(b))  三. 嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？123456w">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-06-09T04:51:27.000Z">
+<meta property="article:modified_time" content="2023-06-09T07:00:48.126Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tubiao.png"><link rel="canonical" href="http://example.com/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '代码面试',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-06-09 15:00:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">75</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">代码面试</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-09T04:51:27.000Z" title="发表于 2023-06-09 12:51:27">2023-06-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-09T07:00:48.126Z" title="更新于 2023-06-09 15:00:48">2023-06-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="代码面试"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h4 id="一-用预处理指令-define-声明一个常数，用以表明1年中有多少秒（忽略闰年问题）"><a href="#一-用预处理指令-define-声明一个常数，用以表明1年中有多少秒（忽略闰年问题）" class="headerlink" title="一. 用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）"></a>一. 用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> a_year (365*24*60*60)UL</span></span><br><span class="line"><span class="comment">//UL无符号整形</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="二-写一个”标准”宏MIN-，这个宏输入两个参数并返回较小的一个"><a href="#二-写一个”标准”宏MIN-，这个宏输入两个参数并返回较小的一个" class="headerlink" title="二. 写一个”标准”宏MIN ，这个宏输入两个参数并返回较小的一个"></a>二. 写一个”标准”宏MIN ，这个宏输入两个参数并返回较小的一个</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span>	MIN( a, b)	((a&lt;=b)?(a):(b))</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="三-嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？"><a href="#三-嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？" class="headerlink" title="三. 嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？"></a>三. 嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;&#125;</span><br><span class="line"><span class="keyword">for</span>(;;)</span><br><span class="line">&#123;&#125;</span><br><span class="line">loop:...</span><br><span class="line"><span class="keyword">goto</span> loop;</span><br></pre></td></tr></table></figure>
+
+<h4 id="四-用变量a给出下面的定义"><a href="#四-用变量a给出下面的定义" class="headerlink" title="四. 用变量a给出下面的定义"></a>四. 用变量a给出下面的定义</h4><ul>
+<li>a) 一个整型数（An integer）</li>
+<li>b)一个指向整型数的指针（ A pointer to an integer）</li>
+<li>c)一个指向指针的的指针，它指向的指针是指向一个整型数（ A pointer to a pointer to an intege）</li>
+<li>d)一个有10个整型数的数组（ An array of 10 integers）</li>
+<li>e) 一个有10个指针的数组，该指针是指向一个整型数的。（An array of 10 pointers to integers）</li>
+<li>f) 一个指向有10个整型数数组的指针（ A pointer to an array of 10 integers）</li>
+<li>g) 一个指向函数的指针，该函数有一个整型参数并返回一个整型数（A pointer to a function that takes an integer as an argument and returns an integer）</li>
+<li>h)  一个有10个指针的数组，该指针指向一个函数，该函数有一个整型参数并返回一个整型数 （ An array of ten pointers to functions that take an integer argument and return an integer ）</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a;</span><br><span class="line"><span class="type">int</span> *p;</span><br><span class="line"><span class="type">int</span> **p;</span><br><span class="line"><span class="type">int</span> sum[<span class="number">10</span>];</span><br><span class="line"><span class="type">int</span> *sum[<span class="number">10</span>];</span><br><span class="line"><span class="type">int</span> (*sum)[<span class="number">10</span>];</span><br><span class="line"><span class="type">int</span> *<span class="title function_">prie</span><span class="params">(<span class="type">int</span> a)</span></span><br><span class="line"><span class="title function_">int</span> <span class="params">(*prie[<span class="number">10</span>](<span class="type">int</span>))</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="五-关键字static的作用是什么？"><a href="#五-关键字static的作用是什么？" class="headerlink" title="五. 关键字static的作用是什么？"></a>五. 关键字static的作用是什么？</h4><p>首先，是static修饰了变量，延长了变量生命周期，直到程序运行结束后才释放。</p>
+<p>之后是static修饰一个函数则这个函数<strong>只能在本文件中调用，不能被其他文件调用</strong>，Static修饰的局部变量存放在全局数据区的静态变量区。初始化的时候自动初始化为0；</p>
+<p>static修饰全局变量的时候，这个全局变量只能在本文件中访问，不能在其它文件中访问，即便是extern外部声明也不可以。</p>
+<h4 id="六-关键字const有什么含意？"><a href="#六-关键字const有什么含意？" class="headerlink" title="六. 关键字const有什么含意？"></a>六. 关键字const有什么含意？</h4><p>要一个变量前用const来修饰，就意味着该变量里的数据只能被访问，而不能被修改，也就是意味着const“只读”（readonly）。</p>
+<h4 id="七-关键字volatile有什么含意？并给出三个不同的例子"><a href="#七-关键字volatile有什么含意？并给出三个不同的例子" class="headerlink" title="七. 关键字volatile有什么含意？并给出三个不同的例子"></a>七. 关键字volatile有什么含意？并给出三个不同的例子</h4><p>一个定义为volatile的变量是说这变量可能会被意想不到地改变，这样，编译器就不会去假设这个变量的值了。精确地说就是，优化器在用到这个变量时必须每次都小心地重新读取这个变量的值，而不是使用保存在寄存器里的备份。下面是volatile变量的几个例子：</p>
+<ul>
+<li>并行设备的硬件寄存器（如：状态寄存器）</li>
+<li>一个中断服务子程序中会访问到的非自动变量(Non-automatic variables)</li>
+<li>多线程应用中被几个任务共享的变量</li>
+</ul>
+<h4 id="八-嵌入式系统总是要用户对变量或寄存器进行位操作。给定一个整型变量a，写两段代码，第一个设置a的bit-3，第二个清除a-的bit-3。在以上两个操作中，要保持其它位不变。"><a href="#八-嵌入式系统总是要用户对变量或寄存器进行位操作。给定一个整型变量a，写两段代码，第一个设置a的bit-3，第二个清除a-的bit-3。在以上两个操作中，要保持其它位不变。" class="headerlink" title="八. 嵌入式系统总是要用户对变量或寄存器进行位操作。给定一个整型变量a，写两段代码，第一个设置a的bit 3，第二个清除a 的bit 3。在以上两个操作中，要保持其它位不变。"></a>八. 嵌入式系统总是要用户对变量或寄存器进行位操作。给定一个整型变量a，写两段代码，第一个设置a的bit 3，第二个清除a 的bit 3。在以上两个操作中，要保持其它位不变。</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    </span><br><span class="line">    a |= (a &lt;&lt; <span class="number">3</span>);</span><br><span class="line">    a &amp;= ~( a &lt;&lt; <span class="number">3</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="九-下面的代码输出是什么，为什么？"><a href="#九-下面的代码输出是什么，为什么？" class="headerlink" title="九. 下面的代码输出是什么，为什么？"></a>九. 下面的代码输出是什么，为什么？</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">foo</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> a = <span class="number">6</span>;</span><br><span class="line">    <span class="type">int</span> b = <span class="number">-20</span>;</span><br><span class="line">    (a+b &gt; <span class="number">6</span>) ? <span class="built_in">puts</span>(<span class="string">&quot;&gt;6&quot;</span>) : (<span class="string">&quot;&lt;=6&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不管如何，这无符号整型问题的答案是输出是 “&gt;6”。原因 是当表达式中存在有符号类型和无符号类型时所有的操作数都自动转换为无符号类型。</p>
+<p>因此-20变成了一个非常大的正整数，所以该表达式计算出的结果大于6。这一点对于应当频繁用到无符号数据类型的嵌入式系统来说是丰常重要的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/">http://example.com/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AE%9E%E6%88%98/">实战</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/09/Untitled/"><img class="prev-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2023/05/31/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">研电赛</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/05/31/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/" title="研电赛"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-31</div><div class="title">研电赛</div></div></a></div><div><a href="/2023/03/16/2023-3-16-git%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" title="git提交代码到远程仓库"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-16</div><div class="title">git提交代码到远程仓库</div></div></a></div><div><a href="/2022/10/09/stm32%E5%AE%9E%E6%88%98%E7%AF%87/" title="stm32实战篇"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-09</div><div class="title">stm32实战篇</div></div></a></div><div><a href="/2022/09/24/stm32%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" title="stm32系统学习"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="title">stm32系统学习</div></div></a></div><div><a href="/2022/09/21/stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/" title="stm32最小系统板制作"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-21</div><div class="title">stm32最小系统板制作</div></div></a></div><div><a href="/2022/07/01/stm32hal%E5%BA%93/" title="stm32hal库"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-01</div><div class="title">stm32hal库</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">75</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80-%E7%94%A8%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4-define-%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%B8%B8%E6%95%B0%EF%BC%8C%E7%94%A8%E4%BB%A5%E8%A1%A8%E6%98%8E1%E5%B9%B4%E4%B8%AD%E6%9C%89%E5%A4%9A%E5%B0%91%E7%A7%92%EF%BC%88%E5%BF%BD%E7%95%A5%E9%97%B0%E5%B9%B4%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">一. 用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C-%E5%86%99%E4%B8%80%E4%B8%AA%E2%80%9D%E6%A0%87%E5%87%86%E2%80%9D%E5%AE%8FMIN-%EF%BC%8C%E8%BF%99%E4%B8%AA%E5%AE%8F%E8%BE%93%E5%85%A5%E4%B8%A4%E4%B8%AA%E5%8F%82%E6%95%B0%E5%B9%B6%E8%BF%94%E5%9B%9E%E8%BE%83%E5%B0%8F%E7%9A%84%E4%B8%80%E4%B8%AA"><span class="toc-number">2.</span> <span class="toc-text">二. 写一个”标准”宏MIN ，这个宏输入两个参数并返回较小的一个</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89-%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%BB%8F%E5%B8%B8%E8%A6%81%E7%94%A8%E5%88%B0%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF%EF%BC%8C%E4%BD%A0%E6%80%8E%E4%B9%88%E6%A0%B7%E7%94%A8C%E7%BC%96%E5%86%99%E6%AD%BB%E5%BE%AA%E7%8E%AF%E5%91%A2%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">三. 嵌入式系统中经常要用到无限循环，你怎么样用C编写死循环呢？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B-%E7%94%A8%E5%8F%98%E9%87%8Fa%E7%BB%99%E5%87%BA%E4%B8%8B%E9%9D%A2%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">4.</span> <span class="toc-text">四. 用变量a给出下面的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94-%E5%85%B3%E9%94%AE%E5%AD%97static%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">五. 关键字static的作用是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD-%E5%85%B3%E9%94%AE%E5%AD%97const%E6%9C%89%E4%BB%80%E4%B9%88%E5%90%AB%E6%84%8F%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">六. 关键字const有什么含意？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%83-%E5%85%B3%E9%94%AE%E5%AD%97volatile%E6%9C%89%E4%BB%80%E4%B9%88%E5%90%AB%E6%84%8F%EF%BC%9F%E5%B9%B6%E7%BB%99%E5%87%BA%E4%B8%89%E4%B8%AA%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">7.</span> <span class="toc-text">七. 关键字volatile有什么含意？并给出三个不同的例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AB-%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%80%BB%E6%98%AF%E8%A6%81%E7%94%A8%E6%88%B7%E5%AF%B9%E5%8F%98%E9%87%8F%E6%88%96%E5%AF%84%E5%AD%98%E5%99%A8%E8%BF%9B%E8%A1%8C%E4%BD%8D%E6%93%8D%E4%BD%9C%E3%80%82%E7%BB%99%E5%AE%9A%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8Fa%EF%BC%8C%E5%86%99%E4%B8%A4%E6%AE%B5%E4%BB%A3%E7%A0%81%EF%BC%8C%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%AE%BE%E7%BD%AEa%E7%9A%84bit-3%EF%BC%8C%E7%AC%AC%E4%BA%8C%E4%B8%AA%E6%B8%85%E9%99%A4a-%E7%9A%84bit-3%E3%80%82%E5%9C%A8%E4%BB%A5%E4%B8%8A%E4%B8%A4%E4%B8%AA%E6%93%8D%E4%BD%9C%E4%B8%AD%EF%BC%8C%E8%A6%81%E4%BF%9D%E6%8C%81%E5%85%B6%E5%AE%83%E4%BD%8D%E4%B8%8D%E5%8F%98%E3%80%82"><span class="toc-number">8.</span> <span class="toc-text">八. 嵌入式系统总是要用户对变量或寄存器进行位操作。给定一个整型变量a，写两段代码，第一个设置a的bit 3，第二个清除a 的bit 3。在以上两个操作中，要保持其它位不变。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%9D-%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BB%A3%E7%A0%81%E8%BE%93%E5%87%BA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">九. 下面的代码输出是什么，为什么？</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/06/09/Untitled/" title="无题"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2023/06/09/Untitled/" title="无题">无题</a><time datetime="2023-06-09T06:06:15.200Z" title="发表于 2023-06-09 14:06:15">2023-06-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/" title="代码面试"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="代码面试"/></a><div class="content"><a class="title" href="/2023/06/09/2023-06-09-%E4%BB%A3%E7%A0%81%E9%9D%A2%E8%AF%95/" title="代码面试">代码面试</a><time datetime="2023-06-09T04:51:27.000Z" title="发表于 2023-06-09 12:51:27">2023-06-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/31/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/" title="研电赛"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="研电赛"/></a><div class="content"><a class="title" href="/2023/05/31/2023-4-22-%E7%A0%94%E7%94%B5%E8%B5%9B/" title="研电赛">研电赛</a><time datetime="2023-05-31T11:30:00.000Z" title="发表于 2023-05-31 19:30:00">2023-05-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/18/2023-5-18-linux%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5/" title="linux异步通知"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux异步通知"/></a><div class="content"><a class="title" href="/2023/05/18/2023-5-18-linux%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5/" title="linux异步通知">linux异步通知</a><time datetime="2023-05-18T11:30:00.000Z" title="发表于 2023-05-18 19:30:00">2023-05-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
