@@ -23,6 +23,25 @@
     
     
     <entry>
+      <title>linux下的IIC</title>
+      <link href="/2023/07/18/2023-7-18-linux%E4%B8%8B%E7%9A%84IIC/"/>
+      <url>/2023/07/18/2023-7-18-linux%E4%B8%8B%E7%9A%84IIC/</url>
+      
+        <content type="html"><![CDATA[<h1 id="linux的IIC体系结构"><a href="#linux的IIC体系结构" class="headerlink" title="linux的IIC体系结构"></a>linux的IIC体系结构</h1><p>Linux的IIC体系结构分为3个组成部分，分别是IIC核心、IIC总线驱动和IIC设备驱动！</p><p>（1）IIC核心</p><p>提供了IIC总线驱动与IIC设备驱动的注册、注销方法和与具体IIC控制器无关的代码，该部分用来管理IIC总线驱动与IIC设备驱动。</p><p>（2）IIC总线驱动</p><p>IIC总线驱动是适配器（IIC控制器）的驱动程序，包含了适配器（IIC控制器）的数据描述结构i2c_adapter、通信方法数据结构i2c_algorithm、控制适配器产生通信时序的函数。</p><p>（3）IIC设备驱动</p><p>是具体IIC设备的驱动，因为不同的IIC设备可能有不同的读写时序要求，比如at24cxx读写需要发送16位地址，而tmp75只需要8位地址即可。IIC设备驱动通过i2c_algorithm通信方法驱动适配器驱动程序去访问具体的IIC设备。</p><p>体系结构</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-19%20205901.png"></p><h2 id="架构层次分类"><a href="#架构层次分类" class="headerlink" title="架构层次分类"></a>架构层次分类</h2><p>　　<strong>第一层</strong>：提供i2c adapter的硬件驱动，探测、初始化i2c adapter（如申请i2c的io地址和中断号），驱动soc控制的i2c adapter在硬件上产生信号（start、stop、ack）以及处理i2c中断。图中的硬件实现控制层。</p><p>　　<strong>第二层：</strong>提供i2c adapter的algorithm，用具体适配器的xxx_xfer()函数来填充i2c_algorithm的master_xfer函数指针，并把赋值后的i2c_algorithm再赋值给i2c_adapter的algo指针。图中的访问抽象层。</p><p>　　<strong>第三层：</strong>实现i2c设备驱动中的i2c_driver接口，用具体的i2c device设备的probe()、remove()方法赋值给i2c_driver的成员函数指针。实现设备device与总线（或者叫adapter）的匹配挂接。图中的driver驱动层。</p><p>　　<strong>第四层：</strong>实现i2c设备所对应的具体device的驱动，i2c_driver只是实现设备与总线的挂接，而挂接在总线上的设备则是千差万别的，所以要实现具体设备device的write()、read()、ioctl()等方法，赋值给file_operations，然后注册字符设备（多数是字符设备）。也是图中的driver驱动层。</p><p>​       <strong>第一层和第二层属于i2c总线驱动(bus)（芯片厂商写），第三第四属于i2c设备驱动(device driver)（驱动工程师来写）。</strong></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 驱动开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>IIC驱动</title>
       <link href="/2023/07/14/2023-7-14-IIC%E9%A9%B1%E5%8A%A8/"/>
       <url>/2023/07/14/2023-7-14-IIC%E9%A9%B1%E5%8A%A8/</url>
