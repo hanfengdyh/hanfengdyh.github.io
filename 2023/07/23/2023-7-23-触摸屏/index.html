@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>触摸屏驱动 | 涵风 Blog</title><meta name="keywords" content="驱动开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="触屏需要的知识点首先触摸屏的驱动，也是使用之前使用input的知识点。  通过注册函数注册到内核， 触控屏幕，电容屏幕是控制 IC ，所以要使用到IIC的驱动，因为触摸 IC 提供了中断信号引脚(INT)，可以通过中断来获取触摸信息 ，上报屏幕坐标等信息需要使用input的系统上报。 多点电容触摸的(Multi-touch，简称 MT)， MT 协议被分为两种类型， TypeA 和 TypeB，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="触摸屏驱动">
+<meta property="og:url" content="http://example.com/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="触屏需要的知识点首先触摸屏的驱动，也是使用之前使用input的知识点。  通过注册函数注册到内核， 触控屏幕，电容屏幕是控制 IC ，所以要使用到IIC的驱动，因为触摸 IC 提供了中断信号引脚(INT)，可以通过中断来获取触摸信息 ，上报屏幕坐标等信息需要使用input的系统上报。 多点电容触摸的(Multi-touch，简称 MT)， MT 协议被分为两种类型， TypeA 和 TypeB，这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/das.png">
+<meta property="article:published_time" content="2023-07-23T11:30:00.000Z">
+<meta property="article:modified_time" content="2023-07-23T04:15:13.861Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="驱动开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/das.png"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="http://example.com/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '触摸屏驱动',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-07-23 12:15:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/das.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">触摸屏驱动</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-07-23T11:30:00.000Z" title="发表于 2023-07-23 19:30:00">2023-07-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-23T04:15:13.861Z" title="更新于 2023-07-23 12:15:13">2023-07-23</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="触摸屏驱动"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="触屏需要的知识点"><a href="#触屏需要的知识点" class="headerlink" title="触屏需要的知识点"></a>触屏需要的知识点</h2><p>首先触摸屏的驱动，也是使用之前使用input的知识点。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-22%20150749.png"></p>
+<p>通过注册函数注册到内核，<img src="https://gitee.com/hanfengdyh/image/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-22%20150847.png"></p>
+<p>触控屏幕，电容屏幕是控制 IC ，所以要使用到IIC的驱动，因为触摸 IC 提供了中断信号引脚(INT)，可以通过中断来获取触摸信息 ，上报屏幕坐标等信息需要使用input的系统上报。</p>
+<p>多点电容触摸的(Multi-touch，简称 MT)， MT 协议被分为两种类型， TypeA 和 TypeB，这两种类型的区别如下：<br>Type A：适用于触摸点不能被区分或者追踪，此类型的设备上报原始数据(此类型在实际使用中非常少！ )。<br>Type B：适用于有硬件追踪并能区分触摸点的触摸设备，此类型设备通过 slot 更新某一个触摸点的信息， FT5426 就属于此类型，一般的多点电容触摸屏 IC 都有此能力。 </p>
+<p>触摸点的信息通过一系列的 ABS_MT 事件(有的资料也叫消息)上报给 linux 内核 ，ABS_MT 事件定义在文件 include&#x2F;uapi&#x2F;linux&#x2F;input.h中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input_mt_sync</span><span class="params">(<span class="keyword">struct</span> input_dev *dev)</span>			<span class="comment">//A型隔离触摸点的数据</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">input_mt_slot</span><span class="params">(<span class="keyword">struct</span> input_dev *dev, <span class="type">int</span> slot)</span>	<span class="comment">//B型区分触摸点数据</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">			<span class="comment">/*对于 Type A 类型的设备，发送触摸点信息的时序*/</span></span><br><span class="line">ABS_MT_POSITION_X x[<span class="number">0</span>]	<span class="comment">//通过 ABS_MT_POSITION_X 事件上报第一个触摸点的 X 坐标数据</span></span><br><span class="line">ABS_MT_POSITION_Y y[<span class="number">0</span>]	<span class="comment">//通过 ABS_MT_POSITION_Y 事件上报第一个触摸点的 Y 坐标数据。</span></span><br><span class="line">SYN_MT_REPORT				<span class="comment">//上报 SYN_MT_REPORT 事件，通过调用 input_mt_sync 函数来实现。</span></span><br><span class="line">ABS_MT_POSITION_X x[<span class="number">1</span>]	<span class="comment">//通过 ABS_MT_POSITION_X 事件上报第二个触摸点的 X 坐标数据。</span></span><br><span class="line">ABS_MT_POSITION_Y y[<span class="number">1</span>]	<span class="comment">//通过 ABS_MT_POSITION_Y 事件上报第二个触摸点的 Y 坐标数据。</span></span><br><span class="line">SYN_MT_REPORT				<span class="comment">//上报 SYN_MT_REPORT 事件，通过调用 input_mt_sync 函数来实现。</span></span><br><span class="line">SYN_REPORT				<span class="comment">//上报 SYN_REPORT 事件，通过调用 input_sync 函数实现。</span></span><br><span class="line">    		<span class="comment">/*对于 Type B 类型的设备，发送触摸点信息的时序*/</span></span><br><span class="line">ABS_MT_SLOT <span class="number">0</span>				<span class="comment">//上报 ABS_MT_SLOT 事件，也就是触摸点对应的 SLOT。</span></span><br><span class="line">ABS_MT_TRACKING_ID <span class="number">45</span>		<span class="comment">/*根据 Type B 的要求，每个 SLOT 必须关联一个 ABS_MT_TRACKING_ID，通过修改 SLOT 关联的 								ABS_MT_TRACKING_ID 来完成对触摸点的添加、替换或删除。*/</span></span><br><span class="line">ABS_MT_POSITION_X x[<span class="number">0</span>]		<span class="comment">//上报触摸点 0 的 X 轴坐标，使用函数 input_report_abs 来完成</span></span><br><span class="line">ABS_MT_POSITION_Y y[<span class="number">0</span>]		<span class="comment">//上报触摸点 0 的 Y 轴坐标</span></span><br><span class="line">ABS_MT_SLOT <span class="number">1</span></span><br><span class="line">ABS_MT_TRACKING_ID <span class="number">46</span></span><br><span class="line">ABS_MT_POSITION_X x[<span class="number">1</span>]</span><br><span class="line">ABS_MT_POSITION_Y y[<span class="number">1</span>]</span><br><span class="line">SYN_REPORT					<span class="comment">//当所有的触摸点坐标都上传完毕以后就得发送 SYN_REPORT 事件，使用 input_sync函数来完成。</span></span><br></pre></td></tr></table></figure>
+
+<p>以上是TypeA和B 类型的时序，使用多点触摸驱动的时候就需要以上的时序上报坐标信息。 </p>
+<h3 id="多点触摸所使用到的-API-函数"><a href="#多点触摸所使用到的-API-函数" class="headerlink" title="多点触摸所使用到的 API 函数"></a>多点触摸所使用到的 API 函数</h3><ol>
+<li><p>input_mt_init_slots 函数用于初始化 MT 的输入 slots，编写 MT 驱动的时候必须先调用此函数初始化 slots。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>	<span class="title function_">input_mt_init_slots</span><span class="params">( <span class="keyword">struct</span> input_dev *dev,	<span class="comment">//MT 设备对应的 input_dev，因为 MT 设备隶属于 input_dev。</span></span></span><br><span class="line"><span class="params">					<span class="type">unsigned</span> <span class="type">int</span> num_slots,		<span class="comment">//设备要使用的 SLOT 数量，也就是触摸点的数量。</span></span></span><br><span class="line"><span class="params">					<span class="type">unsigned</span> <span class="type">int</span> flags)</span>			<span class="comment">//其他一些 flags 信息，</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>input_mt_slot 函数 此函数用于 Type B 类型，此函数用于产生 ABS_MT_SLOT 事件，告诉内核当前上报的是哪个触摸点的坐标数据 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input_mt_slot</span><span class="params">(<span class="keyword">struct</span> input_dev *dev,<span class="type">int</span> slot)</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>input_mt_report_slot_state 函数此函数用于 Type B 类型，用于产生 ABS_MT_TRACKING_ID 和 ABS_MT_TOOL_TYPE事 件 ， ABS_MT_TRACKING_ID 事 件 给 slot 关 联 一 个 ABS_MT_TRACKING_ID ，ABS_MT_TOOL_TYPE 事 件 指 定 触 摸 类 型 （ 是 笔 还 是 手 指 等 ）。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input_mt_report_slot_state</span><span class="params">( <span class="keyword">struct</span> input_dev *dev,<span class="type">unsigned</span> <span class="type">int</span> tool_type,<span class="type">bool</span> active)</span></span><br><span class="line"><span class="comment">/*dev： MT 设备对应的 input_dev。</span></span><br><span class="line"><span class="comment">tool_type：触摸类型，可以选择 MT_TOOL_FINGER(手指)、 MT_TOOL_PEN(笔)或</span></span><br><span class="line"><span class="comment">MT_TOOL_PALM(手掌)，对于多点电容触摸屏来说一般都是手指。</span></span><br><span class="line"><span class="comment">active： true，连续触摸， input 子系统内核会自动分配一个 ABS_MT_TRACKING_ID 给 slot。</span></span><br><span class="line"><span class="comment">false，触摸点抬起，表示某个触摸点无效了， input 子系统内核会分配一个-1 给 slot，表示触摸</span></span><br><span class="line"><span class="comment">点溢出。*/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>input_report_abs 函数Type A 和 Type B 类型都使用此函数上报触摸点坐标信息，通过 ABS_MT_POSITION_X 和ABS_MT_POSITION_Y 事 件 实 现 X 和 Y 轴 坐 标 信 息 上 报 。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input_report_abs</span><span class="params">( <span class="keyword">struct</span> input_dev *dev,<span class="type">unsigned</span> <span class="type">int</span> code,<span class="type">int</span> value)</span></span><br><span class="line"><span class="comment">/*dev： MT 设备对应的 input_dev。</span></span><br><span class="line"><span class="comment">code：要上报的是什么数据，可以设置为 ABS_MT_POSITION_X 或 ABS_MT_POSITION_Y，</span></span><br><span class="line"><span class="comment">也就是 X 轴或者 Y 轴坐标数据。</span></span><br><span class="line"><span class="comment">value： 具体的 X 轴或 Y 轴坐标数据值*/</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>input_mt_report_pointer_emulation 如果追踪到的触摸点数量多于当前上报的数量，驱动程序使用 BTN_TOOL_TAP 事件来通知用户空间当前追踪到的触摸点总数量，然后调用 input_mt_report_pointer_emulation 函数将use_count 参数设置为 false。否则的话将use_count 参数设置为 true，表示当前的触摸点数量(函数会获取到具体的触摸点数量，不需要用户给出) </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input_mt_report_pointer_emulation</span><span class="params">(<span class="keyword">struct</span> input_dev *dev,<span class="type">bool</span> use_count)</span></span><br><span class="line"><span class="comment">/*dev： MT 设备对应的 input_dev。</span></span><br><span class="line"><span class="comment">use_count： true，有效的触摸点数量； false，追踪到的触摸点数量多于当前上报的数量。*/</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="多点电容触摸驱动框架"><a href="#多点电容触摸驱动框架" class="headerlink" title="多点电容触摸驱动框架"></a>多点电容触摸驱动框架</h3><p>①、多点电容触摸芯片的接口，一般都为 I2C 接口，因此驱动主框架肯定是 I2C。<br>②、 linux 里面一般都是通过中断来上报触摸点坐标信息，因此需要用到中断框架。<br>③、多点电容触摸属于 input 子系统，因此还要用到 input 子系统框架。<br>④、在中断处理程序中按照 linux 的 MT 协议上报坐标信息。 </p>
+<h4 id="IIC驱动框架"><a href="#IIC驱动框架" class="headerlink" title="IIC驱动框架"></a>IIC驱动框架</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">/* 设备树匹配表 */</span></span><br><span class="line"><span class="number">2</span> <span class="type">static</span> <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">i2c_device_id</span> <span class="title">xxx_ts_id</span>[] =</span> &#123;</span><br><span class="line"><span class="number">3</span> &#123; <span class="string">&quot;xxx&quot;</span>, <span class="number">0</span>, &#125;,</span><br><span class="line"><span class="number">4</span> &#123; <span class="comment">/* sentinel */</span> &#125;</span><br><span class="line"><span class="number">5</span> &#125;;</span><br><span class="line"><span class="number">6</span> </span><br><span class="line"><span class="number">7</span><span class="comment">/* 设备树匹配表 */</span></span><br><span class="line"><span class="number">8</span> <span class="type">static</span> <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">of_device_id</span> <span class="title">xxx_of_match</span>[] =</span> &#123;</span><br><span class="line"><span class="number">9</span> &#123; .compatible = <span class="string">&quot;xxx&quot;</span>, &#125;,</span><br><span class="line"><span class="number">10</span> &#123; <span class="comment">/* sentinel */</span> &#125;</span><br><span class="line"><span class="number">11</span> &#125;;</span><br><span class="line"><span class="number">12</span></span><br><span class="line"><span class="number">13</span> <span class="comment">/* i2c 驱动结构体 */</span></span><br><span class="line"><span class="number">14</span> <span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">i2c_driver</span> <span class="title">ft5x06_ts_driver</span> =</span> &#123;</span><br><span class="line"><span class="number">15</span> .driver = &#123;</span><br><span class="line"><span class="number">16</span> .owner = THIS_MODULE,</span><br><span class="line"><span class="number">17</span> .name = <span class="string">&quot;edt_ft5x06&quot;</span>,</span><br><span class="line"><span class="number">18</span> .of_match_table =of_match_ptr(xxx_of_match),</span><br><span class="line"><span class="number">19</span> &#125;,</span><br><span class="line"><span class="number">20</span> .id_table = xxx_ts_id,</span><br><span class="line"><span class="number">21</span> .probe = xxx_ts_probe,</span><br><span class="line"><span class="number">22</span> .remove = xxx_ts_remove,</span><br><span class="line"><span class="number">23</span> &#125;;</span><br><span class="line"><span class="number">24</span></span><br><span class="line"><span class="number">25</span> <span class="comment">/*</span></span><br><span class="line"><span class="comment">26 * @description : 驱动入口函数</span></span><br><span class="line"><span class="comment">27 * @param : 无</span></span><br><span class="line"><span class="comment">28 * @return : 无</span></span><br><span class="line"><span class="comment">29 */</span></span><br><span class="line"><span class="number">30</span> <span class="type">static</span> <span class="type">int</span> __init <span class="title function_">xxx_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">31 &#123;</span><br><span class="line"><span class="number">32</span> <span class="type">int</span> ret = <span class="number">0</span>;</span><br><span class="line"><span class="number">33</span></span><br><span class="line"><span class="number">34</span> ret = i2c_add_driver(&amp;xxx_ts_driver);</span><br><span class="line"><span class="number">35</span></span><br><span class="line"><span class="number">36</span> <span class="keyword">return</span> ret;</span><br><span class="line"><span class="number">37</span> &#125;</span><br><span class="line"><span class="number">38</span></span><br><span class="line"><span class="number">39</span> <span class="comment">/*</span></span><br><span class="line"><span class="comment">40 * @description : 驱动出口函数</span></span><br><span class="line"><span class="comment">41 * @param : 无</span></span><br><span class="line"><span class="comment">42 * @return : 无</span></span><br><span class="line"><span class="comment">43 */</span></span><br><span class="line"><span class="number">44</span> <span class="type">static</span> <span class="type">void</span> __exit <span class="title function_">xxx_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">45 &#123;</span><br><span class="line"><span class="number">46</span> i2c_del_driver(&amp;ft5x06_ts_driver);</span><br><span class="line"><span class="number">47</span> &#125;</span><br><span class="line"><span class="number">48</span></span><br><span class="line"><span class="number">49</span> module_init(xxx_init);</span><br><span class="line"><span class="number">50</span> module_exit(xxx_exit);</span><br><span class="line"><span class="number">51</span> MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);</span><br><span class="line"><span class="number">52</span> MODULE_AUTHOR(<span class="string">&quot;zuozhongkai&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="初始化触摸-IC、中断和-input-子系统"><a href="#初始化触摸-IC、中断和-input-子系统" class="headerlink" title="初始化触摸 IC、中断和 input 子系统"></a>初始化触摸 IC、中断和 input 子系统</h4><p>在probe函数中完成初始化中断，input等。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="type">static</span> <span class="type">int</span> <span class="title function_">xxx_ts_probe</span><span class="params">(<span class="keyword">struct</span> i2c_client *client, <span class="type">const</span> <span class="keyword">struct</span></span></span><br><span class="line"><span class="params">i2c_device_id *id)</span></span><br><span class="line">2 &#123;</span><br><span class="line"><span class="number">3</span> <span class="class"><span class="keyword">struct</span> <span class="title">input_dev</span> *<span class="title">input</span>;</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">5</span> <span class="comment">/* 1、初始化 I2C */</span></span><br><span class="line"><span class="number">6</span> ......</span><br><span class="line"><span class="number">7</span> <span class="number">8</span></span><br><span class="line"><span class="comment">/* 2，申请中断， */</span></span><br><span class="line"><span class="number">9</span> devm_request_threaded_irq(&amp;client-&gt;dev, client-&gt;irq, <span class="literal">NULL</span>,</span><br><span class="line"><span class="number">10</span> xxx_handler, IRQF_TRIGGER_FALLING | IRQF_ONESHOT,</span><br><span class="line"><span class="number">11</span> client-&gt;name, &amp;xxx);</span><br><span class="line"><span class="number">12</span> ......</span><br><span class="line"><span class="number">13</span></span><br><span class="line"><span class="number">14</span> <span class="comment">/* 3， input 设备申请与初始化 */</span></span><br><span class="line"><span class="number">15</span> input = devm_input_allocate_device(&amp;client-&gt;dev);</span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="number">17</span> input-&gt;name = client-&gt;name;</span><br><span class="line"><span class="number">18</span> input-&gt;id.bustype = BUS_I2C;</span><br><span class="line"><span class="number">19</span> input-&gt;dev.parent = &amp;client-&gt;dev;</span><br><span class="line"><span class="number">20</span> ......</span><br><span class="line"><span class="number">21</span></span><br><span class="line"><span class="number">22</span> <span class="comment">/* 4，初始化 input 和 MT */</span></span><br><span class="line"><span class="number">23</span> __set_bit(EV_ABS, input-&gt;evbit);</span><br><span class="line"><span class="number">24</span> __set_bit(BTN_TOUCH, input-&gt;keybit);</span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="number">26</span> input_set_abs_params(input, ABS_X, <span class="number">0</span>, width, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="number">27</span> input_set_abs_params(input, ABS_Y, <span class="number">0</span>, height, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="number">28</span> input_set_abs_params(input, ABS_MT_POSITION_X,<span class="number">0</span>, width, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="number">29</span> input_set_abs_params(input, ABS_MT_POSITION_Y,<span class="number">0</span>, height, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="number">30</span> input_mt_init_slots(input, MAX_SUPPORT_POINTS, <span class="number">0</span>);</span><br><span class="line"><span class="number">31</span> ......</span><br><span class="line"><span class="number">32</span></span><br><span class="line"><span class="number">33</span> <span class="comment">/* 5，注册 input_dev */</span></span><br><span class="line"><span class="number">34</span> input_register_device(input);</span><br><span class="line"><span class="number">35</span> ......</span><br><span class="line"><span class="number">36</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="上报坐标信息"><a href="#上报坐标信息" class="headerlink" title="上报坐标信息"></a>上报坐标信息</h4><p>typeB时序的设备多，按照typeB的时序来进行抒写。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="type">static</span> <span class="type">irqreturn_t</span> <span class="title function_">xxx_handler</span><span class="params">(<span class="type">int</span> irq, <span class="type">void</span> *dev_id)</span></span><br><span class="line">2 &#123;</span><br><span class="line"><span class="number">3</span> </span><br><span class="line"><span class="number">4</span> <span class="type">int</span> num; <span class="comment">/* 触摸点数量 */</span></span><br><span class="line"><span class="number">5</span> <span class="type">int</span> x[n], y[n]; <span class="comment">/* 保存坐标值 */</span></span><br><span class="line"><span class="number">6</span> </span><br><span class="line"><span class="number">7</span><span class="comment">/* 1、从触摸芯片获取各个触摸点坐标值 */</span></span><br><span class="line"><span class="number">8</span> ......</span><br><span class="line"><span class="number">9</span></span><br><span class="line"><span class="number">10</span> <span class="comment">/* 2、上报每一个触摸点坐标 */</span></span><br><span class="line"><span class="number">11</span> <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num; i++) &#123;</span><br><span class="line"><span class="number">12</span> input_mt_slot(input, id);</span><br><span class="line"><span class="number">13</span> input_mt_report_slot_state(input, MT_TOOL_FINGER, <span class="literal">true</span>);</span><br><span class="line"><span class="number">14</span> input_report_abs(input, ABS_MT_POSITION_X, x[i]);</span><br><span class="line"><span class="number">15</span> input_report_abs(input, ABS_MT_POSITION_Y, y[i]);</span><br><span class="line"><span class="number">16</span> &#125;</span><br><span class="line"><span class="number">17</span> ......</span><br><span class="line"><span class="number">18</span></span><br><span class="line"><span class="number">19</span> input_sync(input);</span><br><span class="line"><span class="number">20</span> ......</span><br><span class="line"><span class="number">21</span></span><br><span class="line"><span class="number">22</span> <span class="keyword">return</span> IRQ_HANDLED;</span><br><span class="line"><span class="number">23</span> &#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/">http://example.com/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">驱动开发</a></div><div class="post_share"><div class="social-share" data-image="/img/das.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/07/20/2023-7-20-%E4%B8%B2%E5%8F%A3%E9%A9%B1%E5%8A%A8/"><img class="next-cover" src="/img/das.png" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">串口驱动</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/07/20/2023-7-20-%E4%B8%B2%E5%8F%A3%E9%A9%B1%E5%8A%A8/" title="串口驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-20</div><div class="title">串口驱动</div></div></a></div><div><a href="/2023/07/18/2023-7-18-SPI%E9%A9%B1%E5%8A%A8/" title="SPI驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-18</div><div class="title">SPI驱动</div></div></a></div><div><a href="/2023/07/18/2023-7-18-linux%E4%B8%8B%E7%9A%84IIC/" title="linux下的IIC"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-18</div><div class="title">linux下的IIC</div></div></a></div><div><a href="/2023/07/14/2023-7-14-IIC%E9%A9%B1%E5%8A%A8/" title="IIC驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-14</div><div class="title">IIC驱动</div></div></a></div><div><a href="/2023/07/12/2023-7-12-RTC%E9%A9%B1%E5%8A%A8/" title="RTC驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-12</div><div class="title">RTC驱动</div></div></a></div><div><a href="/2023/07/10/2023-7-10-lcd%E9%A9%B1%E5%8A%A8/" title="lcd驱动"><img class="cover" src="/img/das.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-10</div><div class="title">lcd驱动</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A6%E5%B1%8F%E9%9C%80%E8%A6%81%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">触屏需要的知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%82%B9%E8%A7%A6%E6%91%B8%E6%89%80%E4%BD%BF%E7%94%A8%E5%88%B0%E7%9A%84-API-%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">多点触摸所使用到的 API 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%82%B9%E7%94%B5%E5%AE%B9%E8%A7%A6%E6%91%B8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6"><span class="toc-number">1.2.</span> <span class="toc-text">多点电容触摸驱动框架</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#IIC%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text">IIC驱动框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%A6%E6%91%B8-IC%E3%80%81%E4%B8%AD%E6%96%AD%E5%92%8C-input-%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.2.</span> <span class="toc-text">初始化触摸 IC、中断和 input 子系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8A%E6%8A%A5%E5%9D%90%E6%A0%87%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.3.</span> <span class="toc-text">上报坐标信息</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/" title="触摸屏驱动"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="触摸屏驱动"/></a><div class="content"><a class="title" href="/2023/07/23/2023-7-23-%E8%A7%A6%E6%91%B8%E5%B1%8F/" title="触摸屏驱动">触摸屏驱动</a><time datetime="2023-07-23T11:30:00.000Z" title="发表于 2023-07-23 19:30:00">2023-07-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/20/2023-7-20-%E4%B8%B2%E5%8F%A3%E9%A9%B1%E5%8A%A8/" title="串口驱动"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="串口驱动"/></a><div class="content"><a class="title" href="/2023/07/20/2023-7-20-%E4%B8%B2%E5%8F%A3%E9%A9%B1%E5%8A%A8/" title="串口驱动">串口驱动</a><time datetime="2023-07-20T11:30:00.000Z" title="发表于 2023-07-20 19:30:00">2023-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/18/2023-7-18-SPI%E9%A9%B1%E5%8A%A8/" title="SPI驱动"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="SPI驱动"/></a><div class="content"><a class="title" href="/2023/07/18/2023-7-18-SPI%E9%A9%B1%E5%8A%A8/" title="SPI驱动">SPI驱动</a><time datetime="2023-07-18T11:30:00.000Z" title="发表于 2023-07-18 19:30:00">2023-07-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/18/2023-7-18-linux%E4%B8%8B%E7%9A%84IIC/" title="linux下的IIC"><img src="/img/das.png" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux下的IIC"/></a><div class="content"><a class="title" href="/2023/07/18/2023-7-18-linux%E4%B8%8B%E7%9A%84IIC/" title="linux下的IIC">linux下的IIC</a><time datetime="2023-07-18T11:30:00.000Z" title="发表于 2023-07-18 19:30:00">2023-07-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
