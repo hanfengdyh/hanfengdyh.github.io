@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>can通信协议 | 涵风 Blog</title><meta name="keywords" content="通信协议"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="CAN通信协议CAN 的特点主要有一下几点：①、多主控制②、系统的柔软性③、通信速度快，距离远④、具有错误检测、错误通知和错误恢复功能⑤、故障封闭功能⑥、连接节点多 CAN 电气属性CAN 总线使用两根线来连接各个单元：CAN_H 和 CAN_L， CAN 控制器通过判断这两根线上的电位差来得到总线电平， CAN 总线电平分为显性电平和隐性电平两种。显性电平表示逻辑“0”，此时 CAN_H 电平比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="can通信协议">
+<meta property="og:url" content="http://example.com/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="CAN通信协议CAN 的特点主要有一下几点：①、多主控制②、系统的柔软性③、通信速度快，距离远④、具有错误检测、错误通知和错误恢复功能⑤、故障封闭功能⑥、连接节点多 CAN 电气属性CAN 总线使用两根线来连接各个单元：CAN_H 和 CAN_L， CAN 控制器通过判断这两根线上的电位差来得到总线电平， CAN 总线电平分为显性电平和隐性电平两种。显性电平表示逻辑“0”，此时 CAN_H 电平比">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-08-07T11:30:00.000Z">
+<meta property="article:modified_time" content="2023-08-07T12:00:43.172Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="通信协议">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="http://example.com/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'can通信协议',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-07 20:00:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">can通信协议</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-07T11:30:00.000Z" title="发表于 2023-08-07 19:30:00">2023-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-07T12:00:43.172Z" title="更新于 2023-08-07 20:00:43">2023-08-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="can通信协议"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="CAN通信协议"><a href="#CAN通信协议" class="headerlink" title="CAN通信协议"></a>CAN通信协议</h2><p>CAN 的特点主要有一下几点：<br>①、多主控制<br>②、系统的柔软性<br>③、通信速度快，距离远<br>④、具有错误检测、错误通知和错误恢复功能<br>⑤、故障封闭功能<br>⑥、连接节点多</p>
+<h3 id="CAN-电气属性"><a href="#CAN-电气属性" class="headerlink" title="CAN 电气属性"></a>CAN 电气属性</h3><p>CAN 总线使用两根线来连接各个单元：CAN_H 和 CAN_L， CAN 控制器通过判断这两根线上的电位差来得到总线电平， CAN 总线电平分为显性电平和隐性电平两种。显性电平表示逻辑“0”，此时 CAN_H 电平比 CAN_L 高，分别为 3.5V 和 1.5V，电位差为 2V。隐形电平表示逻辑“1”，此时 CAN_H 和 CAN_L 电压都为 2.5V 左右，电位差为 0V。 CAN 总线就通过显性和隐形电平的变化来将具体的数据发送出去 。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-07%20185240.png"></p>
+<p>CAN 总线上没有节点传输数据的时候一直处于隐性状态，也就是说总线空闲状态的时候一直处于隐性。 </p>
+<h3 id="CAN协议帧"><a href="#CAN协议帧" class="headerlink" title="CAN协议帧"></a>CAN协议帧</h3><p>CAN 协议提供了 5 种帧格式来传输数据：数据帧、遥控帧、错误帧、过载帧和帧间隔。其中数据帧和遥控帧有标准格式和扩展格式两种，标准格式有 11 位标识符(ID)，扩展格式有 29 个标识符(ID)。 </p>
+<table>
+<thead>
+<tr>
+<th align="center">帧类型</th>
+<th align="center">帧用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数据帧</td>
+<td align="center">用于 CAN 节点单元之间进行数据传输的帧</td>
+</tr>
+<tr>
+<td align="center">遥控帧</td>
+<td align="center">用于接收单元向具有相同 ID 的发送单元请求数据的帧</td>
+</tr>
+<tr>
+<td align="center">错误帧</td>
+<td align="center">用于当检测出错误时向其它单元通知错误的帧</td>
+</tr>
+<tr>
+<td align="center">过载帧</td>
+<td align="center">用于接收单元通知其尚未做好接收准备的帧</td>
+</tr>
+<tr>
+<td align="center">间隔帧</td>
+<td align="center">用于将数据帧及遥控帧与前面的帧分离开来的帧</td>
+</tr>
+</tbody></table>
+<p>D为显性0，R为隐形1。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE_202308071734_13201%203.jpg"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE_202308071734_11851%201.jpg"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE_202308071734_14251%204.jpg"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE_202308071734_15346%205.jpg"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE_202308071734_12590%202.jpg"></p>
+<h3 id="CAN速率"><a href="#CAN速率" class="headerlink" title="CAN速率"></a>CAN速率</h3><p>CAN 总线以帧的形式发送数据，但是最终到总线上的就是“0”和“1”这样的二进制数据，这里就涉及到了通信速率，也就是每秒钟发送多少位数据， CAN2.0 最高速度为1Mbps&#x2F;S。对于 CAN 总线，一个位分为 4 段：<br>①、同步段(SS)<br>②、传播时间段(PTS)<br>③、相位缓冲段 1(PBS1)<br>④、相位缓冲段 2(PBS2)<br>这些段由 Tq(Time Quantum)组成， <strong>Tq 是 CAN 总线的最小时间单位。帧由位构成，一个位由 4 个段构成，每个段又由若干个 Tq 组成，这个就是位时序。</strong> 1 位由多少个 Tq 构成、每个段又由多少个 Tq 构成等，可以任意设定位时序。通过设定位时序，多个单元可同时采样，也可任意设定采样点。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-07%20191029.png"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-07%20191432.png"></p>
+<h3 id="can传输仲裁"><a href="#can传输仲裁" class="headerlink" title="can传输仲裁"></a>can传输仲裁</h3><p>在总线空闲态，最先开始发送消息的单元获得发送权。当多个单元同时开始发送时，各发送单元从仲裁段的第一位开始进行仲裁。连续输出显性电平最多的单元可继续发送。 </p>
+<p><img src="C:\Users\hanfeng\AppData\Roaming\Typora\typora-user-images\1691407245638.png" alt="1691407245638"></p>
+<p>单元 1 和单元 2 同时开始向总线发送数据，开始部分他们的数据格式是一样的，故无法区分优先级，直到 T 时刻，单元 1 输出隐性电平，而单元 2 输出显性电平，此时单元 1 仲裁失利，立刻转入接收状态工作，不再与单元 2 竞争，而单元 2 则顺利获得总线使用权，继续发送自己的数据。这就实现了仲裁，让连续发送显性电平多的单元获得总线使用权。 </p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/hanfengdyh/code/blob/master/CAN%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.pdf">CAN入门教程.pdf · 码云 </a></p>
+<h3 id="FlexCAN（CAN外设）"><a href="#FlexCAN（CAN外设）" class="headerlink" title="FlexCAN（CAN外设）"></a>FlexCAN（CAN外设）</h3><p> FlexCAN 符合 CAN2.0B 协议。 FlexCAN完全符合CAN协议，支持标准格式和扩展格式，支持 64个消息缓冲。I.MX6ULL自带的FlexCAN模块特性如下：<br>①、支持 CAN2.0B 协议，数据帧和遥控帧支持标准和扩展两种格式，数据长度支持 0~8 字<br>节，可编程速度，最高 1Mbit&#x2F;S。<br>②、灵活的消息邮箱，最高支持 8 个字节。<br>③、每个消息邮箱可以配置为接收或发送，都支持标准和扩展这两种格式的消息。<br>④、每个消息邮箱都有独立的接收掩码寄存器。<br>⑤、强大的接收 FIFO ID 过滤。<br>⑥、未使用的空间可以用作通用 RAM。<br>⑦、可编程的回测模式，用于进行自测。<br>⑧、可编程的优先级组合。</p>
+<p>FlexCAN 支持四种模式：正常模式(Normal)、冻结模式(Freeze)、仅监听模式(Listen-Only)和回环模式(Loop-Back)，另外还有两种低功耗模式：禁止模式(Disable)和停止模式(Stop)。<br>①、正常模式(Normal)<br>在正常模式下， FlexCAN 正常接收或发送消息帧，所有的 CAN 协议功能都使能。<br>②、冻结模式(Freeze)<br>当 MCR 寄存器的 FRZ 位置 1 的时候使能此模式，在此模式下无法进行帧的发送或接收，CAN 总线同步丢失。<br>③、仅监听模式(Listen-Onley)<br>当 CTRL 寄存器的 LOM 位置 1 的时候使能此模式，在此模式下帧发送被禁止，所有错误计数器被冻结， CAN 控制器工作在被动错误模式，此时只会接收其他 CAN 单元发出的 ACK 消息。<br>④、 回环模式(Loop-Back)<br>当 CTRL 寄存器的 LPB 位置 1 的时候进入此模式，此模式下 FlexCAN 工作在内部回环模式，一般用来进行自测。从模式下发送出来的数据流直接反馈给内部接收单元。 </p>
+<p>控制寄存器 CTRL 用于设置这些位时序， CTRL 寄存器中的 PRESDIV、 PROPSEG、 PSEG1、PSEG2 和 RJW 这 5 个位域用于设置 CAN 位时序。<br>PRESDIV 为 CAN 分频值，也即是设置 CAN 协议中的 Tq 值，公式如下：<br>$$<br>𝑓_{𝑇𝑞} &#x3D;𝑓_{𝐶𝐴𝑁𝐶𝐿𝐾}&#x2F;PRESDIV + 1<br>$$<br><strong>fCANCLK为 FlexCAN 模块时钟，这个根据时钟章节设置即可，设置好以后就是一个定值，因此只需要修改 PRESDIV 即可修改 FlexCAN 的 Tq 频率值。</strong><br>Tq 定了以后我们结合各个段来看一下如何设置 FlexCAN 的速率：</p>
+<p>SS： 同步段(Synchronization Segment)，在 I.MX6ULL 参考手册中叫做 SYNC_SEG，此段固定为 1 个 Tq 长度，因此不需要去设置。<br>PTS： 传播时间段(Propagatin Segment)， FlexCAN 的 CTRL 寄存器中的 PROPSEG 位域设置此段，可以设置为 0<del>7，对应 1</del>8 个 Tq。<br>PBS1： 相位缓冲段 1(Phase Buffer Segment 1)， FlexCAN 的 CRTL 寄存器中的 PSEG1 位域设置此段，可以设置为 0<del>7，对应 1</del>8 个 Tq。<br>PBS2：相位缓冲段 2(Phase Buffer Segment 2)， FlexCAN 的 CRTL 寄存器中的 PSEG2 位域设置此段，可以设置为 1<del>7，对应 2</del>8 个 Tq。<br>SJW： 再同步补偿宽度(reSynchronization Jump Width)， FlexCAN 的 CRTL 寄存器中的 RJW位域设置此段，可以设置 0<del>3，对应 1</del>4 个 Tq。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-07%20195038.png"></p>
+<p>SYNC+SEG+(PROP_SEG+PSEG1+2)+(PSEG2+1)就是总的 Tq，因此FlexCAN 的波特率就是：<br>$$<br>𝐶𝐴𝑁波特率 &#x3D; 𝑓_{𝑇𝑞}&#x2F;总Tq<br>$$</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">http://example.com/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/">通信协议</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux开发板安装第三方库</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CAN%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text">CAN通信协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAN-%E7%94%B5%E6%B0%94%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">CAN 电气属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CAN%E5%8D%8F%E8%AE%AE%E5%B8%A7"><span class="toc-number">1.2.</span> <span class="toc-text">CAN协议帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CAN%E9%80%9F%E7%8E%87"><span class="toc-number">1.3.</span> <span class="toc-text">CAN速率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#can%E4%BC%A0%E8%BE%93%E4%BB%B2%E8%A3%81"><span class="toc-number">1.4.</span> <span class="toc-text">can传输仲裁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FlexCAN%EF%BC%88CAN%E5%A4%96%E8%AE%BE%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">FlexCAN（CAN外设）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="can通信协议"/></a><div class="content"><a class="title" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议">can通信协议</a><time datetime="2023-08-07T11:30:00.000Z" title="发表于 2023-08-07 19:30:00">2023-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux开发板安装第三方库"/></a><div class="content"><a class="title" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库">linux开发板安装第三方库</a><time datetime="2023-08-06T11:30:00.000Z" title="发表于 2023-08-06 19:30:00">2023-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="音频驱动开发"/></a><div class="content"><a class="title" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发">音频驱动开发</a><time datetime="2023-08-05T11:30:00.000Z" title="发表于 2023-08-05 19:30:00">2023-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="驱动程序编译进入内核"/></a><div class="content"><a class="title" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核">驱动程序编译进入内核</a><time datetime="2023-08-04T11:30:00.000Z" title="发表于 2023-08-04 19:30:00">2023-08-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>

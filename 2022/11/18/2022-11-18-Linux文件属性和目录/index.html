@@ -1,0 +1,495 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>linux文件属性 | 涵风 Blog</title><meta name="keywords" content="linux"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="文件类型正所谓Linux下皆文件，系统下一共分为7种文件： ①普通文件 普通文件（regular file）在 Linux 系统下是最常见的，譬如文本文件、二进制文件，我们编写的源代码文件这些都是普通文件。 普通文件分为文本文件和二进制文件。 文本文件：文件中的内容是由文本构成的，所谓文本指的是 ASCII 码字符。文件中的内容其本质上都是数字。 二进制文件：二进制文件中存储的本质上也是数字，只不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux文件属性">
+<meta property="og:url" content="http://example.com/2022/11/18/2022-11-18-Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E7%9B%AE%E5%BD%95/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="文件类型正所谓Linux下皆文件，系统下一共分为7种文件： ①普通文件 普通文件（regular file）在 Linux 系统下是最常见的，譬如文本文件、二进制文件，我们编写的源代码文件这些都是普通文件。 普通文件分为文本文件和二进制文件。 文本文件：文件中的内容是由文本构成的，所谓文本指的是 ASCII 码字符。文件中的内容其本质上都是数字。 二进制文件：二进制文件中存储的本质上也是数字，只不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2022-11-18T08:00:27.000Z">
+<meta property="article:modified_time" content="2022-11-20T08:23:25.551Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="http://example.com/2022/11/18/2022-11-18-Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E7%9B%AE%E5%BD%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux文件属性',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-20 16:23:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux文件属性</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-18T08:00:27.000Z" title="发表于 2022-11-18 16:00:27">2022-11-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-20T08:23:25.551Z" title="更新于 2022-11-20 16:23:25">2022-11-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux文件属性"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>正所谓Linux下皆文件，系统下一共分为7种文件：</p>
+<p><strong>①普通文件</strong></p>
+<p>普通文件（regular file）在 Linux 系统下是最常见的，譬如文本文件、二进制文件，我们编写的源代码文件这些都是普通文件。</p>
+<p>普通文件分为文本文件和二进制文件。</p>
+<p>文本文件：文件中的内容是由文本构成的，所谓文本指的是 ASCII 码字符。文件中的内容其本质上都是数字。</p>
+<p>二进制文件：二进制文件中存储的本质上也是数字，只不过对于二进制文件来说，这些数字并不是文本字符编码，而是真正的数字。譬如 Linux 系统下的可执行文件、C 代码编译之后得到的.o 文件、.bin 文件等都是二进制件。</p>
+<p><strong>②目录文件</strong></p>
+<p>目录（directory）就是文件夹，文件夹在 Linux 系统中也是一种文件，是一种特殊文件。</p>
+<p><strong>③字符设备文件和块设备文件</strong></p>
+<p>Linux 系统下，一切皆文件，也包括各种硬件设备。设备文件（字符设备文件、块设备文件）对应的是硬件设备，在 Linux 系统中，硬件设备会对应到一个设备文件，应用程序通过对设备文件的读写来操控、使用硬件设备。</p>
+<p>Linux 系统中，可将硬件设备分为字符设备和块设备，所以就有了字符设备文件和块设备文件两种文件类型。虽然有设备文件，但是设备文件并不对应磁盘上的一个文件，也就是说设备文件并不存在于磁盘中，而是由文件系统虚拟出来的，一般是由内存来维护，当系统关机时，设备文件都会消失；字符设备文件一般存放在 Linux 系统&#x2F;dev&#x2F;目录下。</p>
+<p><strong>④符号链接文件</strong></p>
+<p>符号链接文件（link）类似于 Windows 系统中的快捷方式文件，是一种特殊文件，它的内容指向的是另一个文件路径，当对符号链接文件进行操作时，系统根据情况会对这个操作转移到它指向的文件上去，而不是对它本身进行操作。</p>
+<p><strong>⑤管道文件</strong></p>
+<p>管道文件（pipe）主要用于进程间通信。</p>
+<p><strong>⑥套接字文件</strong></p>
+<p>套接字文件（socket）也是一种进程间通信的方式，与管道文件不同的是，它们可以在不同主机上的进程间通信，实际上就是网络通信。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">stat</span> test_file			<span class="comment">##可以查看文件属性</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这个命令内部就是通过调用 stat()函数来获取文件属性的，stat 函数是 Linux 中的系统调用，用于获取文件相关的信息，函数原型如下所示</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">stat</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="keyword">struct</span> stat *buf)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>函数参数及返回值含义如下：<br>pathname：用于指定一个需要查看属性的文件路径。<br>buf：struct stat 类型指针，用于指向一个 struct stat 结构体变量。调用 stat 函数的时候需要传入一个 struct<br>stat 变量的指针，获取到的文件属性信息就记录在 struct stat 结构体中，稍后给大家介绍 struct stat 结构体中有记录了哪些信息。<br>返回值：成功返回 0；失败返回-1，并设置 error。</p>
+<h4 id="struct-stat-结构体"><a href="#struct-stat-结构体" class="headerlink" title="struct stat 结构体"></a>struct stat 结构体</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stat</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"> <span class="type">dev_t</span> st_dev; <span class="comment">/* 文件所在设备的 ID */</span></span><br><span class="line"> <span class="type">ino_t</span> st_ino; <span class="comment">/* 文件对应 inode 节点编号 */</span></span><br><span class="line"> <span class="type">mode_t</span> st_mode; <span class="comment">/* 文件对应的模式 */</span></span><br><span class="line"> <span class="type">nlink_t</span> st_nlink; <span class="comment">/* 文件的链接数 */</span></span><br><span class="line"> <span class="type">uid_t</span> st_uid; <span class="comment">/* 文件所有者的用户 ID */</span></span><br><span class="line"> <span class="type">gid_t</span> st_gid; <span class="comment">/* 文件所有者的组 ID */</span></span><br><span class="line"> <span class="type">dev_t</span> st_rdev; <span class="comment">/* 设备号（指针对设备文件） */</span></span><br><span class="line"> <span class="type">off_t</span> st_size; <span class="comment">/* 文件大小（以字节为单位） */</span></span><br><span class="line"> <span class="type">blksize_t</span> st_blksize; <span class="comment">/* 文件内容存储的块大小 */</span></span><br><span class="line"> <span class="type">blkcnt_t</span> st_blocks; <span class="comment">/* 文件内容所占块数 */</span></span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">st_atim</span>;</span> <span class="comment">/* 文件最后被访问的时间 */</span></span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">st_mtim</span>;</span> <span class="comment">/* 文件内容最后被修改的时间 */</span></span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">st_ctim</span>;</span> <span class="comment">/* 文件状态最后被改变的时间 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="st-mode变量"><a href="#st-mode变量" class="headerlink" title="st_mode变量"></a>st_mode变量</h4><p>st_mode 是 structstat 结构体中的一个成员变量，是一个 32 位无符号整形数据，该变量记录了文件的类型、文件的权限这些信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/st_mode.png"></p>
+<p>这些 bit 位表达内容与 open 函数的 mode 参数相对应，这里不再重述。同样，在 mode 参数中表示权限的宏定义，在这里也是可以使用的，这些宏定义如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">S_IRWXU 00700 owner has read, write, and execute permission</span><br><span class="line">S_IRUSR 00400 owner has read permission</span><br><span class="line">S_IWUSR 00200 owner has write permission</span><br><span class="line">S_IXUSR 00100 owner has execute permission</span><br><span class="line">S_IRWXG 00070 group has read, write, and execute permission</span><br><span class="line">S_IRGRP 00040 group has read permission</span><br><span class="line">S_IWGRP 00020 group has write permission</span><br><span class="line">S_IXGRP 00010 group has execute permission</span><br><span class="line">S_IRWXO 00007 others (not in group) have read, write, and execute permission</span><br><span class="line">S_IROTH 00004 others have read permission</span><br><span class="line">S_IWOTH 00002 others have write permission</span><br><span class="line">S_IXOTH 00001 others have execute permission</span><br><span class="line"></span><br><span class="line">S_IFSOCK 0140000 socket（套接字文件）</span><br><span class="line">S_IFLNK 0120000 symbolic link（链接文件）</span><br><span class="line">S_IFREG 0100000 regular file（普通文件）</span><br><span class="line">S_IFBLK 0060000 block device（块设备文件）</span><br><span class="line">S_IFDIR 0040000 directory（目录）</span><br><span class="line">S_IFCHR 0020000 character device（字符设备文件）</span><br><span class="line">S_IFIFO 0010000 FIFO（管道文件）</span><br><span class="line"></span><br><span class="line">S_ISREG(m) #判断是不是普通文件，如果是返回 true，否则返回 false</span><br><span class="line">S_ISDIR(m) #判断是不是目录，如果是返回 true，否则返回 false</span><br><span class="line">S_ISCHR(m) #判断是不是字符设备文件，如果是返回 true，否则返回 false</span><br><span class="line">S_ISBLK(m) #判断是不是块设备文件，如果是返回 true，否则返回 false</span><br><span class="line">S_ISFIFO(m) #判断是不是管道文件，如果是返回 true，否则返回 false</span><br><span class="line">S_ISLNK(m) #判断是不是链接文件，如果是返回 true，否则返回 false</span><br><span class="line">S_ISSOCK(m) #判断是不是套接字文件，如果是返回 true，否则返回 false</span><br></pre></td></tr></table></figure>
+
+<h4 id="struct-timespec结构体"><a href="#struct-timespec结构体" class="headerlink" title="struct timespec结构体"></a>struct timespec结构体</h4><p>该结构体定义在头文件中，是 Linux 系统中时间相关的结构体。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">timespec</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"> <span class="type">time_t</span> tv_sec; <span class="comment">/* 秒 */</span></span><br><span class="line"> <span class="type">syscall_slong_t</span> tv_nsec; <span class="comment">/* 纳秒 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="fstat和lstat函数"><a href="#fstat和lstat函数" class="headerlink" title="fstat和lstat函数"></a>fstat和lstat函数</h4><p><strong>fstat函数</strong></p>
+<p>fstat 与 stat 区别在于，stat 是从文件名出发得到文件属性信息，不需要先打开文件；而 fstat 函数则是从文件描述符出发得到文件属性信息，所以使用 fstat 函数之前需要先打开文件得到文件描述符。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fstat</span><span class="params">(<span class="type">int</span> fd, <span class="keyword">struct</span> stat *buf)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>lstat 函数</strong></p>
+<p>lstat()与 stat、fstat 的区别在于，对于符号链接文件，stat、fstat 查阅的是符号链接文件所指向的文件对应的文件属性信息，而 lstat 查阅的是符号链接文件本身的属性信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">lstat</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="keyword">struct</span> stat *buf)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件属主"><a href="#文件属主" class="headerlink" title="文件属主"></a>文件属主</h3><p>Linux 是一个多用户操作系统，系统中一般存在着好几个不同的用户，而 Linux 系统中的每一个文件都有一个与之相关联的用户和用户组，通过这个信息可以判断文件的所有者和所属组。</p>
+<p>文件所有者表示该文件属于“谁”，也就是属于哪个用户。一般来说文件在创建时，其所有者就是创建该文件的那个用户。文件所属组则表示该文件属于哪一个用户组。在 Linux 中，系统并不是通过用户名或用户组名来识别不同的用户和用户组，而是通过 ID。ID 就是一个编号，Linux 系统会为每一个用户或用户组分配一个 ID，将用户名或用户组名与对应的 ID 关联起来，所以系统通过用户 ID（UID）或组 ID（GID）就可以识别出不同的用户和用组。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/ID.png"></p>
+<h4 id="有效用户-ID-和有效组-ID"><a href="#有效用户-ID-和有效组-ID" class="headerlink" title="有效用户 ID 和有效组 ID"></a>有效用户 ID 和有效组 ID</h4><p>这是进程所持有的概念，对于文件来说，并无此属性！有效用户 ID 和有效组 ID 是站在操作系统的角度，用于给操作系统判断当前执行该进程的用户在当前环境下对某个文件是否拥有相应的权限。</p>
+<p>当进行权限检查时，并不是通过进程的实际用户和实际组来参与权限检查的，而是通过有效用户和有效组来参与文件权限检查。</p>
+<p><strong>chown函数</strong></p>
+<p>chown 是一个系统调用，该系统调用可用于改变文件的所有者（用户 ID）和所属组（组 ID）。其实在Linux 系统下也有一个 chown 命令，该命令的作用也是用于改变文件的所有者和所属组，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">chown</span> root:root testApp.c			<span class="comment">##该命令的作用也是用于改变文件的所有者和所属组</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="chown函数原型"><a href="#chown函数原型" class="headerlink" title="chown函数原型"></a>chown函数原型</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">chown</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">uid_t</span> owner, <span class="type">gid_t</span> group)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>函数参数和返回值如下所示：<br>pathname：用于指定一个需要修改所有者和所属组的文件路径。<br>owner：将文件的所有者修改为该参数指定的用户（以用户 ID 的形式描述）；<br>group：将文件的所属组修改为该参数指定的用户组（以用户组 ID 的形式描述）；<br>返回值：成功返回 0；失败将返回-1，兵并且会设置 errno。</p>
+<p>有以下两个限制条件：</p>
+<p>⚫ 只有超级用户进程能更改文件的用户 ID；<br>⚫ 普通用户进程可以将文件的组 ID 修改为其所从属的任意附属组 ID，前提条件是该进程的有效用户 ID 等于文件的用户 ID；而超级用户进程可以将文件的组 ID 修改为任意值。</p>
+<p>eg：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="keyword">if</span> (<span class="number">-1</span> == chown(<span class="string">&quot;./test_file&quot;</span>, <span class="number">0</span>, <span class="number">0</span>)) &#123;</span><br><span class="line"> perror(<span class="string">&quot;chown error&quot;</span>);</span><br><span class="line"> <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 系统下，可以使用 getuid 和 getgid 两个系统调用分别用于获取当前进程的用户 ID 和用户组ID，这里说的进程的用户 ID 和用户组 ID 指的就是进程的实际用户 ID 和实际组 ID。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="type">uid_t</span> <span class="title function_">getuid</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">gid_t</span> <span class="title function_">getgid</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>eg：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;uid: %d\n&quot;</span>, getuid());</span><br><span class="line"> <span class="keyword">if</span> (<span class="number">-1</span> == chown(<span class="string">&quot;./test_file&quot;</span>, <span class="number">0</span>, <span class="number">0</span>)) &#123;</span><br><span class="line"> perror(<span class="string">&quot;chown error&quot;</span>);</span><br><span class="line"> <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件访问权限"><a href="#文件访问权限" class="headerlink" title="文件访问权限"></a>文件访问权限</h3><p>struct stat 结构体中的 st_mode 字段记录了文件的访问权限位。当提及到文件时，并不仅仅指的是普通文件；所有文件类型（目录、设备文件）都有访问权限（access permission）。</p>
+<p>文件的权限可以分为两个大类，分别是<u>普通权限和特殊权限</u>（也可称为附加权限）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls-l							##查看访问权限</span><br></pre></td></tr></table></figure>
+
+<p><strong><u>-rwxrwxr-x</u></strong></p>
+<p>-表示文件类型，前三位rwx为所有者权限，中间三位为同组用户权限，后三位为其它用户权限。</p>
+<p>r表示具有读权限；w表示具有写权限；x表示具有执行权限；-表示没有权限</p>
+<p><em><strong>当进程每次对文件进行读、写、执行等操作时，内核就会对文件进行访问权限检查，以确定该进程对文件是否拥有相应的权限。</strong></em>而对于进程来说，参与文件权限检查的是进程的有效用户、有效用户组以及进程的附属组用户。</p>
+<p>如何判断权限，首先要搞清楚该进程对于需要进行操作的文件来说是属于哪一类“角色”：<br>⚫ 如果进程的有效用户 ID 等于文件所有者 ID（st_uid），意味着该进程以文件所有者的角色存在；<br>⚫ 如果进程的有效用户 ID 并不等于文件所有者 ID，意味着该进程并不是文件所有者身份；但是进程<br>的有效用户组 ID 或进程的附属组 ID 之一等于文件的组 ID（st_gid），那么意味着该进程以文件所<br>属组成员的角色存在，也就是文件所属组的同组用户成员。<br>⚫ 如果进程的有效用户 ID 不等于文件所有者 ID、并且进程的有效用户组 ID 或进程的所有附属组 ID<br>均不等于文件的组 ID（st_gid），那么意味着该进程以其它用户的角色存在。<br>⚫ 如果进程的有效用户 ID 等于 0（root 用户），则无需进行权限检查，直接对该文件拥有最高权限。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90.png"></p>
+<p>宏定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S_ISUID 04000 set-user-ID bit</span><br><span class="line">S_ISGID 02000 set-group-ID bit (see below)</span><br><span class="line">S_ISVTX 01000 sticky bit (see below)</span><br></pre></td></tr></table></figure>
+
+<p>譬如通过 st_mode 变量判断文件是否设置了 set-user-ID 位权限，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (st.st_mode &amp; S_ISUID) &#123;</span><br><span class="line"><span class="comment">//设置了 set-user-ID 位权限</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="comment">//没有设置 set-user-ID 位权限</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三种权限位的具体作用：</p>
+<p>⚫ 当进程对文件进行操作的时候、将进行权限检查，如果文件的 set-user-ID 位权限被设置，内核会将进程的有效 ID 设置为该文件的用户 ID（文件所有者 ID），意味着该进程直接获取了文件所有的权限、以文件所有者的身份操作该文件。<br>⚫ 当进程对文件进行操作的时候、将进行权限检查，如果文件的 set-group-ID 位权限被设置，内核会将进程的有效用户组 ID 设置为该文件的用户组 ID（文件所属组 ID），意味着该进程直接获取了文件所属组成员的权限、以文件所属组成员的身份操作该文件。</p>
+<h4 id="目录权限"><a href="#目录权限" class="headerlink" title="目录权限"></a>目录权限</h4><p>⚫ 目录的读权限：可列出（譬如：通过 ls 命令）目录之下的内容（即目录下有哪些文件）。<br>⚫ 目录的写权限：可以在目录下创建文件、删除文件。<br>⚫ 目录的执行权限：可访问目录下的文件，譬如对目录下的文件进行读、写、执行等操作。</p>
+<p>要想访问目录下的文件，譬如查看文件的 inode 节点、大小、权限等信息，还需要对目录拥有执行权限。反之，若拥有对目录的执行权限、而无读权限，只要知道目录内文件的名称，仍可对其进行访问，但不能列出目录下的内容（即目录下包含的其它文件的名称）。要想在目录下创建文件或删除原有文件，需要同时拥有对该目录的执行和写权限。</p>
+<h4 id="检查文件权限"><a href="#检查文件权限" class="headerlink" title="检查文件权限"></a>检查文件权限</h4><p>文件的权限检查不只关于文件本身的权限，还需要涉及到文件所在目录的权限，只有同时都满足了，才能通过操作系统的权限检查，进而才可以对文件进行相关操作。可以通过access来检查执行进程的用户是否对该文件拥有应的权限。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">access</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> mode)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要进行权限检查的文件路径。<br>mode：该参数可以取以下值：<br>pathname：需要进行权限检查的文件路径。<br>mode：该参数可以取以下值：<br>⚫ F_OK：检查文件是否存在<br>⚫ R_OK：检查是否拥有读权限<br>⚫ W_OK：检查是否拥有写权限<br>⚫ X_OK：检查是否拥有执行权限</p>
+<p>返回值：检查项通过则返回 0，表示拥有相应的权限并且文件存在；否则返回-1，如果多个检查项组合在一起，只要其中任何一项不通过都会返回-1。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MY_FILE <span class="string">&quot;./test_file&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> 	<span class="type">int</span> ret;</span><br><span class="line"> <span class="comment">/* 检查文件是否存在 */</span></span><br><span class="line"> 	ret = access(MY_FILE, F_OK);</span><br><span class="line"> 	<span class="keyword">if</span> (<span class="number">-1</span> == ret) </span><br><span class="line">    &#123;</span><br><span class="line">		 <span class="built_in">printf</span>(<span class="string">&quot;%: file does not exist.\n&quot;</span>, MY_FILE);</span><br><span class="line"> 		 <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> <span class="comment">/* 检查权限 */</span></span><br><span class="line"> 	ret = access(MY_FILE, R_OK);</span><br><span class="line"> 	<span class="keyword">if</span> (!ret)</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Read permission: Yes\n&quot;</span>);</span><br><span class="line"> 	<span class="keyword">else</span></span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Read permission: NO\n&quot;</span>);</span><br><span class="line"> 	ret = access(MY_FILE, W_OK);</span><br><span class="line"> 	<span class="keyword">if</span> (!ret)</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Write permission: Yes\n&quot;</span>);</span><br><span class="line">	 <span class="keyword">else</span></span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Write permission: NO\n&quot;</span>);</span><br><span class="line"> 	ret = access(MY_FILE, X_OK);</span><br><span class="line"> 	<span class="keyword">if</span> (!ret)</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Execution permission: Yes\n&quot;</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Execution permission: NO\n&quot;</span>);</span><br><span class="line"> 	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h4><p>在 Linux 系统下，可以使用 chmod 命令修改文件权限，该命令内部实现方法其实是调用了 chmod 函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">chmod</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">mode_t</span> mode)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要进行权限修改的文件路径，若该参数所指为符号链接，实际改变权限的文件是符号链接所指向的文件，而不是符号链接文件本身。<br>mode：该参数用于描述文件权限，与 open 函数的第三个参数一样，这里不再重述，可以直接使用八进制数据来描述，也可以使用相应的权限宏（单个或通过位或运算符” | “组合）。<br>返回值：成功返回 0；失败返回-1，并设置 errno。</p>
+<p>fchmod()与 chmod()的区别在于使用了文件描述符来代替文件路径，就像是 fstat 与 stat 的区别。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fchmod</span><span class="params">(<span class="type">int</span> fd, <span class="type">mode_t</span> mode)</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="umask函数"><a href="#umask函数" class="headerlink" title="umask函数"></a>umask函数</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umask							##查看/设置权限掩码</span><br></pre></td></tr></table></figure>
+
+<p>权限掩码主要用于对新建文件的权限进行屏蔽。权限掩码的表示方式与文件权限的表示方式相同，但是需要去除特殊权限位，umask 不能对特殊权限位进行屏蔽。</p>
+<p>umask 权限掩码是进程的一种属性，用于指明该进程新建文件或目录时，应屏蔽哪些权限位。进程的umask 通常继承至其父进程，譬如在 Ubuntu shell终端下执行的应用程序，它的 umask 继承至该 shell 进程。</p>
+<p>函数原型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="type">mode_t</span> <span class="title function_">umask</span><span class="params">(<span class="type">mode_t</span> mask)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>函数参数和返回值含义如下：<br>mask：需要设置的权限掩码值，可以发现 make 参数的类型与 open 函数、chmod 函数中的 mode 参数对应的类型一样，所以其表示方式也是一样的，前面也给大家介绍了，既可以使用数字表示（譬如八进制数），也可以直接使用宏（S_IRUSR、S_IWUSR 等）。<br>返回值：返回设置之前的 umask 值，也就是旧的 umask。</p>
+<h3 id="文件的时间属性"><a href="#文件的时间属性" class="headerlink" title="文件的时间属性"></a>文件的时间属性</h3><p>文件最后被访问的时间、文件内容最后被修改的时间以及文件状态最后被改变的时间，分别记录在 struct stat 结构体的 st_atim、st_mtim 以及 st_ctim 变量中。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">st_atim</td>
+<td align="center">文件最后被访问的时间</td>
+</tr>
+<tr>
+<td align="center">st_mtim</td>
+<td align="center">文件内容最后被修改的时间</td>
+</tr>
+<tr>
+<td align="center">st_ctim</td>
+<td align="center">文件状态最后被改变的时间</td>
+</tr>
+</tbody></table>
+<p>⚫ 文件最后被访问的时间：访问指的是读取文件内容，文件内容最后一次被读取的时间，譬如使用read()函数读取文件内容便会改变该时间属性；<br>⚫ 文件内容最后被修改的时间：文件内容发生改变，譬如使用 write()函数写入数据到文件中便会改变该时间属性；<br>⚫ 文件状态最后被改变的时间：状态更改指的是该文件的 inode 节点最后一次被修改的时间，譬如更改文件的访问权限、更改文件的用户 ID、用户组 ID、更改链接数等，但它们并没有更改文件的实际内容，也没有访问（读取）文件内容。inode 中包含了很多文件信息，譬如：文件字节大小、文件所有者、文件对应的读&#x2F;写&#x2F;执行权限、文件时间戳（时间属性）、文件数据存储的 block（块）等，所以由此可知，状态的更改指的就是 inode 节点内容的更改。譬如 chmod()、chown()等<br>这些函数都能改变该时间属性。</p>
+<p>列出了一些系统调用或 C 库函数对文件时间属性的影响，有些操作并不仅仅只会影响文件本身的时间属性，还会影响到其父目录的相关时间属性。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/time.png"></p>
+<h4 id="utime-、utimes-修改时间属性"><a href="#utime-、utimes-修改时间属性" class="headerlink" title="utime()、utimes()修改时间属性"></a>utime()、utimes()修改时间属性</h4><p>utime()函数原型如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utime.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">utime</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *filename, <span class="type">const</span> <span class="keyword">struct</span> utimbuf *times)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>filename：需要修改时间属性的文件路径。<br>times：将时间属性修改为该参数所指定的时间值，times 是一个 struct utimbuf 结构体类型的指针，如果times 参数设置为 NULL，则会将文件的访问时间和修改时间设置为系统当前时间。<br>返回值：成功返回值 0；失败将返回-1，并会设置 errno。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">utimbuf</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">time_t</span> actime; <span class="comment">/* 访问时间 */</span></span><br><span class="line">	<span class="type">time_t</span> modtime; <span class="comment">/* 内容修改时间 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>该结构体中包含了两个 time_t 类型的成员，分别用于表示访问时间和内容修改时间，time_t 类型其实就是 long int 类型。</p>
+<p>同样对于文件来说，时间属性也是文件非常重要的属性之一，对文件时间属性的修改也不是任何用户都可以随便修改的，只有以下两种进程可对其进行修改：<br>⚫ 超级用户进程（以 root 身份运行的进程）。<br>⚫ 有效用户 ID 与该文件用户 ID（文件所有者）相匹配的进程。<br>⚫ 在参数 times 等于 NULL 的情况下，对文件拥有写权限的进程。<br>除以上三种情况之外的用户进程将无法对文件时间戳进行修改。</p>
+<p>utimes函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">utimes</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *filename, <span class="type">const</span> <span class="keyword">struct</span> timeval times[<span class="number">2</span>])</span>;</span><br></pre></td></tr></table></figure>
+
+<p>函数参数和返回值含义如下：<br>filename：需要修改时间属性的文件路径。<br>times：将时间属性修改为该参数所指定的时间值，times 是一个 struct timeval 结构体类型的数组，数组共有两个元素，第一个元素用于指定访问时间，第二个元素用于指定内容修改时间，稍后给大家介绍，如果times 参数为 NULL，则会将文件的访问时间和修改时间设置为当前时间。<br>返回值：成功返回 0；失败返回-1，并且会设置 errno。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">long</span> tv_sec; <span class="comment">/* 秒 */</span></span><br><span class="line">	<span class="type">long</span> tv_usec; <span class="comment">/* 微秒 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="futimens-、utimensat-修改时间属性"><a href="#futimens-、utimensat-修改时间属性" class="headerlink" title="futimens()、utimensat()修改时间属性"></a>futimens()、utimensat()修改时间属性</h4><p>futimens()、utimensat()函数是两个系统调用由于显示修改文件时间。</p>
+<p>这两个系统调用相对于 utime 和 utimes 函数有以下三个优点：<br>⚫ 可按纳秒级精度设置时间戳。相对于提供微秒级精度的 utimes()，这是重大改进！<br>⚫ 可单独设置某一时间戳。譬如，只设置访问时间、而修改时间保持不变，如果要使用 utime()或 utimes()来实现此功能，则需要首先使用 stat()获取另一个时间戳的值，然后再将获取值与打算变更的时间戳一同指定。<br>⚫ 可独立将任一时间戳设置为当前时间。使用 utime()或 utimes()函数虽然也可以通过将 times 参数设置为NULL 来达到将时间戳设置为当前时间的效果，但是不能单独指定某一个时间戳，必须全部设置为当前时间（不考虑使用额外函数获取当前时间的方式，譬如 time()）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span> <span class="comment">/* Definition of AT_* constants */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">futimens</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="keyword">struct</span> timespec times[<span class="number">2</span>])</span>;</span><br></pre></td></tr></table></figure>
+
+<p>fd：文件描述符。<br>times：将时间属性修改为该参数所指定的时间值，times 指向拥有 2 个 struct timespec 结构体类型变量的数组，数组共有两个元素，第一个元素用于指定访问时间，第二个元素用于指定内容修改时间。<br>返回值：成功返回 0；失败将返回-1，并设置 errno。</p>
+<p>该函数的时间戳可以按下列 4 种方式之一进行指定：<br>⚫ 如果 times 参数是一个空指针，也就是 NULL，则表示将访问时间和修改时间都设置为当前时间。<br>⚫ 如果 times 参数指向两个 struct timespec 结构体类型变量的数组，任一数组元素的 tv_nsec 字段的值设置为 UTIME_NOW，则表示相应的时间戳设置为当前时间，此时忽略相应的 tv_sec 字段。<br>⚫ 如果 times 参数指向两个 struct timespec 结构体类型变量的数组，任一数组元素的 tv_nsec 字段的值设置为 UTIME_OMIT，则表示相应的时间戳保持不变，此时忽略 tv_sec 字段。<br>⚫ 如果 times 参数指向两个 struct timespec 结构体类型变量的数组，且 tv_nsec 字段的值既不是UTIME_NOW 也不是 UTIME_OMIT，在这种情况下，相应的时间戳设置为相应的 tv_sec 和 tv_nsec字段指定的值。</p>
+<p>使用 <u>futimens()函数只有以下进程，可对文件时间戳进行修改：</u><br>⚫ 超级用户进程。<br>⚫ 在参数 times 等于 NULL 的情况下，对文件拥有写权限的进程。<br>⚫ 有效用户 ID 与该文件用户 ID（文件所有者）相匹配的进程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MY_FILE <span class="string">&quot;./test_file&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> 	<span class="class"><span class="keyword">struct</span> <span class="title">timespec</span> <span class="title">tmsp_arr</span>[2];</span></span><br><span class="line"> 	<span class="type">int</span> ret;</span><br><span class="line"> 	<span class="type">int</span> fd;</span><br><span class="line"> 	<span class="comment">/* 检查文件是否存在 */</span></span><br><span class="line"> 	ret = access(MY_FILE, F_OK);</span><br><span class="line"> 	<span class="keyword">if</span> (ret == <span class="number">-1</span>) </span><br><span class="line">    &#123;</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">&quot;Error: %s file does not exist!\n&quot;</span>, MY_FILE);</span><br><span class="line"> 		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> <span class="comment">/* 打开文件 */</span></span><br><span class="line"> 	fd = open(MY_FILE, O_RDONLY);</span><br><span class="line"> 	<span class="keyword">if</span> (fd == <span class="number">-1</span>) </span><br><span class="line">    &#123;</span><br><span class="line"> 		perror(<span class="string">&quot;open error&quot;</span>);</span><br><span class="line"> 		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> <span class="comment">/* 修改文件时间戳 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 1</span></span><br><span class="line"> 	ret = futimens(fd, <span class="literal">NULL</span>); <span class="comment">//同时设置为当前时间</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 0</span></span><br><span class="line"> 	tmsp_arr[<span class="number">0</span>].tv_nsec = UTIME_OMIT;<span class="comment">//访问时间保持不变</span></span><br><span class="line"> 	tmsp_arr[<span class="number">1</span>].tv_nsec = UTIME_NOW;<span class="comment">//内容修改时间设置为当期时间</span></span><br><span class="line"> 	ret = futimens(fd, tmsp_arr);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 0</span></span><br><span class="line"> 	tmsp_arr[<span class="number">0</span>].tv_nsec = UTIME_NOW;<span class="comment">//访问时间设置为当前时间</span></span><br><span class="line"> 	tmsp_arr[<span class="number">1</span>].tv_nsec = UTIME_OMIT;<span class="comment">//内容修改时间保持不变</span></span><br><span class="line"> 	ret = futimens(fd, tmsp_arr);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"> <span class="keyword">if</span> (ret == <span class="number">-1</span>) </span><br><span class="line"> &#123;</span><br><span class="line"> 	perror(<span class="string">&quot;futimens error&quot;</span>);</span><br><span class="line">	<span class="keyword">goto</span> err;</span><br><span class="line"> &#125;</span><br><span class="line">err:</span><br><span class="line"> 	close(fd);</span><br><span class="line"> 	<span class="built_in">exit</span>(ret);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>utimensat()函数功能也是一样的，具体可以使用man 2  utimensat查询用法</p>
+<h3 id="符号链接与硬链接"><a href="#符号链接与硬链接" class="headerlink" title="符号链接与硬链接"></a>符号链接与硬链接</h3><p>在 Linux 系统中有两种链接文件，分为软链接（也叫符号链接）文件和硬链接文件，软链接文件也就是前面给大家的 Linux 系统下的七种文件类型之一，其作用类似于 Windows 下的快捷方式。硬链接两个文件相互影响。</p>
+<p>复习一下shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash"><span class="built_in">ln</span> 源文件 链接文件			<span class="comment">##硬链接</span></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">ln-s 源文件 链接文件			<span class="comment">##软链接</span></span></span><br></pre></td></tr></table></figure>
+
+<p>使用 ln 命令创建的两个硬链接文件与源文件 test_file 都拥有相同的 inode 号，既然inode 相同，也就意味着它们指向了物理硬盘的同一个区块，仅仅只是文件名字不同而已，创建出来的硬链接文件与源文件对文件系统来说是完全平等的关系。</p>
+<p>当为文件每创建一个硬链接，inode 节点上的链接数就会加一，每删除一个硬链接，inode 节点上的链接数就会减一，直到为 0，inode 节点和对应的数据块才会被文件系统所回收，也就意味着文件已经从文件系统中被删除了。</p>
+<p>软链接文件与源文件有着不同的 inode 号，所以也就是意味着它们之间有着不同的数据块，但是软链接文件的数据块中存储的是源文件的路径名，链接文件可以通过这个路径找到被链接的源文件，它们之间类似于一种“主从”关系，当源文件被删除之后，软链接文件依然存在，但此时它指向的是一个无效的文件路径，这种链接文件被称为悬空链接。</p>
+<p>⚫ 不能对目录创建硬链接（超级用户可以创建，但必须在底层文件系统支持的情况下）。<br>⚫ 硬链接通常要求链接文件和源文件位于同一文件系统中。<br>而软链接文件的使用并没有上述限制条件，优点如下所示：<br>⚫ 可以对目录创建软链接；<br>⚫ 可以跨越不同文件系统；<br>⚫ 可以对不存在的文件创建软链接。</p>
+<h4 id="创建硬链接link"><a href="#创建硬链接link" class="headerlink" title="创建硬链接link"></a>创建硬链接link</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">link</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *oldpath, <span class="type">const</span> <span class="type">char</span> *newpath)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>oldpath：用于指定被链接的源文件路径，应避免 oldpath 参数指定为软链接文件，为软链接文件创建硬链接没有意义，虽然并不会报错。<br>newpath：用于指定硬链接文件路径，如果 newpath 指定的文件路径已存在，则会产生错误。<br>返回值：成功返回 0；失败将返回-1，并且会设置 errno。</p>
+<h4 id="创建软链接symlink"><a href="#创建软链接symlink" class="headerlink" title="创建软链接symlink"></a>创建软链接symlink</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">symlink</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *target, <span class="type">const</span> <span class="type">char</span> *linkpath)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>函数参数和返回值含义如下：<br>target：用于指定被链接的源文件路径，target 参数指定的也可以是一个软链接文件。<br>linkpath：用于指定硬链接文件路径，如果 newpath 指定的文件路径已存在，则会产生错误。<br>返回值：成功返回 0；失败将返回-1，并会设置 errno。<br>创建软链接时，并不要求 target 参数指定的文件路径已经存在，如果文件不存在，那么创建的软链接将成为“悬空链接”。</p>
+<h4 id="读取软链接文件"><a href="#读取软链接文件" class="headerlink" title="读取软链接文件"></a>读取软链接文件</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">readlink</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">char</span> *buf, <span class="type">size_t</span> bufsiz)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要读取的软链接文件路径。只能是软链接文件路径，不能是其它类型文件，否则调用函<br>数将报错。<br>buf：用于存放路径信息的缓冲区。<br>bufsiz：读取大小，一般读取的大小需要大于链接文件数据块中存储的文件路径信息字节大小。<br>返回值：失败将返回-1，并会设置 errno；成功将返回读取到的字节数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">readlink</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">char</span> *buf, <span class="type">size_t</span> bufsiz)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要读取的软链接文件路径。只能是软链接文件路径，不能是其它类型文件，否则调用函数将报错。<br>buf：用于存放路径信息的缓冲区。<br>bufsiz：读取大小，一般读取的大小需要大于链接文件数据块中存储的文件路径信息字节大小。<br>返回值：失败将返回-1，并会设置 errno；成功将返回读取到的字节数。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><h4 id="目录存储形式"><a href="#目录存储形式" class="headerlink" title="目录存储形式"></a>目录存储形式</h4><p>目录这种特殊文件在文件系统中的存储形式，其实目录在文件系统中的存储方式与常规文件类似，常规文件包括了 inode 节点以及文件内容数据存储块（block），但对于目录来说，其存储形式则是由 inode 节点和目录块所构成，目录块当中记录了有哪些文件组织在这个目录下，记录它们的文件名以及对应的 inode 编号。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/guazai.jpg"></p>
+<p>目录块当中有多个目录项（或叫目录条目），每一个目录项（或目录条目）都会对应到该目录下的某一个文件，目录项当中记录了该文件的文件名以及它的 inode 节点编号，所以通过目录的目录块便可以遍历找到该目录下的所有文件以及所对应的 inode 节点。<br>所以对此总结如下：<br>⚫ 普通文件由 inode 节点和数据块构成<br>⚫ 目录由 inode 节点和目录块构成</p>
+<h4 id="创建删除目录"><a href="#创建删除目录" class="headerlink" title="创建删除目录"></a>创建删除目录</h4><p><strong>mkdir函数</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">mkdir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">mode_t</span> mode)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要创建的目录路径。<br>mode：新建目录的权限设置，设置方式与 open 函数的 mode 参数一样，最终权限为（mode &amp; ~umask）。<br>返回值：成功返回 0；失败将返回-1，并会设置 errno。<br>pathname 参数指定的新建目录的路径，该路径名可以是相对路径，也可以是绝对路径，若指定的路径名已经存在，则调用 mkdir()将会失败。<br>mode 参数指定了新目录的权限，目录拥有与普通文件相同的权限位，但是其表示的含义与普通文件却有不同。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> 	<span class="type">int</span> ret;</span><br><span class="line"> 	ret = mkdir(<span class="string">&quot;./new_dir&quot;</span>, S_IRWXU |</span><br><span class="line"> 				S_IRGRP | S_IXGRP |</span><br><span class="line">				S_IROTH | S_IXOTH);</span><br><span class="line"> 	<span class="keyword">if</span> (<span class="number">-1</span> == ret) </span><br><span class="line">    &#123;</span><br><span class="line"> 		perror(<span class="string">&quot;mkdir error&quot;</span>);</span><br><span class="line"> 		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除目录rmdir</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">rmdir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要删除的目录对应的路径名，并且该目录必须是一个空目录，也就是该目录下只有.和..这两个目录项；pathname 指定的路径名不能是软链接文件，即使该链接文件指向了一个空目录。<br>返回值：成功返回 0；失败将返回-1，并会设置 errno。</p>
+<p><strong>打开、读取以及关闭目录</strong></p>
+<p><strong>opendir()函数</strong>用于打开一个目录，并返回指向该目录的句柄，供后续操作使用。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line">DIR *<span class="title function_">opendir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>name：指定需要打开的目录路径名，可以是绝对路径，也可以是相对路径。<br>返回值：成功将返回指向该目录的句柄，一个 DIR 指针（其实质是一个结构体指针），其作用类似于<br>open函数返回的文件描述符fd，后续对该目录的操作需要使用该DIR指针变量；若调用失败，则返回NULL。</p>
+<p>**readdir()**用于读取目录，获取目录下所有文件的名称以及对应 inode 号。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="keyword">struct</span> dirent *<span class="title function_">readdir</span><span class="params">(DIR *dirp)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>dirp：目录句柄 DIR 指针。<br>返回值：返回一个指向 struct dirent 结构体的指针，该结构体表示 dirp 指向的目录流中的下一个目录条目。在到达目录流的末尾或发生错误时，它返回 NULL。</p>
+<p><u>“流”这个概念是动态的，而不是静态的。编程当中提到这个概念，一般都是与 I&#x2F;O 相关，所以也经常叫做 I&#x2F;O 流；但对于目录这种特殊文件来说，这里将目录块中存储的数据称为目录流，存储了一个一个的目录项（目录条目）。</u></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"> <span class="type">ino_t</span> d_ino; 				<span class="comment">/* inode 编号 */</span></span><br><span class="line"> <span class="type">off_t</span> d_off; 				<span class="comment">/* not an offset; see NOTES */</span></span><br><span class="line"> <span class="type">unsigned</span> <span class="type">short</span> d_reclen; 	<span class="comment">/* length of this record */</span></span><br><span class="line"> <span class="type">unsigned</span> <span class="type">char</span> d_type; 		<span class="comment">/* type of file; not supported by all filesystem types */</span></span><br><span class="line"> <span class="type">char</span> d_name[<span class="number">256</span>]; 			<span class="comment">/* 文件名 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>每调用一次 readdir()，就会从 drip 所指向的目录流中读取下一条目录项（目录条目），并返回 struct dirent结构体指针，指向经静态分配而得的 struct dirent 类型结构，每次调用 readdir()都会覆盖该结构。一旦遇到目录结尾或是出错，readdir()将返回 NULL，针对后一种情况，还会设置 errno 以示具体错误。</p>
+<p>那如何区别究竟是到了目录末尾还是出错了呢，可通过如下代码进行判断：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">error = <span class="number">0</span>;</span><br><span class="line">direntp = readdir(dirp);</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">NULL</span> == direntp) </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="number">0</span> != error) </span><br><span class="line">	&#123;</span><br><span class="line">	<span class="comment">/* 出现了错误 */</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="comment">/* 已经到了目录末尾 */</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>rewinddir()</strong><u>可将目录流重置为目录起点。</u></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">rewinddir</span><span class="params">(DIR *dirp)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>dirp：目录句柄。<br>返回值：无返回值。</p>
+<p>关闭目录close()函数用于关闭处于打开状态的目录，同时释放他所用的资源。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">closedir</span><span class="params">(DIR *dirp)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>dirp：目录句柄。<br>返回值：成功返回 0；失败将返回-1，并设置 errno。</p>
+<p><strong>进程的当前工作目录</strong></p>
+<p>Linux 下的每一个进程都有自己的当前工作目录（current working directory），当前工作目录是该进程解析、搜索相对路径名的起点。</p>
+<p>一般情况下，运行一个进程时、其父进程的当前工作目录将被该进程所继承，成为该进程的当前工作目录。可通过 getcwd 函数来获取进程的当前工作目录，如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">char</span> *<span class="title function_">getcwd</span><span class="params">(<span class="type">char</span> *buf, <span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>buf：getcwd()将内含当前工作目录绝对路径的字符串存放在 buf 缓冲区中。<br>size：缓冲区的大小，分配的缓冲区大小必须要大于字符串长度，否则调用将会失败。<br>返回值：如果调用成功将返回指向 buf 的指针，失败将返回 NULL，并设置 errno。</p>
+<p><strong>改变当前工作目录</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">chdir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">fchdir</span><span class="params">(<span class="type">int</span> fd)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>path：将进程的当前工作目录更改为 path 参数指定的目录，可以是绝对路径、也可以是相对路径，指定的目录必须要存在，否则会报错。<br>fd：将进程的当前工作目录更改为 fd 文件描述符所指定的目录（譬如使用 open 函数打开一个目录）。<br>返回值：成功均返回 0；失败均返回-1，并设置 errno。</p>
+<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3><p><strong>使用unlink函数删除一个文件</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">unlink</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要删除的文件路径，可使用相对路径、也可使用绝对路径，如果 pathname 参数指定的文件不存在，则调用 unlink()失败。<br>返回值：成功返回 0；失败将返回-1，并设置 errno。</p>
+<p>unlink()系统调用实质上是移除 pathname 参数指定的文件路径对应的目录项（从其父级目录中移除该目录项），并将文件的 inode 链接计数将 1，如果该文件还有其它硬链接，则任可通过其它链接访问该文件的数据；只有当链接计数变为 0 时，该文件的内容才可被删除。另一个条件也会阻止删除文件的内容—只要有进程打开了该文件，其内容也不能被删除。关闭一个文件时，内核会检查打开该文件的进程个数，如果这个计数达到 0，内核再去检查其链接计数，如果链接计数也是 0，那么就删除该文件对应的内容（也就是文件对应的 inode 以及数据块被回收，如果一个文件存在多个硬链接，删除其中任何一个硬链接，其inode 和数据块并没有被回收，还可通过其它硬链接访问文件的数据）。</p>
+<p><strong>使用 remove 函数删除文件</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">remove</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pathname：需要删除的文件或目录路径，可以是相对路径、也可是决定路径。<br>返回值：成功返回 0；失败将返回-1，并设置 errno。<br>pathname 参数指定的是一个非目录文件，那么 remove()去调用 unlink()，如果 pathname 参数指定的是一个目录，那么 remove()去调用 rmdir()。</p>
+<h3 id="文件重命名"><a href="#文件重命名" class="headerlink" title="文件重命名"></a>文件重命名</h3><p>本小节给大家介绍 rename()系统调用，借助于 rename()既可以对文件进行重命名，又可以将文件移至同一文件系统中的另一个目录下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">rename</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *oldpath, <span class="type">const</span> <span class="type">char</span> *newpath)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回值：成功返回 0；失败将返回-1，并设置 errno。</p>
+<p>根据 oldpath、newpath 的不同，有以下不同的情况需要进行说明：<br>⚫ 若 newpath 参数指定的文件或目录已经存在，则将其覆盖；<br>⚫ 若 newpath 和 oldpath 指向同一个文件，则不发生变化（且调用成功）。<br>⚫ rename()系统调用对其两个参数中的软链接均不进行解引用。如果 oldpath 是一个软链接，那么将重命名该软链接；如果 newpath 是一个软链接，则会将其移除、被覆盖。<br>⚫ 如果 oldpath 指代文件，而非目录，那么就不能将 newpath 指定为一个目录的路径名。要想重命名<br>一个文件到某一个目录下，newpath 必须包含新的文件名。<br>⚫ 如果 oldpath 指代为一个目录，在这种情况下，newpath 要么不存在，要么必须指定为一个空目录。<br>⚫ oldpath 和 newpath 所指代的文件必须位于同一文件系统。由前面的介绍，可以得出此结论！<br>⚫ 不能对.（当前目录）和..（上一级目录）进行重命名。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/11/18/2022-11-18-Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E7%9B%AE%E5%BD%95/">http://example.com/2022/11/18/2022-11-18-Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E7%9B%AE%E5%BD%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/18/2022-11-18-%E9%9A%8F%E7%AC%94/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">学习一个阶段的感受</div></div></a></div><div class="next-post pull-right"><a href="/2022/11/12/2022-11-12-Linux%E6%A0%87%E5%87%86IO%E5%BA%93/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux标准IO库</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/12/13/2022-12-13-Linux%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90/" title="Linux系统信息与系统资源"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-13</div><div class="title">Linux系统信息与系统资源</div></div></a></div><div><a href="/2022/12/12/2022-12-12-Linux%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="Linux调试工具gdb"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-12</div><div class="title">Linux调试工具gdb</div></div></a></div><div><a href="/2022/11/23/2022-11-23-Linux%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/" title="Linux——字符串处理"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-23</div><div class="title">Linux——字符串处理</div></div></a></div><div><a href="/2022/11/12/2022-11-12-Linux%E6%A0%87%E5%87%86IO%E5%BA%93/" title="Linux标准IO库"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-12</div><div class="title">Linux标准IO库</div></div></a></div><div><a href="/2022/11/10/2022-11-10-Linux%E6%B7%B1%E5%85%A5%E6%96%87%E4%BB%B6IO/" title="Linux深入文件IO"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-10</div><div class="title">Linux深入文件IO</div></div></a></div><div><a href="/2022/11/08/2022-11-8-Linux%E2%80%94%E2%80%94%E6%96%87%E4%BB%B6IO%E6%93%8D%E4%BD%9C/" title="Linux——文件IO操作"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-08</div><div class="title">Linux——文件IO操作</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">文件类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#struct-stat-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.1.</span> <span class="toc-text">struct stat 结构体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#st-mode%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">st_mode变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#struct-timespec%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.</span> <span class="toc-text">struct timespec结构体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fstat%E5%92%8Clstat%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text">fstat和lstat函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%B1%9E%E4%B8%BB"><span class="toc-number">2.</span> <span class="toc-text">文件属主</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E6%95%88%E7%94%A8%E6%88%B7-ID-%E5%92%8C%E6%9C%89%E6%95%88%E7%BB%84-ID"><span class="toc-number">2.1.</span> <span class="toc-text">有效用户 ID 和有效组 ID</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#chown%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">chown函数原型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">3.</span> <span class="toc-text">文件访问权限</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%9D%83%E9%99%90"><span class="toc-number">3.1.</span> <span class="toc-text">目录权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-number">3.2.</span> <span class="toc-text">检查文件权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-number">3.3.</span> <span class="toc-text">修改文件权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#umask%E5%87%BD%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">umask函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%9A%84%E6%97%B6%E9%97%B4%E5%B1%9E%E6%80%A7"><span class="toc-number">4.</span> <span class="toc-text">文件的时间属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#utime-%E3%80%81utimes-%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">utime()、utimes()修改时间属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#futimens-%E3%80%81utimensat-%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E5%B1%9E%E6%80%A7"><span class="toc-number">4.2.</span> <span class="toc-text">futimens()、utimensat()修改时间属性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5%E4%B8%8E%E7%A1%AC%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">符号链接与硬链接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%A1%AC%E9%93%BE%E6%8E%A5link"><span class="toc-number">5.1.</span> <span class="toc-text">创建硬链接link</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%BD%AF%E9%93%BE%E6%8E%A5symlink"><span class="toc-number">5.2.</span> <span class="toc-text">创建软链接symlink</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%96%87%E4%BB%B6"><span class="toc-number">5.3.</span> <span class="toc-text">读取软链接文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">6.</span> <span class="toc-text">目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E5%AD%98%E5%82%A8%E5%BD%A2%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">目录存储形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95"><span class="toc-number">6.2.</span> <span class="toc-text">创建删除目录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="toc-number">7.</span> <span class="toc-text">删除文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="toc-number">8.</span> <span class="toc-text">文件重命名</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="can通信协议"/></a><div class="content"><a class="title" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议">can通信协议</a><time datetime="2023-08-07T11:30:00.000Z" title="发表于 2023-08-07 19:30:00">2023-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux开发板安装第三方库"/></a><div class="content"><a class="title" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库">linux开发板安装第三方库</a><time datetime="2023-08-06T11:30:00.000Z" title="发表于 2023-08-06 19:30:00">2023-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="音频驱动开发"/></a><div class="content"><a class="title" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发">音频驱动开发</a><time datetime="2023-08-05T11:30:00.000Z" title="发表于 2023-08-05 19:30:00">2023-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="驱动程序编译进入内核"/></a><div class="content"><a class="title" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核">驱动程序编译进入内核</a><time datetime="2023-08-04T11:30:00.000Z" title="发表于 2023-08-04 19:30:00">2023-08-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>

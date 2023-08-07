@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>C语言点亮led | 涵风 Blog</title><meta name="keywords" content="裸机开发"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="Cortex-A 处理器运行模型 Cortex-A7 处理器有 9 种处理模式。如下图：  所有的处理器模式都共用一个 CPSR 物理寄存器，因此 CPSR 可以在任何模式下被访问。CPSR 是当前程序状态寄存器，该寄存器包含了条件标志位、中断禁止位、当前处理器模式标志等一些状态位以及一些控制位。所有的处理器模式都共用一个 CPSR 必然会导致冲突，为此，除了 User 和 Sys 这两个模式以外">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言点亮led">
+<meta property="og:url" content="http://example.com/2023/02/05/2023-2-5-C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="Cortex-A 处理器运行模型 Cortex-A7 处理器有 9 种处理模式。如下图：  所有的处理器模式都共用一个 CPSR 物理寄存器，因此 CPSR 可以在任何模式下被访问。CPSR 是当前程序状态寄存器，该寄存器包含了条件标志位、中断禁止位、当前处理器模式标志等一些状态位以及一些控制位。所有的处理器模式都共用一个 CPSR 必然会导致冲突，为此，除了 User 和 Sys 这两个模式以外">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-02-05T13:30:27.000Z">
+<meta property="article:modified_time" content="2023-02-06T15:14:16.382Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="裸机开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="http://example.com/2023/02/05/2023-2-5-C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C语言点亮led',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-06 23:14:16'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C语言点亮led</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-05T13:30:27.000Z" title="发表于 2023-02-05 21:30:27">2023-02-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-06T15:14:16.382Z" title="更新于 2023-02-06 23:14:16">2023-02-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C语言点亮led"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Cortex-A 处理器运行模型</p>
+<p>Cortex-A7 处理器有 9 种处理模式。如下图：</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230206_165721.png"></p>
+<p>所有的处理器模式都共用一个 CPSR 物理寄存器，因此 CPSR 可以在任何模式下被访问。CPSR 是当前程序状态寄存器，该寄存器包含了条件标志位、中断禁止位、当前处理器模式标志等一些状态位以及一些控制位。所有的处理器模式都共用一个 CPSR 必然会导致冲突，为此，除了 User 和 Sys 这两个模式以外，其他 7 个模式每个都配备了一个专用的物理状态寄存器，叫做 SPSR(备份程序状态寄存器)，当特定的异常中断发生时，SPSR 寄存器用来保存当前程序状态寄存器(CPSR)的值，当异常退出以后可以用 SPSR 中保存的值来恢复 CPSR。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230206_170328.png"></p>
+<p>N(bit31)：当两个补码表示的 有符号整数运算的时候，N&#x3D;1 表示运算对的结果为负数，N&#x3D;0表示结果为正数。<br>Z(bit30)：Z&#x3D;1 表示运算结果为零，Z&#x3D;0 表示运算结果不为零，对于 CMP 指令，Z&#x3D;1 表示进行比较的两个数大小相等。<br>C(bit29)：在加法指令中，当结果产生了进位，则 C&#x3D;1，表示无符号数运算发生上溢，其它情况下 C&#x3D;0。在减法指令中，当运算中发生借位，则 C&#x3D;0，表示无符号数运算发生下溢，其它情况下 C&#x3D;1。对于包含移位操作的非加&#x2F;减法运算指令，C 中包含最后一次溢出的位的数值，对于其它非加&#x2F;减运算指令，C 位的值通常不受影响。<br>V(bit28)：对于加&#x2F;减法运算指令，当操作数和运算结果表示为二进制的补码表示的带符号数时，V&#x3D;1 表示符号位溢出，通常其他位不影响 V 位。<br>Q(bit27)：仅 ARM v5TE_J 架构支持，表示饱和状态，Q&#x3D;1 表示累积饱和，Q&#x3D;0 表示累积不饱和。<br>IT<a href="bit26:25">1:0</a>：和 IT<a href="bit15:bit10">7:2</a>一起组成 IT[7:0]，作为 IF-THEN 指令执行状态。<br>J(bit24)：仅 ARM_v5TE-J 架构支持，J&#x3D;1 表示处于 Jazelle 状态，此位通常和 T(bit5)位一起表示当前所使用的指令集。<br>GE<a href="bit19:16">3:0</a>：SIMD 指令有效，大于或等于。<br>IT<a href="bit15:10">7:2</a>：参考 IT[1:0]。<br>E(bit9)：大小端控制位，E&#x3D;1 表示大端模式，E&#x3D;0 表示小端模式。<br>A(bit8)：禁止异步中断位，A&#x3D;1 表示禁止异步中断。<br>I(bit7)：I&#x3D;1 禁止 IRQ，I&#x3D;0 使能 IRQ。<br>F(bit6)：F&#x3D;1 禁止 FIQ，F&#x3D;0 使能 FIQ。<br>T(bit5)：控制指令执行状态，表明本指令是 ARM 指令还是 Thumb 指令，通常和 J(bit24)一起表明指令类型，参考 J(bit24)位。<br>M[4:0]：处理器模式控制位</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230206_170546.png"></p>
+<h3 id="点亮led"><a href="#点亮led" class="headerlink" title="点亮led"></a>点亮led</h3><p>在开始部分用汇编来初始化一下 C 语言环境，比如初始化 DDR、设置堆栈指针 SP 等等，当这些工作都做完以后就可以进入 C 语言环境，也就是运行 C 语言代码，一般都是进入 main 函数。所以我们有两部分文件要做：<br>①、汇编文件：汇编文件只是用来完成 C 语言环境搭建。<br>②、C 语言文件：C 语言文件就是完成我们的业务层代码的，其实就是我们实际例程要完成的功能。</p>
+<p>start.s文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1 .global _start /* 全局标号 */</span><br><span class="line">2 </span><br><span class="line">3 /*</span><br><span class="line">4 * 描述： _start 函数，程序从此函数开始执行，此函数主要功能是设置 C</span><br><span class="line">5 * 运行环境。</span><br><span class="line">6 */</span><br><span class="line">7 _start:</span><br><span class="line">8 </span><br><span class="line">9 /* 进入 SVC 模式 */</span><br><span class="line">10 mrs r0, cpsr</span><br><span class="line">11 bic r0, r0, #0x1f /* 将 r0 的低 5 位清零，也就是 cpsr 的 M0~M4 */</span><br><span class="line">12 orr r0, r0, #0x13 /* r0 或上 0x13,表示使用 SVC 模式 */</span><br><span class="line">13 msr cpsr, r0 /* 将 r0 的数据写入到 cpsr_c 中 */</span><br><span class="line">14</span><br><span class="line">15 ldr sp, =0X80200000 /* 设置栈指针 */</span><br><span class="line">16 b main /* 跳转到 main 函数 */</span><br></pre></td></tr></table></figure>
+
+<p>第 1 行定义了一个全局标号_start。<br>第 7 行就是标号_start 开始的地方，相当于是一个_start 函数，这个_start 就是第一行代码。<br>第 10<del>13 行就是设置处理器进入 SVC 模式，在 6.2 小节的“Cortex-A 处理器运行模型”中，设置处理器运行在 SVC 模式下。处理器模式的设置是通过修改 CPSR(程序状态)寄存器来完成的，其中 M[4:0](CPSR 的 bit[4:0])就是设置处理器运行模式的，如果要将处理器设置为 SVC 模式，那么 M[4:0]就要等于 0X13。11</del>13 行代码就是先使用指令 MRS 将 CPSR寄存器的值读取到 R0 中，然后修改 R0 中的值，设置 R0 的 bit[4:0]为 0X13，然后再使用指令MSR 将修改后的 R0 重新写入到 CPSR 中。<br>第 15 行通过 ldr 指令设置 SVC 模式下的 SP 指针&#x3D;0X80200000，因为 I.MX6U-ALPHA 开发板上的 DDR3 地址范围 是 0X80000000<del>0XA0000000(512MB) 或 者0X80000000</del>0X90000000(256MB)，不管是 512MB 版本还是 256MB 版本的，其 DDR3 起始地址都是 0X80000000。由于 Cortex-A7 的堆栈是向下增长的，所以将 SP 指针设置为 0X80200000，因此 SVC 模式的栈大小 0X80200000-0X80000000&#x3D;0X200000&#x3D;2MB，2MB 的栈空间已经很大了，如果做裸机开发的话绰绰有余。<br>第 16 行就是跳转到 main 函数，main 函数就是 C 语言代码了。<br>至此汇编部分程序执行完成，就几行代码，用来设置处理器运行到 SVC 模式下、然后初始化 SP 指针、最终跳转到 C 文件的 main 函数中。</p>
+<p>编写led.h文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __LED_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __LED_H</span></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> * CCM 相关寄存器地址</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR0 *((volatile unsigned int *)0X020C4068)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR1 *((volatile unsigned int *)0X020C406C)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR2 *((volatile unsigned int *)0X020C4070)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR3 *((volatile unsigned int *)0X020C4074)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR4 *((volatile unsigned int *)0X020C4078)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR5 *((volatile unsigned int *)0X020C407C)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> CCM_CCGR6 *((volatile unsigned int *)0X020C4080)</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/* </span></span><br><span class="line"><span class="comment"> * IOMUX 相关寄存器地址</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> SW_MUX_GPIO1_IO03 *((volatile unsigned int *)0X020E0068)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> SW_PAD_GPIO1_IO03 *((volatile unsigned int *)0X020E02F4)</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/* </span></span><br><span class="line"><span class="comment"> * GPIO1 相关寄存器地址</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_DR *((volatile unsigned int *)0X0209C000)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_GDIR *((volatile unsigned int *)0X0209C004)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_PSR *((volatile unsigned int *)0X0209C008)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_ICR1 *((volatile unsigned int *)0X0209C00C)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_ICR2 *((volatile unsigned int *)0X0209C010)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_IMR *((volatile unsigned int *)0X0209C014)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_ISR *((volatile unsigned int *)0X0209C018)</span></span><br><span class="line"> <span class="meta">#<span class="keyword">define</span> GPIO1_EDGE_SEL *((volatile unsigned int *)0X0209C01C)</span></span><br><span class="line"></span><br><span class="line"> <span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>编写led.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">#<span class="keyword">include</span> <span class="string">&quot;led.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">  @description : 使能 I.MX6U 所有外设时钟</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">clk_enable</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> &#123;</span><br><span class="line"> 	CCM_CCGR0 = <span class="number">0xffffffff</span>;</span><br><span class="line"> 	CCM_CCGR1 = <span class="number">0xffffffff</span>;</span><br><span class="line"> 	CCM_CCGR2 = <span class="number">0xffffffff</span>;</span><br><span class="line">	CCM_CCGR3 = <span class="number">0xffffffff</span>;</span><br><span class="line">	CCM_CCGR4 = <span class="number">0xffffffff</span>;</span><br><span class="line">	CCM_CCGR5 = <span class="number">0xffffffff</span>;</span><br><span class="line">	CCM_CCGR6 = <span class="number">0xffffffff</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">  @description : 初始化 LED 对应的 GPIO</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">led_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> &#123;</span><br><span class="line"> <span class="comment">/* 1、初始化 IO 复用, 复用为 GPIO1_IO03 */</span></span><br><span class="line"> 	SW_MUX_GPIO1_IO03 = <span class="number">0x5</span>;  </span><br><span class="line"> <span class="comment">/* 2、配置 GPIO1_IO03 的 IO 属性 </span></span><br><span class="line"><span class="comment">	bit 16:0 HYS 关闭</span></span><br><span class="line"><span class="comment">	bit [15:14]: 00 默认下拉</span></span><br><span class="line"><span class="comment"> 	bit [13]: 0 kepper 功能</span></span><br><span class="line"><span class="comment"> 	bit [12]: 1 pull/keeper 使能</span></span><br><span class="line"><span class="comment"> 	bit [11]: 0 关闭开路输出</span></span><br><span class="line"><span class="comment"> 	bit [7:6]: 10 速度 100Mhz</span></span><br><span class="line"><span class="comment"> 	bit [5:3]: 110 R0/6 驱动能力</span></span><br><span class="line"><span class="comment"> 	bit [0]: 0 低转换率</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">	SW_PAD_GPIO1_IO03 = <span class="number">0X10B0</span>; </span><br><span class="line"> <span class="comment">/* 3、初始化 GPIO, GPIO1_IO03 设置为输出 */</span></span><br><span class="line">	GPIO1_GDIR = <span class="number">0X0000008</span>;</span><br><span class="line"> <span class="comment">/* 4、设置 GPIO1_IO03 输出低电平，打开 LED0 */</span></span><br><span class="line">	GPIO1_DR = <span class="number">0X0</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">   打开 LED 灯</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">led_on</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> &#123;</span><br><span class="line"> <span class="comment">/* </span></span><br><span class="line"><span class="comment"> * 将 GPIO1_DR 的 bit3 清零 </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> 	GPIO1_DR &amp;= ~(<span class="number">1</span>&lt;&lt;<span class="number">3</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @description : 关闭 LED 灯</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">led_off</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> &#123;</span><br><span class="line">  <span class="comment">/* </span></span><br><span class="line"><span class="comment">   * 将 GPIO1_DR 的 bit3 置 1</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"> 	GPIO1_DR |= (<span class="number">1</span>&lt;&lt;<span class="number">3</span>);</span><br><span class="line"> &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * @description : 短时间延时函数</span></span><br><span class="line"><span class="comment">   * @param - n : 要延时循环次数(空操作循环次数，模式延时)</span></span><br><span class="line"><span class="comment">   * @return : 无</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_short</span><span class="params">(<span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> n)</span></span><br><span class="line">&#123;</span><br><span class="line"> 	<span class="keyword">while</span>(n--)&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @description : 延时函数,在 396Mhz 的主频下延时时间大约为 1ms</span></span><br><span class="line"><span class="comment"> * @param - n : 要延时的 ms 数</span></span><br><span class="line"><span class="comment"> * @return : 无</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay</span><span class="params">(<span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> n)</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="keyword">while</span>(n--)</span><br><span class="line">	&#123;</span><br><span class="line"> 		delay_short(<span class="number">0x7ff</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> &#123;</span><br><span class="line"> 	clk_enable(); <span class="comment">/* 使能所有的时钟 */</span></span><br><span class="line"> 	led_init(); <span class="comment">/* 初始化 led */</span></span><br><span class="line"></span><br><span class="line"> 	<span class="keyword">while</span>(<span class="number">1</span>) <span class="comment">/* 死循环 */</span></span><br><span class="line">	&#123; </span><br><span class="line"> 		led_off(); <span class="comment">/* 关闭 LED */</span></span><br><span class="line"> 		delay(<span class="number">500</span>); <span class="comment">/* 延时大约 500ms */</span></span><br><span class="line">		led_on(); <span class="comment">/* 打开 LED */</span></span><br><span class="line"> 		delay(<span class="number">500</span>); <span class="comment">/* 延时大约 500ms */</span></span><br><span class="line"> 	&#125;</span><br><span class="line"> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后就编写Makefile文件</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">objects: start.o led.o</span></span><br><span class="line"><span class="section">ledc.bin:<span class="variable">$(objects)</span></span></span><br><span class="line">	arm-linux-gnuebihf-ld -Ttext 0X8780000 -o ledc.elf start.o led.o</span><br><span class="line">	arm-linux-gnuebihf-objcopy -O binary -S ledc.edf ledc.bin</span><br><span class="line">	arm-linux-gnueabihf-objdump -D -m arm ledc.elf &gt; ledc.dis</span><br><span class="line"></span><br><span class="line"><span class="section">%.o:%.s</span></span><br><span class="line">arm-linux-gnueabihf-gcc -Wall -nostdlib -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line"><span class="section">%.o:%.S</span></span><br><span class="line">arm-linux-gnueabihf-gcc -Wall -nostdlib -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line"><span class="section">%.o:%.c</span></span><br><span class="line">arm-linux-gnueabihf-gcc -Wall -nostdlib -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm-rf *.o ledc.bin ledc.elf ledc.dis</span><br></pre></td></tr></table></figure>
+
+<p>第一行定义变量，第二行默认目标目的是生成start.o 和led.o，之后是使用arm-linux-gnueabihf-ld进行链接，链接地址是0X87800000,之后是编译为ledc.bin文件，在之后是反汇编，第七行是针对不同文件生成对应的.o文件，用到了自动变量$@和$&lt;,其中“$&lt;”的意思是依赖目标集合的第一个文件</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230206_230300.png"></p>
+<h4 id="链接脚本编写格式"><a href="#链接脚本编写格式" class="headerlink" title="链接脚本编写格式"></a>链接脚本编写格式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 SECTIONS&#123;</span><br><span class="line">2 . = 0X10000000;</span><br><span class="line">3 .text : &#123;*(.text)&#125;</span><br><span class="line">4 . = 0X30000000;</span><br><span class="line">5 .data ALIGN(4) : &#123; *(.data) &#125; </span><br><span class="line">6 .bss ALIGN(4) : &#123; *(.bss) &#125; </span><br><span class="line">7 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 1 行我们先写了一个关键字“SECTIONS”，后面跟了一个大括号，这个大括号和第 7 行的大括号是一对，这是必须的。看起来就跟 C 语言里面的函数一样。<br>第 2 行对一个特殊符号“.”进行赋值，“.”在链接脚本里面叫做定位计数器，默认的定位计数器为 0。我们要求代码链接到以 0X10000000 为起始地址的地方，因此这一行给“.”赋值0X10000000，表示以 0X10000000 开始，后面的文件或者段都会以 0X10000000 为起始地址开始链接。<br>第 3 行的“.text”是段名，后面的冒号是语法要求，冒号后面的大括号里面可以填上要链接到“.text”这个段里面的所有文件，“*(.text)”中的“*”是通配符，表示所有输入文件的.text段都放到“.text”中。<br>第 4 行，我们的要求是数据放到 0X30000000 开始的地方，所以我们需要重新设置定位计数器“.”，将其改为 0X30000000。如果不重新设置的话会怎么样？假设“.text”段大小为 0X10000，那么接下来的.data 段开始地址就是 0X10000000+0X10000&#x3D;0X10010000，这明显不符合我们的要求。所以我们必须调整定位计数器为 0X30000000。<br>第 5 行跟第 3 行一样，定义了一个名为“.data”的段，然后所有文件的“.data”段都放到这里面。但是这一行多了一个“ALIGN(4)”，这是什么意思呢？这是用来对“.data”这个段的起始地址做字节对齐的，ALIGN(4)表示 4 字节对齐。也就是说段“.data”的起始地址要能被 4 整除，一般常见的都是 ALIGN(4)或者 ALIGN(8)，也就是 4 字节或者 8 字节对齐。<br>第 6 行定义了一个“.bss”段，所有文件中的“.bss”数据都会被放到这个里面，“.bss”数据就是那些定义了但是没有被初始化的变量。上面就是链接脚本最基本的语法格式，我们接下来就按照这个基本的语法格式来编写我们本试验的链接脚本，我们本试验的链接脚本要求如下：<br>①、链接起始地址为 0X87800000。<br>②、start.o 要被链接到最开始的地方，因为 start.o 里面包含这第一个要执行的命令。</p>
+<h5 id="imx6ul-lds-链接脚本代码"><a href="#imx6ul-lds-链接脚本代码" class="headerlink" title="imx6ul.lds 链接脚本代码"></a>imx6ul.lds 链接脚本代码</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1 SECTIONS&#123;</span><br><span class="line">2 	. = 0X87800000;</span><br><span class="line">3 	.text :</span><br><span class="line">4 	&#123;</span><br><span class="line">5 		start.o </span><br><span class="line">6		led.o </span><br><span class="line">7 		*(.text)</span><br><span class="line">8 	&#125;</span><br><span class="line">9 	.rodata ALIGN(4) : &#123;*(.rodata*)&#125; </span><br><span class="line">10 	.data ALIGN(4) : &#123; *(.data) &#125; </span><br><span class="line">11 	__bss_start = .; </span><br><span class="line">12 	.bss ALIGN(4) : &#123; *(.bss) *(COMMON) &#125; </span><br><span class="line">13 	__bss_end = .;</span><br><span class="line">14 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 11、13 这两行其实就是对这两个符号进行赋值，其值为定位符“.”，这两个符号用来保存.bss 段的起始地址和结束地址,前面说了.bss 段是定义了但是没有被初始化的变量，我们需要手动对.bss 段的变量清零的，因此我们需要知道.bss 段的起始和结束地址，这样我们直接对这段内存赋 0 即可完成清零。通过第 11、13 行代码，.bss 段的起始地址和结束地址就保存在了“__bss_start”和“__bss_end”中，我们就可以直接在汇编或者 C 文件里面使用这两个符号。</p>
+<h5 id="修改-Makefile"><a href="#修改-Makefile" class="headerlink" title="修改 Makefile"></a>修改 Makefile</h5><p>已经编写好了链接脚本文件：imx6ul.lds，将 Makefile 中的如下一行代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arm-linux-gnueabihf-ld -Ttext 0X87800000 -o ledc.elf $^</span><br></pre></td></tr></table></figure>
+
+<p>改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arm-linux-gnueabihf-ld -Timx6ul.lds -o ledc.elf $^</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/05/2023-2-5-C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/">http://example.com/2023/02/05/2023-2-5-C%E8%AF%AD%E8%A8%80%E7%82%B9%E4%BA%AEled/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91/">裸机开发</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/05/2023-2-5-%E6%B1%87%E7%BC%96%E7%82%B9%E4%BA%AEled/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">汇编点亮led</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/04/2023-2-4-arm%E6%B1%87%E7%BC%96/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">arm汇编</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/03/16/2023-3-15-imx6ull-SPI%E6%8E%A7%E5%88%B6%E5%85%AD%E8%BD%B4/" title="imx6ull SPI控制六轴"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-16</div><div class="title">imx6ull SPI控制六轴</div></div></a></div><div><a href="/2023/03/14/2023-3-14-Imx6ull%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C%E7%94%9F%E8%AF%8D/" title="Imx6ull数据手册生词"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-14</div><div class="title">Imx6ull数据手册生词</div></div></a></div><div><a href="/2023/03/13/2023-3-13-imx6ull%E7%9A%84IIC%E5%AE%9E%E9%AA%8C/" title="imx6ull的IIC实验"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-13</div><div class="title">imx6ull的IIC实验</div></div></a></div><div><a href="/2023/03/10/2023-3-20-imx6ull%E7%9A%84RTC-%E5%AE%9E%E6%97%B6%E6%97%B6%E9%92%9F%E5%AE%9E%E9%AA%8C/" title="imx6ull的RTC 实时时钟实验"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-10</div><div class="title">imx6ull的RTC 实时时钟实验</div></div></a></div><div><a href="/2023/03/07/2023-3-06-%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86%E7%82%B9/" title="补充知识点"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-07</div><div class="title">补充知识点</div></div></a></div><div><a href="/2023/03/06/2023-3-06-imx6u%E7%9A%84RGBlCD%E6%98%BE%E7%A4%BA/" title="imx6u的RGBlCD显示"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-06</div><div class="title">imx6u的RGBlCD显示</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BA%AEled"><span class="toc-number">1.</span> <span class="toc-text">点亮led</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">链接脚本编写格式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#imx6ul-lds-%E9%93%BE%E6%8E%A5%E8%84%9A%E6%9C%AC%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.1.</span> <span class="toc-text">imx6ul.lds 链接脚本代码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-Makefile"><span class="toc-number">1.1.2.</span> <span class="toc-text">修改 Makefile</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="can通信协议"/></a><div class="content"><a class="title" href="/2023/08/07/2023-8-7-can%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="can通信协议">can通信协议</a><time datetime="2023-08-07T11:30:00.000Z" title="发表于 2023-08-07 19:30:00">2023-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="linux开发板安装第三方库"/></a><div class="content"><a class="title" href="/2023/08/06/2023-8-6-%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="linux开发板安装第三方库">linux开发板安装第三方库</a><time datetime="2023-08-06T11:30:00.000Z" title="发表于 2023-08-06 19:30:00">2023-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="音频驱动开发"/></a><div class="content"><a class="title" href="/2023/08/05/2023-8-5-%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="音频驱动开发">音频驱动开发</a><time datetime="2023-08-05T11:30:00.000Z" title="发表于 2023-08-05 19:30:00">2023-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="驱动程序编译进入内核"/></a><div class="content"><a class="title" href="/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/" title="驱动程序编译进入内核">驱动程序编译进入内核</a><time datetime="2023-08-04T11:30:00.000Z" title="发表于 2023-08-04 19:30:00">2023-08-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
