@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>网络驱动</title>
+      <link href="/2023/08/13/2023-8-13-%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/"/>
+      <url>/2023/08/13/2023-8-13-%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
+      
+        <content type="html"><![CDATA[<p>嵌入式网络硬件分为两部分： MAC 和 PHY，大家都是通过看数据手册来判断一款 SOC 是否支持网络，如果一款芯片数据手册说自己支持网络，一般都是说的这款 SOC 内置 MAC， MAC 类似 I2C 控制器、 SPI 控制器一样的外设。但是光有 MAC还不能直接驱动网络，还需要另外一个芯片： PHY，因此对于内置 MAC 的 SOC，其外部必须搭配一个 PHY 芯片。但是有些 SOC 内部没有 MAC，那也就没法搭配 PHY 芯片了，这些内部没有网络 MAC 的芯片如何上网呢？这里就要牵扯出常见的两个嵌入式网络硬件方案了 </p><p><strong>1、 SOC 内部没有网络 MAC 外设</strong><br>我们一般说某个 SOC 不支持网络，说的就是它没有网络 MAC。那么这个芯片就不能上网了吗？显然不是的，既然没有内部 MAC，那么可以找个外置的 MAC 芯片啊，不过一般这种外置的网络芯片都是 MAC+PHY 一体的。 </p><p>这种方案的优点就是让不支持网络的 SOC 能够另辟蹊径，实现网络功能，但是缺点就是网络效率不高，因为一般芯片内置的 MAC 会有网络加速引擎，比如网络专用 DMA，网络处理效率会很高。而且此类芯片网速都不快，基本就是 10&#x2F;100M。 </p><p><strong>2、 SOC 内部集成网络 MAC 外设</strong></p><p>我们一般说某个 SOC 支持网络，说的就是他内部集成网络 MAC 外设，此时我们还需要外接一个网络 PHY 芯片。</p><p>内部集成网络 MAC 的优点如下： </p><p>①、内部 MAC 外设会有专用的加速模块，比如专用的 DMA，加速网速数据的处理。<br>②、网速快，可以支持 10&#x2F;100&#x2F;1000M 网速。<br>③、外接 PHY 可选择性多，成本低。 </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130028.png"></p><p>MII接口</p><p>MII 全称是 Media Independent Interface，直译过来就是介质独立接口，它是 IEEE-802.3 定义的以太网标准接口 。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130138.png"></p><p>MII接口一共16根线，</p><p>TX_CLK： 发送时钟，如果网速为 100M 的话时钟频率为 25MHz， 10M 网速的话时钟频率为 2.5MHz，此时钟由 PHY 产生并发送给 MAC。<br>TX_EN： 发送使能信号。<br>TX_ER： 发送错误信号，高电平有效，表示 TX_ER 有效期内传输的数据无效。 10Mpbs 网速下 TX_ER 不起作用。<br>TXD[3:0]：发送数据信号线，一共 4 根。<br>RXD[3:0]： 接收数据信号线，一共 4 根。<br>RX_CLK： 接收时钟信号，如果网速为 100M 的话时钟频率为 25MHz， 10M 网速的话时钟频率为 2.5MHz， RX_CLK 也是由 PHY 产生的。<br>RX_ER： 接收错误信号，高电平有效，表示 RX_ER 有效期内传输的数据无效。 10Mpbs 网速下 RX_ER 不起作用。<br>RX_DV： 接收数据有效，作用类似 TX_EN。<br>CRS： 载波侦听信号。<br>COL： 冲突检测信号 </p><p>RMII 全称是 Reduced Media Independent Interface，翻译过来就是精简的介质独立接口，也就是 MII 接口的精简版本。 RMII 接口只需要 7 根数据线， </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130321.png"></p><p>TX_EN： 发送使能信号。<br>TXD[1:0]： 发送数据信号线，一共 2 根。<br>RXD[1:0]：接收数据信号线，一共 2 根。<br>CRS_DV： 相当于 MII 接口中的 RX_DV 和 CRS 这两个信号的混合。<br>REF_CLK： 参考时钟，由外部时钟源提供， 频率为 50MHz。这里与 MII 不同， MII 的接收和发送时钟是独立分开的，而且都是由 PHY 芯片提供的。</p><p><strong>嵌入式网络硬件框图</strong></p><p>一个 MAC 连接一个 PHY 芯片形成一个完整网络接口 </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20133933.png"></p><p>PHY 是 IEEE 802.3 规定的一个标准模块，前面说了， SOC 可以对 PHY 进行配置或者读取PHY 相关状态，这个就需要 PHY 内部寄存器去实现了。 PHY 芯片寄存器地址空间为 5 位，地址 0<del>31 共 32 个寄存器， IEEE 定义了 0</del>15 这 16 个寄存器的功能， 16~31 这 16 个寄存器由厂商自行实现。 后面16位的引脚为不同厂商的特色功能引脚，前16位就能保证基本的网络数据通信。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 驱动开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>块设备驱动开发</title>
       <link href="/2023/08/08/2023-8-8-%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/"/>
       <url>/2023/08/08/2023-8-8-%E5%9D%97%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</url>
@@ -85,25 +104,6 @@
       <url>/2023/08/04/2023-8-4-%E9%A9%B1%E5%8A%A8%E7%BC%96%E8%AF%91%E8%BF%9B%E5%85%A5%E5%86%85%E6%A0%B8/</url>
       
         <content type="html"><![CDATA[<p>通常都是将驱动源码编译为.ok文件，然后通过insmod 或者modprobe加载进系统中，而在脱离网络的设备中就需要将驱动编译进入内核。</p><h3 id="已知驱动类型操作步骤："><a href="#已知驱动类型操作步骤：" class="headerlink" title="已知驱动类型操作步骤："></a>已知驱动类型操作步骤：</h3><ol><li><p>查看自己编写驱动的所属类型，例如编写一个led的驱动，那么寻找内核drivers目录中的led驱动目录</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-04%20154249.png"></p></li><li><p>首先打开编写Kconfig文件</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-04%20154652.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tristate &quot;内容&quot;</span><br></pre></td></tr></table></figure><p>这行的内容是显示在menuconfig的目录中，相当于这个驱动的说明。</p></li><li><p>之后修改leds这个目录的Makefile</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-04%20150403.png"></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">obj-$</span><span class="language-bash">(CONFIG_GPIOLED)+= gpioled.o</span></span><br></pre></td></tr></table></figure><p>$()的内容是CONFIG_后面加上Kconfig里添加的内容，+&#x3D;后面加上文件.o的名字</p></li><li><p>最后在内核中编译make menuconfig,可以在设备驱动的led驱动里面看到自己写的驱动。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-04%20153656.png"></p></li></ol><h3 id="未知驱动类型操作步骤："><a href="#未知驱动类型操作步骤：" class="headerlink" title="未知驱动类型操作步骤："></a>未知驱动类型操作步骤：</h3><ol><li><p>在drivers的目录下自行创建一个目录</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir nxpops</span><br></pre></td></tr></table></figure></li><li><p>在此目录下创建Kconfig文件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nxpops</span><br><span class="line">vi Kconfig</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menuconfigNXPOPS</span><br><span class="line">bool &quot;nxpops driver&quot;</span><br><span class="line">help </span><br><span class="line">Put the driver the operation in nxp</span><br><span class="line">configMULTITOUCH</span><br><span class="line">tristate &quot;multitouch&quot;</span><br><span class="line">depends on NXPOPS</span><br><span class="line">help</span><br><span class="line">nxp multitouch</span><br></pre></td></tr></table></figure></li><li><p>编写Makefile</p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-<span class="variable">$(CONFIG_BEEP)</span>+= beep.o</span><br></pre></td></tr></table></figure></li><li><p>之后修改drivers目录中的Kconfig和Makefile文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source &quot;drivers/nxpops/Kconfig&quot;</span><br></pre></td></tr></table></figure><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-y+= nxpops/</span><br></pre></td></tr></table></figure></li></ol>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 驱动开发 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>网络驱动</title>
-      <link href="/2023/08/03/2023-8-13-%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/"/>
-      <url>/2023/08/03/2023-8-13-%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
-      
-        <content type="html"><![CDATA[<p>嵌入式网络硬件分为两部分： MAC 和 PHY，大家都是通过看数据手册来判断一款 SOC 是否支持网络，如果一款芯片数据手册说自己支持网络，一般都是说的这款 SOC 内置 MAC， MAC 类似 I2C 控制器、 SPI 控制器一样的外设。但是光有 MAC还不能直接驱动网络，还需要另外一个芯片： PHY，因此对于内置 MAC 的 SOC，其外部必须搭配一个 PHY 芯片。但是有些 SOC 内部没有 MAC，那也就没法搭配 PHY 芯片了，这些内部没有网络 MAC 的芯片如何上网呢？这里就要牵扯出常见的两个嵌入式网络硬件方案了 </p><p><strong>1、 SOC 内部没有网络 MAC 外设</strong><br>我们一般说某个 SOC 不支持网络，说的就是它没有网络 MAC。那么这个芯片就不能上网了吗？显然不是的，既然没有内部 MAC，那么可以找个外置的 MAC 芯片啊，不过一般这种外置的网络芯片都是 MAC+PHY 一体的。 </p><p>这种方案的优点就是让不支持网络的 SOC 能够另辟蹊径，实现网络功能，但是缺点就是网络效率不高，因为一般芯片内置的 MAC 会有网络加速引擎，比如网络专用 DMA，网络处理效率会很高。而且此类芯片网速都不快，基本就是 10&#x2F;100M。 </p><p><strong>2、 SOC 内部集成网络 MAC 外设</strong></p><p>我们一般说某个 SOC 支持网络，说的就是他内部集成网络 MAC 外设，此时我们还需要外接一个网络 PHY 芯片。</p><p>内部集成网络 MAC 的优点如下： </p><p>①、内部 MAC 外设会有专用的加速模块，比如专用的 DMA，加速网速数据的处理。<br>②、网速快，可以支持 10&#x2F;100&#x2F;1000M 网速。<br>③、外接 PHY 可选择性多，成本低。 </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130028.png"></p><p>MII接口</p><p>MII 全称是 Media Independent Interface，直译过来就是介质独立接口，它是 IEEE-802.3 定义的以太网标准接口 。</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130138.png"></p><p>MII接口一共16根线，</p><p>TX_CLK： 发送时钟，如果网速为 100M 的话时钟频率为 25MHz， 10M 网速的话时钟频率为 2.5MHz，此时钟由 PHY 产生并发送给 MAC。<br>TX_EN： 发送使能信号。<br>TX_ER： 发送错误信号，高电平有效，表示 TX_ER 有效期内传输的数据无效。 10Mpbs 网速下 TX_ER 不起作用。<br>TXD[3:0]：发送数据信号线，一共 4 根。<br>RXD[3:0]： 接收数据信号线，一共 4 根。<br>RX_CLK： 接收时钟信号，如果网速为 100M 的话时钟频率为 25MHz， 10M 网速的话时钟频率为 2.5MHz， RX_CLK 也是由 PHY 产生的。<br>RX_ER： 接收错误信号，高电平有效，表示 RX_ER 有效期内传输的数据无效。 10Mpbs 网速下 RX_ER 不起作用。<br>RX_DV： 接收数据有效，作用类似 TX_EN。<br>CRS： 载波侦听信号。<br>COL： 冲突检测信号 </p><p>RMII 全称是 Reduced Media Independent Interface，翻译过来就是精简的介质独立接口，也就是 MII 接口的精简版本。 RMII 接口只需要 7 根数据线， </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20130321.png"></p><p>TX_EN： 发送使能信号。<br>TXD[1:0]： 发送数据信号线，一共 2 根。<br>RXD[1:0]：接收数据信号线，一共 2 根。<br>CRS_DV： 相当于 MII 接口中的 RX_DV 和 CRS 这两个信号的混合。<br>REF_CLK： 参考时钟，由外部时钟源提供， 频率为 50MHz。这里与 MII 不同， MII 的接收和发送时钟是独立分开的，而且都是由 PHY 芯片提供的。</p><p><strong>嵌入式网络硬件框图</strong></p><p>一个 MAC 连接一个 PHY 芯片形成一个完整网络接口 </p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-08-13%20133933.png"></p><p>PHY 是 IEEE 802.3 规定的一个标准模块，前面说了， SOC 可以对 PHY 进行配置或者读取PHY 相关状态，这个就需要 PHY 内部寄存器去实现了。 PHY 芯片寄存器地址空间为 5 位，地址 0<del>31 共 32 个寄存器， IEEE 定义了 0</del>15 这 16 个寄存器的功能， 16~31 这 16 个寄存器由厂商自行实现。 后面16位的引脚为不同厂商的特色功能引脚，前16位就能保证基本的网络数据通信。</p>]]></content>
       
       
       
