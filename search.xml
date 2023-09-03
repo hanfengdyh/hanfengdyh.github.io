@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>qt信号和槽</title>
+      <title>开发板Qt环境搭建</title>
       <link href="/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
       <url>/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
       
@@ -1543,25 +1543,6 @@
     
     
     <entry>
-      <title>Linux工具vim</title>
-      <link href="/2022/10/20/2022-10-20-Linux%E5%B7%A5%E5%85%B7vim/"/>
-      <url>/2022/10/20/2022-10-20-Linux%E5%B7%A5%E5%85%B7vim/</url>
-      
-        <content type="html"><![CDATA[<p>vi编辑器是所有Unix及<a href="http://www.2cto.com/os/linux/">Linux</a>系统下标准的编辑器，他就相当于<a href="http://www.2cto.com/os/windows/">windows</a>系统中的记事本一样，它的强大不逊色于任何最新的文本编辑器。他是我们使用Linux系统不能缺少的工具。<a href="https://so.csdn.net/so/search?q=vim&spm=1001.2101.3001.7020">vim</a> 具有程序编辑的能力，可以以字体颜色辨别语法的正确性。</p><p>vi可以分为三种状态，分别是一般模式、编辑模式和命令行模式</p><p>一般模式：<br>以vi打开一个文件就直接进入一般模式了(这是默认的模式)。在这个模式中， 你可以使用上下左右按键来移动光标，你可以使用删除字符或删除整行来处理文件内容， 也可以使用复制、粘贴来处理你的文件数据。</p><p>编辑模式：<br>在一般模式中可以进行删除、复制、粘贴等的操作，但是却无法编辑文件的内容，只有当你按下【i, I, o, O, a, A, r, R】等任何一个字母之后才会进入编辑模式。这时候屏幕的左下方会出现【INSERT或 REPLACE】的字样，此时才可以进行编辑。而如果要回到一般模式时， 则必须要按下【Esc】即可退出编辑模式。</p><p>命令行模式：<br>输入【 : &#x2F; ? 】三个中的任何一个，就可以将光标移动到最底下那一行。在这个模式中， 可以提供查找、读取、存盘、替换字符、离开vi、显示行号等的动作则是在此模式中完成的！</p><p>针对程序员配置</p><p>打开高亮功能，vim会通过文件的扩展名自动决定哪些是关键字。</p><p>：syntax on</p><p>自动缩进</p><p>：set autoindent</p><p>设置tab键的空格数</p><p>：set shiftwidth&#x3D;4</p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/vimopen.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/vimParenthesis.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/sn.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/close.png"></p><p>如何在vim中进行搜索</p><p>想要在 Vim 中进行搜索，必须处于 normal 模式。当你启动 Vim 编辑器的时候，你就在这个模式。 想要从其他任何模式回到正常模式，仅仅需要按 ESC 按键。</p><p>Vim 允许你使用<code>/</code>和<code>?</code>快速搜索文本。</p><p>想要向前搜索按<code>/</code>，想要向后搜索按<code>?</code>，输入搜索样式，并且按<code>Enter</code>进行搜索：</p><p>Vim 搜索的基本步骤如下：</p><p>01.按<code>/</code></p><p>02.输入搜索样式</p><p>03.按<code>Enter</code>进行搜索</p><p>04.按<code>n</code>搜索下一个匹配结果，或者<code>N</code>查找前面一个匹配结果。</p><p>例如搜索gnu输入&#x2F;\&lt;gnu\&gt;</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> linux </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>C语言算法项</title>
       <link href="/2022/10/20/2022-10-20-C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/"/>
       <url>/2022/10/20/2022-10-20-C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/</url>
@@ -1573,6 +1554,25 @@
         <tags>
             
             <tag> C </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux工具vim</title>
+      <link href="/2022/10/20/2022-10-20-Linux%E5%B7%A5%E5%85%B7vim/"/>
+      <url>/2022/10/20/2022-10-20-Linux%E5%B7%A5%E5%85%B7vim/</url>
+      
+        <content type="html"><![CDATA[<p>vi编辑器是所有Unix及<a href="http://www.2cto.com/os/linux/">Linux</a>系统下标准的编辑器，他就相当于<a href="http://www.2cto.com/os/windows/">windows</a>系统中的记事本一样，它的强大不逊色于任何最新的文本编辑器。他是我们使用Linux系统不能缺少的工具。<a href="https://so.csdn.net/so/search?q=vim&spm=1001.2101.3001.7020">vim</a> 具有程序编辑的能力，可以以字体颜色辨别语法的正确性。</p><p>vi可以分为三种状态，分别是一般模式、编辑模式和命令行模式</p><p>一般模式：<br>以vi打开一个文件就直接进入一般模式了(这是默认的模式)。在这个模式中， 你可以使用上下左右按键来移动光标，你可以使用删除字符或删除整行来处理文件内容， 也可以使用复制、粘贴来处理你的文件数据。</p><p>编辑模式：<br>在一般模式中可以进行删除、复制、粘贴等的操作，但是却无法编辑文件的内容，只有当你按下【i, I, o, O, a, A, r, R】等任何一个字母之后才会进入编辑模式。这时候屏幕的左下方会出现【INSERT或 REPLACE】的字样，此时才可以进行编辑。而如果要回到一般模式时， 则必须要按下【Esc】即可退出编辑模式。</p><p>命令行模式：<br>输入【 : &#x2F; ? 】三个中的任何一个，就可以将光标移动到最底下那一行。在这个模式中， 可以提供查找、读取、存盘、替换字符、离开vi、显示行号等的动作则是在此模式中完成的！</p><p>针对程序员配置</p><p>打开高亮功能，vim会通过文件的扩展名自动决定哪些是关键字。</p><p>：syntax on</p><p>自动缩进</p><p>：set autoindent</p><p>设置tab键的空格数</p><p>：set shiftwidth&#x3D;4</p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/vimopen.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/vimParenthesis.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/sn.png"></p><p><img src="https://cdn.jsdelivr.net/gh/hanfengdyh/image@main/bloglmg/close.png"></p><p>如何在vim中进行搜索</p><p>想要在 Vim 中进行搜索，必须处于 normal 模式。当你启动 Vim 编辑器的时候，你就在这个模式。 想要从其他任何模式回到正常模式，仅仅需要按 ESC 按键。</p><p>Vim 允许你使用<code>/</code>和<code>?</code>快速搜索文本。</p><p>想要向前搜索按<code>/</code>，想要向后搜索按<code>?</code>，输入搜索样式，并且按<code>Enter</code>进行搜索：</p><p>Vim 搜索的基本步骤如下：</p><p>01.按<code>/</code></p><p>02.输入搜索样式</p><p>03.按<code>Enter</code>进行搜索</p><p>04.按<code>n</code>搜索下一个匹配结果，或者<code>N</code>查找前面一个匹配结果。</p><p>例如搜索gnu输入&#x2F;\&lt;gnu\&gt;</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
             
         </tags>
       
