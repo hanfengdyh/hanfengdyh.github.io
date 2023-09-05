@@ -1,0 +1,355 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>开发板Qt环境搭建 | 涵风 Blog</title><meta name="keywords" content="Qt"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="字符串类操作字符串QString 提供了一个二元的“+”操作符用于组合两个字符串，并提供一个+&#x3D;操作符将一个字符串追加到另一个字符串的结尾，另一种方法QString::append()函数具有同样功能。 123QString str1 &#x3D; &quot;welcome&quot;;str1 &#x3D; str1 + &quot;to you&quot;;	&#x2F;&#x2F;str1 &#x3D; &quot;welcom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发板Qt环境搭建">
+<meta property="og:url" content="https://example.com/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="字符串类操作字符串QString 提供了一个二元的“+”操作符用于组合两个字符串，并提供一个+&#x3D;操作符将一个字符串追加到另一个字符串的结尾，另一种方法QString::append()函数具有同样功能。 123QString str1 &#x3D; &quot;welcome&quot;;str1 &#x3D; str1 + &quot;to you&quot;;	&#x2F;&#x2F;str1 &#x3D; &quot;welcom">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-09-01T07:30:32.000Z">
+<meta property="article:modified_time" content="2023-09-05T08:47:38.499Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '开发板Qt环境搭建',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-05 16:47:38'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">开发板Qt环境搭建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-09-01T07:30:32.000Z" title="发表于 2023-09-01 15:30:32">2023-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-05T08:47:38.499Z" title="更新于 2023-09-05 16:47:38">2023-09-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="开发板Qt环境搭建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="字符串类"><a href="#字符串类" class="headerlink" title="字符串类"></a>字符串类</h3><h4 id="操作字符串"><a href="#操作字符串" class="headerlink" title="操作字符串"></a>操作字符串</h4><p>QString 提供了一个二元的“+”操作符用于组合两个字符串，<strong>并提供一个+&#x3D;操作符将一个字符串追加到另一个字符串的结尾</strong>，<strong>另一种方法QString::append()函数具有同样功能。</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QString str1 = <span class="string">&quot;welcome&quot;</span>;</span><br><span class="line">str1 = str1 + <span class="string">&quot;to you&quot;</span>;	<span class="comment">//str1 = &quot;welcome to you&quot;;</span></span><br><span class="line">QString.<span class="built_in">append</span>(<span class="string">&quot;!&quot;</span>);	<span class="comment">//str = &quot;welcome to you !&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>其他组合字符串作用函数：</p>
+<table>
+<thead>
+<tr>
+<th>insert()函数</th>
+<th>原字符串特定位置插入另一个字符串</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>prepend()函数</strong></td>
+<td><strong>原字符串的开头插入另一个字符串</strong></td>
+</tr>
+<tr>
+<td><strong>replace()函数</strong></td>
+<td><strong>用指定的字符串代替另一个字符串</strong></td>
+</tr>
+<tr>
+<td><strong>arg()函数</strong></td>
+<td><strong>重载数据类型</strong></td>
+</tr>
+<tr>
+<td><strong>trimmed()函数</strong></td>
+<td><strong>移除字符串两端的空白字符</strong></td>
+</tr>
+<tr>
+<td><strong>simplified()函数</strong></td>
+<td><strong>移除字符串两端的空白字符，使用单个空格字符”“代替字符串中出现的空白字符。</strong></td>
+</tr>
+</tbody></table>
+<p><strong>查询字符串数据</strong></p>
+<p>QString::startsWith()函数判断一个字符串是否以第一个参数的字符串开头，第二个参数是是否大小写敏感。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QString str= <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">QString::<span class="built_in">startsWith</span>(<span class="string">&quot;hello&quot;</span>, Qt::CaseSensitive); <span class="comment">//返回true</span></span><br></pre></td></tr></table></figure>
+
+<p>同理QString::endWith是判断一个字符串是否以第一个参数的字符串结尾。</p>
+<p>QString::contains判断一个指定字符串是否出现过。</p>
+<p>localeAwareCompare(const QSring&amp;, const QString&amp;):静态函数比较前后两个字符串。</p>
+<p><strong>字符串转换函数</strong></p>
+<p>QString::toInt()函数将字符串转换为整型数值，类似的函数还有 toDouble() 、 toFloat() 、toLong() 、 toLongLong()等。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">QString str=<span class="string">&quot;l25&quot;</span>; <span class="comment">//初始化一个 &quot;125&quot; 的字符串</span></span><br><span class="line"><span class="type">bool</span> ok;</span><br><span class="line"><span class="type">int</span> hex=str. <span class="built_in">toInt</span> (&amp;ok, <span class="number">16</span>) ; / / ok=<span class="literal">true</span>, hex=<span class="number">2</span> <span class="number">93</span></span><br><span class="line"><span class="type">int</span> dec=str.<span class="built_in">toint</span>(&amp;ok,<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数bool类型指针用于返回转换状态。成功true，失败false。第二个参数指定了转换基数，0x为16基数16，0为基数8，其他都是10;</p>
+<p>① toAsciiO~ 返回一个 ASCII 编码的 8 位字符串。<br>② toLatinlO: 返回一个 Latin-I 0S08859-1) 编码的 8 位字符串。<br>③ toUtf80: 返回一个 UTF-8 编码的 8 位字符串 (UTF-8 是 ASCII 码的超集<br>④ toLocal8Bit0: 返回一个系统本地 (locale) 编码的 8 位字符串。 </p>
+<h3 id="容器类"><a href="#容器类" class="headerlink" title="容器类"></a>容器类</h3><p>Qt库提供了一套通用的基于模板的容器类，可以用这些类存储指定类型的项。比如，你需要一个大小可变的QString的数组，则使用QVector<QString>。</p>
+<p>这些容器类比STL（C++标准模板库）容器设计得更轻量、更安全并且更易于使用。如果对STL不熟悉，或者倾向于用“Qt的方式”，那么你可以使用这些类，而不去使用STL的类。</p>
+<p>存储在 Qt 容器中的数据必须是可赋值的数据类型，也就是说，这种数据类型必须提供一个默认的构造函数（不需要参数的构造函数）、一个复制构造函数和一个赋值操作运算符。 </p>
+<h4 id="QList-类、QLinkedList-类和-QVector-类"><a href="#QList-类、QLinkedList-类和-QVector-类" class="headerlink" title="QList 类、QLinkedList 类和 QVector 类"></a>QList 类、QLinkedList 类和 QVector 类</h4><h4 id=""><a href="#" class="headerlink" title=""></a><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-09-05%20154308.png"></h4><table>
+<thead>
+<tr>
+<th>类</th>
+<th>概述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>QList<T></td>
+<td>这是目前<strong>使用最频繁的容器类</strong>，它存储了指定类型(T)的一串值，可以通过索引来获得。本质上QList是用数组实现的，从而保证基于索引的访问非常快。</td>
+</tr>
+<tr>
+<td>QLinkedList<T></td>
+<td>类似于QList，但它使用迭代器而不是整数索引来获得项。当在一个很大的list中间插入项时，它提供了更好的性能，并且它有更好的迭代器机制。</td>
+</tr>
+<tr>
+<td>QVector<T></td>
+<td>在内存中相邻的位置存储一组值，在开头或中间插入会非常慢，因为它会导致内存中很多项移动一个位置。</td>
+</tr>
+<tr>
+<td>QStack<T></td>
+<td>QVector的一个子类，提供后进先出的机制。在当前的QVector中增加了几个方法：push()、pos()、top()。</td>
+</tr>
+<tr>
+<td>QQueue<T></td>
+<td>QList的一个子类，提供了先进先出的机制，在当前的QList中增加了几个方法：enqueue()、dequeue()、head()。</td>
+</tr>
+<tr>
+<td>QSet<T></td>
+<td>单值的数学集合，能够快速查找。</td>
+</tr>
+<tr>
+<td>QMap&lt;Key, T&gt;</td>
+<td>提供了字典（关联数组）将类型Key的键对应类型T的值。通常一个键对应一个值，QMap以Key的顺序存储数据，如果顺序不重要，QHash是一个更快的选择。</td>
+</tr>
+<tr>
+<td>QMultiMap&lt;Key, T&gt;</td>
+<td>QMap的子类，提供了多值的接口，一个键对应多个值。</td>
+</tr>
+<tr>
+<td>QHash&lt;Key, T&gt;</td>
+<td>和QMap几乎有着相同的接口，但查找起来更快。QHash存储数据没有什么顺序。</td>
+</tr>
+<tr>
+<td>QMultiHash&lt;Key, T&gt;</td>
+<td>QHash的子类，提供了多值的接口。</td>
+</tr>
+</tbody></table>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QCoreApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QCoreApplication <span class="title">a</span><span class="params">(argc, argv)</span></span></span><br><span class="line"><span class="function">    QList&lt;<span class="type">int</span>&gt; list</span>;</span><br><span class="line">    list&lt;&lt;<span class="number">1</span> &lt;&lt; <span class="number">2</span>&lt;&lt; <span class="number">3</span>&lt;&lt; <span class="number">4</span>&lt;&lt; <span class="number">5</span>;</span><br><span class="line">    <span class="function">QListIterator&lt;<span class="type">int</span>&gt; <span class="title">i</span> <span class="params">(list)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(; i.<span class="built_in">hasNext</span>();)</span><br><span class="line">    	<span class="built_in">qDebug</span>() &lt;&lt; i.<span class="built_in">next</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="QVariant-类"><a href="#QVariant-类" class="headerlink" title="QVariant 类"></a>QVariant 类</h3><p>QVariant 类类似千 C++的联合 (union) 数据类型，它不仅能保存很多 Qt 类型的值，包括QColor 、 QBrush 、 QFont 、 QPen 、 QRect 、 QString 和 QSize 等，而且也能存放 Qt 的容器类型的值。 </p>
+<p>新建QtWidgets Application基类选择QWidget，取消创建界面复选框。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;widget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Qdebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QVariant&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QColor&gt;</span></span></span><br><span class="line">Widget :: <span class="built_in">Widget</span>(QWidget *parent)</span><br><span class="line">	:<span class="built_in">QWidget</span>(parent)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function">QVariant <span class="title">v</span><span class="params">(<span class="number">709</span>)</span></span>;<span class="comment">//声明了一个QVariant变量v,并初始化为整数</span></span><br><span class="line">    <span class="built_in">QDebug</span>() &lt;&lt; v.<span class="built_in">toInt</span>();	<span class="comment">//调用QVariant::toInt函数将QVariant变量包含的内容换为整数并输出。</span></span><br><span class="line">    <span class="function">QVariant <span class="title">w</span><span class="params">(<span class="string">&quot;How are you ?&quot;</span>)</span></span>; <span class="comment">//声明一个QVariant变量w初始化为字符串</span></span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; w.<span class="built_in">toString</span>();	<span class="comment">//调用QVariant::toString函数将QVariant变量包含的内容换为整数并输出。</span></span><br><span class="line">    QMap&lt;QString, QVariant&gt; map;<span class="comment">//声明一个 QMap 变量 map, 使用字符串作为键， QVariant变量作为值。</span></span><br><span class="line">    map[<span class="string">&quot;int&quot;</span>] = <span class="number">709</span>;	</span><br><span class="line">    map[<span class="string">&quot;int&quot;</span>J=<span class="number">709</span>;</span><br><span class="line">	map[<span class="string">&quot;double&quot;</span>)=<span class="number">709.</span> <span class="number">709</span>;</span><br><span class="line">	map [<span class="string">&quot;string&quot;</span>) =<span class="string">&quot;How are you! &quot;</span>;</span><br><span class="line">	map[<span class="string">&quot;color&quot;</span>)=<span class="built_in">QColor</span>(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	<span class="built_in">qDebug</span> () &lt;&lt;map [<span class="string">&quot;int&quot;</span>]&lt;&lt; map[<span class="string">&quot;int&quot;</span>] .<span class="built_in">toint</span>();</span><br><span class="line">	<span class="built_in">qDebug</span>()&lt;&lt;map[<span class="string">&quot;double&quot;</span>]&lt;&lt; map[<span class="string">&quot;double&quot;</span>].<span class="built_in">toDouble</span>();</span><br><span class="line">	<span class="built_in">qDebug</span>()&lt;&lt;map[<span class="string">&quot;string&quot;</span>J&lt;&lt; map[<span class="string">&quot;string&quot;</span>] .<span class="built_in">toString</span>();</span><br><span class="line">	<span class="built_in">qDebug</span> () &lt;&lt;map [<span class="string">&quot;color&quot;</span>]&lt;&lt; map [<span class="string">&quot;color&quot;</span>]. <span class="built_in">value</span>&lt;QColor&gt; (); <span class="comment">//在 QVariant 变量中保存了一个 QColor 对象，并使用模板 QVariant: :value()还原为 QColor, 然后输出。</span></span><br><span class="line">	QStringList sl; <span class="comment">//创建一个字符串列表</span></span><br><span class="line">	sl&lt;&lt;<span class="string">&quot;A&quot;</span>&lt;&lt;<span class="string">&quot;B&quot;</span>&lt;&lt;<span class="string">&quot;C&quot;</span>&lt;&lt;<span class="string">&quot;D&quot;</span>;</span><br><span class="line">	<span class="function">QVariant <span class="title">slv</span><span class="params">(sl)</span></span>; <span class="comment">//将该列表保存在一个 QVariant 变量中</span></span><br><span class="line">	<span class="keyword">if</span> (slv. <span class="built_in">type</span>() ==QVariant:: StringList) <span class="comment">//QVariant: :type() 函数返回存储在 QVariant 变量中的值的数据类型。 </span></span><br><span class="line">	&#123;</span><br><span class="line">		QStringLis 七 list=slv.<span class="built_in">toStringList</span>();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=O;i&lt;list.<span class="built_in">size</span>() ;++i)</span><br><span class="line">		<span class="built_in">qDebug</span> ()«list. <span class="built_in">at</span> (i); / /输出列表内容    </span><br><span class="line">    &#125;          </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法及正则表达式"><a href="#算法及正则表达式" class="headerlink" title="算法及正则表达式"></a>算法及正则表达式</h3><p>常用的算法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QCoreApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QCoreApplication <span class="title">a0</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    <span class="type">double</span> a = <span class="number">-19.3</span>, b=<span class="number">9.7</span>;</span><br><span class="line">    <span class="type">double</span> c =<span class="built_in">aAbs</span>(a);</span><br><span class="line">    <span class="type">double</span> max = <span class="built_in">aMax</span>(b, c);</span><br><span class="line">    <span class="type">int</span> bn = <span class="built_in">qRound</span>(b);</span><br><span class="line">    <span class="type">int</span> cn = <span class="built_in">qRound</span>(c);</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;a= &quot;</span>&lt;&lt; a;</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;b= &quot;</span>&lt;&lt; b;</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;c = qAbs(a)= &quot;</span> &lt;&lt; c;</span><br><span class="line">    <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;c=qAbs(a)= &quot;</span>&lt;&lt;c;</span><br><span class="line">	<span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;qMax(b,c)= &quot;</span>&lt;&lt;max;</span><br><span class="line">	<span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;bn=qRound(b)= &quot;</span>&lt;&lt;bn;</span><br><span class="line">	<span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;cn=qRound(c)= &quot;</span>&lt;&lt;en;</span><br><span class="line">	<span class="built_in">qSwap</span> (bn, en); </span><br><span class="line">／／调用 <span class="built_in">qDebug</span> ()函数输出所有的计算结果</span><br><span class="line">	<span class="built_in">qDebug</span> () &lt;&lt;<span class="string">&quot;qSwap (l?n, en) : &quot;</span>&lt;&lt;<span class="string">&quot;bn=&quot;</span>&lt;&lt;bn&lt;&lt;<span class="string">&quot; cn=&quot;</span>&lt;&lt;cn;</span><br><span class="line">	<span class="keyword">return</span> aO. <span class="built_in">exec</span>() ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/">https://example.com/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Qt/">Qt</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">开发板Qt环境搭建</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/30/2023-8-30-%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">qt信号和槽</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="开发板Qt环境搭建"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-01</div><div class="title">开发板Qt环境搭建</div></div></a></div><div><a href="/2023/08/30/2023-8-30-%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/" title="qt信号和槽"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-30</div><div class="title">qt信号和槽</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">字符串类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.1.</span> <span class="toc-text">操作字符串</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">容器类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#QList-%E7%B1%BB%E3%80%81QLinkedList-%E7%B1%BB%E5%92%8C-QVector-%E7%B1%BB"><span class="toc-number">2.1.</span> <span class="toc-text">QList 类、QLinkedList 类和 QVector 类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QVariant-%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">QVariant 类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%8F%8A%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">算法及正则表达式</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="开发板Qt环境搭建"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="开发板Qt环境搭建"/></a><div class="content"><a class="title" href="/2023/09/01/2023-9-1-%E5%BC%80%E5%8F%91%E6%9D%BFqt%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="开发板Qt环境搭建">开发板Qt环境搭建</a><time datetime="2023-09-01T07:30:32.000Z" title="发表于 2023-09-01 15:30:32">2023-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/" title="开发板Qt环境搭建"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="开发板Qt环境搭建"/></a><div class="content"><a class="title" href="/2023/09/01/2023-9-5-qt%E5%B7%A5%E5%85%B7%E7%B1%BB%E6%8E%A7%E4%BB%B61/" title="开发板Qt环境搭建">开发板Qt环境搭建</a><time datetime="2023-09-01T07:30:32.000Z" title="发表于 2023-09-01 15:30:32">2023-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/30/2023-8-30-%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/" title="qt信号和槽"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="qt信号和槽"/></a><div class="content"><a class="title" href="/2023/08/30/2023-8-30-%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/" title="qt信号和槽">qt信号和槽</a><time datetime="2023-08-30T07:30:32.000Z" title="发表于 2023-08-30 15:30:32">2023-08-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/20/2023-8-20-c++%E6%B5%85%E5%AD%A6/" title="c++浅学"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="c++浅学"/></a><div class="content"><a class="title" href="/2023/08/20/2023-8-20-c++%E6%B5%85%E5%AD%A6/" title="c++浅学">c++浅学</a><time datetime="2023-08-20T12:30:27.000Z" title="发表于 2023-08-20 20:30:27">2023-08-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
