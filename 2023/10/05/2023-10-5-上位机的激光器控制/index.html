@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>上位机控制激光器 | 涵风 Blog</title><meta name="keywords" content="Qt"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="这个工程是假期前完成的，延期更新了。 激光器的IO 所以说需要使用的是PWM，GPIO控制IO口，adc这三个知识点。 首先是要给设备加上pwm的驱动和adc的驱动。 pwm驱动首先是imx6ull有8路PWM输出，对应这8个PWM的控制器，在设备树下有相对应的8个控制器节点。 查看手册可以看到：  • 16-bit up-counter with clock source selection•">
+<meta property="og:type" content="article">
+<meta property="og:title" content="上位机控制激光器">
+<meta property="og:url" content="https://example.com/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="这个工程是假期前完成的，延期更新了。 激光器的IO 所以说需要使用的是PWM，GPIO控制IO口，adc这三个知识点。 首先是要给设备加上pwm的驱动和adc的驱动。 pwm驱动首先是imx6ull有8路PWM输出，对应这8个PWM的控制器，在设备树下有相对应的8个控制器节点。 查看手册可以看到：  • 16-bit up-counter with clock source selection•">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-10-05T04:20:32.000Z">
+<meta property="article:modified_time" content="2023-10-05T07:23:29.414Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '上位机控制激光器',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-05 15:23:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">111</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">上位机控制激光器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-05T07:23:29.414Z" title="更新于 2023-10-05 15:23:29">2023-10-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="上位机控制激光器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>这个工程是假期前完成的，延期更新了。</p>
+<h2 id="激光器的IO"><a href="#激光器的IO" class="headerlink" title="激光器的IO"></a>激光器的IO</h2><p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-05%20133328.png"></p>
+<p>所以说需要使用的是PWM，GPIO控制IO口，adc这三个知识点。</p>
+<p>首先是要给设备加上pwm的驱动和adc的驱动。</p>
+<h2 id="pwm驱动"><a href="#pwm驱动" class="headerlink" title="pwm驱动"></a>pwm驱动</h2><p>首先是imx6ull有8路PWM输出，对应这8个PWM的控制器，在设备树下有相对应的8个控制器节点。</p>
+<p>查看手册可以看到：</p>
+<blockquote>
+<p>• 16-bit up-counter with clock source selection<br>• 4 x 16 FIFO to minimize interrupt overhead<br>• 12-bit prescaler for division of clock<br>• Sound and melody generation<br>• Active high or active low configured output<br>• Can be programmed to be active in low-power mode<br>• Can be programmed to be active in debug mode<br>• Interrupts at compare and rollover </p>
+</blockquote>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-05%20140844.png"></p>
+<p>使用GPIO1_IO04(也就是PWM3)来进行完成实验。在imx6ull.dtsi文件中已经有关于pwm3的节点信息了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 pwm3: pwm@02088000 &#123;</span><br><span class="line">2 compatible = &quot;fsl,imx6ul-pwm&quot;, &quot;fsl,imx27-pwm&quot;;</span><br><span class="line">3 reg = &lt;0x02088000 0x4000&gt;;</span><br><span class="line">4 interrupts = &lt;GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH&gt;;</span><br><span class="line">5 clocks = &lt;&amp;clks IMX6UL_CLK_PWM3&gt;,</span><br><span class="line">6 &lt;&amp;clks IMX6UL_CLK_PWM3&gt;;</span><br><span class="line">7 clock-names = &quot;ipg&quot;, &quot;per&quot;;</span><br><span class="line">8 #pwm-cells = &lt;2&gt;;</span><br><span class="line">9 &#125;；</span><br></pre></td></tr></table></figure>
+
+<p>在自己的设备树文件中进行追加GPIO1_IO04的信息。在iomuxc节点添加引脚信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pinctrl_pwm3: pwm3grp &#123;</span><br><span class="line">	fsl,pins = &lt;</span><br><span class="line">	MX6UL_PAD_GPIO1_IO04__PWM3_OUT 0x110b0</span><br><span class="line">	&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在根节点后的追加节点内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&amp;pwm3 &#123;</span><br><span class="line">	pinctrl-names = &quot;default&quot;;</span><br><span class="line">	pinctrl-0 = &lt;&amp;pinctrl_pwm3&gt;;</span><br><span class="line">	clocks = &lt;&amp;clks IMX6UL_CLK_PWM3&gt;,</span><br><span class="line">	&lt;&amp;clks IMX6UL_CLK_PWM3&gt;;</span><br><span class="line">	status = &quot;okay&quot;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>之后保存加载linux内核使能pwm驱动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-&gt; Device Drivers</span><br><span class="line">-&gt; Pulse-Width Modulation (PWM) Support</span><br><span class="line">-&gt; &lt;*&gt; i.MX PWM support</span><br></pre></td></tr></table></figure>
+
+<p>之后打开设备通过串口查看根文件系统里的设备驱动加载。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd /sys/class/pwm</span><br><span class="line">$ ls</span><br><span class="line">pwmchip0 pwmchip1 pwmchip2 pwmchip3 pwmchip4 pwmchip5 pwmchip6 pwmchip7</span><br></pre></td></tr></table></figure>
+
+<p>pwmchip0<del>pwmchip7 对应 I.MX6ULL 的 PWM1</del>PWM8，所以我们需要用到pwmchip2。 </p>
+<p><strong>调出 pwmchip2 的 pwm0 子目录</strong> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 0 &gt; /sys/class/pwm/pwmchip2/export </span><br></pre></td></tr></table></figure>
+
+<p>执行完成会在 pwmchip2 目录下生成一个名为“pwm0”的子目录 ，这个就是控制PWM3的目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$cd pwm0</span><br><span class="line">$echo 1 &gt; /sys/class/pwm/pwmchip2/pwm0/enable	#使能pwm</span><br><span class="line">$echo 50000 &gt; /sys/class/pwm/pwmchip2/pwm0/period	#设置频率</span><br><span class="line">$echo 10000 &gt; /sys/class/pwm/pwmchip2/pwm0/duty_cycle	#设置占空比</span><br></pre></td></tr></table></figure>
+
+<h2 id="ADC驱动"><a href="#ADC驱动" class="headerlink" title="ADC驱动"></a>ADC驱动</h2><p>使用的是IIO子系统框架来编写adc的传感器驱动，使用的是nxp编写好的ADC驱动，在其基础上添加引脚信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pinctrl_adc1: adc1grp &#123;</span><br><span class="line">	fsl,pins = &lt;</span><br><span class="line">	MX6UL_PAD_GPIO1_IO01__GPIO1_IO01 0xb0</span><br><span class="line">	&gt;;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>追加adc1节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&amp;adc1 &#123;</span><br><span class="line">	pinctrl-names = &quot;default&quot;;</span><br><span class="line">	pinctrl-0 = &lt;&amp;pinctrl_adc1&gt;;</span><br><span class="line">	num-channels = &lt;2&gt;;</span><br><span class="line">	vref-supply = &lt;&amp;reg_vref_adc&gt;;</span><br><span class="line">	status = &quot;okay&quot;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>使能内核自带的adc驱动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-&gt; Device Drivers</span><br><span class="line">-&gt; Industrial I/O support</span><br><span class="line">-&gt; Analog to digital converters</span><br><span class="line">-&gt; &lt;*&gt; Freescale vf610 ADC driver //选中</span><br></pre></td></tr></table></figure>
+
+<p>编译修改后的设备树，然后使用新的设备树启动系统。进入&#x2F;sys&#x2F;bus&#x2F;iio&#x2F;devices 目录下，此目录下就有 ADC 对应的 iio 设备： iio:deviceX </p>
+<p>iio:device0”就是 ADC 设备，因为此时并没有加载其他的 IIO 设备驱动，只有一个 ADC。 </p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-05%20151722.png"></p>
+<p>in_voltage1_raw： ADC1 通道 1 原始值文件。<br>in_voltage_scale： ADC1 比例文件(分辨率)，单位为 mV。实际电压值(mV)&#x3D;in_voltage1_raw*in_voltage_scale </p>
+<p><strong>gpio的控制参考上一篇文章</strong></p>
+<p>最后就是通过QFile来操作文件，mainwindow.h文件如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> MAINWINDOW_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAINWINDOW_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QMainWindow&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QPushButton&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSpinBox&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QLabel&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QProcess&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QFile&gt;</span></span></span><br><span class="line">QT_BEGIN_NAMESPACE</span><br><span class="line"><span class="keyword">namespace</span> Ui &#123; <span class="keyword">class</span> <span class="title class_">MainWindow</span>; &#125;</span><br><span class="line">QT_END_NAMESPACE</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MainWindow</span> : <span class="keyword">public</span> QMainWindow</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MainWindow</span>(QWidget *parent = <span class="literal">nullptr</span>);</span><br><span class="line">    ~<span class="built_in">MainWindow</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::MainWindow *ui;</span><br><span class="line">    QPushButton * start;</span><br><span class="line">    QPushButton *update;</span><br><span class="line">    QSpinBox * p_spinBox;</span><br><span class="line">    QSpinBox *t_spinBox;</span><br><span class="line">    QLabel *p_label;</span><br><span class="line">    QLabel *t_label;</span><br><span class="line">    QProcess *process;</span><br><span class="line">    QFile file;</span><br><span class="line">    QPushButton * uptemper;</span><br><span class="line"><span class="keyword">private</span> slots:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pushButton_startprogress</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">update_power</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">up_temperature</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// MAINWINDOW_H</span></span></span><br></pre></td></tr></table></figure>
+
+<p>mainwindow.cpp文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;mainwindow.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ui_mainwindow.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QFile&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QString&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QProcess&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bytesToInt</span><span class="params">(QByteArray bytes)</span> </span>;</span><br><span class="line">MainWindow::<span class="built_in">MainWindow</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QMainWindow</span>(parent)</span><br><span class="line">    , <span class="built_in">ui</span>(<span class="keyword">new</span> Ui::MainWindow)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;<span class="built_in">setupUi</span>(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">setGeometry</span>( <span class="number">0</span>, <span class="number">0</span>, <span class="number">800</span>, <span class="number">480</span>);</span><br><span class="line">    start = <span class="keyword">new</span> <span class="built_in">QPushButton</span>(<span class="string">&quot;开启激光器的配置&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">    start-&gt;<span class="built_in">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">120</span>, <span class="number">40</span>);</span><br><span class="line">    update = <span class="keyword">new</span> <span class="built_in">QPushButton</span>(<span class="string">&quot;控制功率&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">    update -&gt;<span class="built_in">setGeometry</span>(<span class="number">300</span>, <span class="number">150</span>, <span class="number">80</span>, <span class="number">40</span>);</span><br><span class="line">    uptemper = <span class="keyword">new</span> <span class="built_in">QPushButton</span>(<span class="string">&quot;更新温度功率的数据&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">    uptemper-&gt;<span class="built_in">setGeometry</span>(<span class="number">300</span>, <span class="number">190</span>, <span class="number">160</span>, <span class="number">40</span>);</span><br><span class="line">    file.<span class="built_in">setFileName</span>(<span class="string">&quot;/sys/bus/iio/devices/iio:device0/in_voltage0_raw&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!file.<span class="built_in">exists</span>())&#123;</span><br><span class="line">       QLabel * label = <span class="keyword">new</span> <span class="built_in">QLabel</span>(<span class="string">&quot;文件不存在,无法调制功率&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">       label-&gt;<span class="built_in">setGeometry</span>( <span class="number">270</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">40</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    QLabel * label_p = <span class="keyword">new</span> <span class="built_in">QLabel</span>(<span class="string">&quot;激光器功率为&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">    QLabel * <span class="type">label_t</span> = <span class="keyword">new</span> <span class="built_in">QLabel</span>(<span class="string">&quot;激光器温度为&quot;</span>,<span class="keyword">this</span>);</span><br><span class="line">    label_p -&gt; <span class="built_in">setGeometry</span>(<span class="number">100</span>, <span class="number">150</span>, <span class="number">100</span>, <span class="number">40</span>);</span><br><span class="line">    <span class="type">label_t</span> -&gt; <span class="built_in">setGeometry</span>(<span class="number">100</span>, <span class="number">190</span>, <span class="number">100</span>, <span class="number">40</span>);</span><br><span class="line">    p_spinBox = <span class="keyword">new</span> <span class="built_in">QSpinBox</span>(<span class="keyword">this</span>);</span><br><span class="line">    p_spinBox-&gt;<span class="built_in">setGeometry</span>(<span class="number">210</span>, <span class="number">150</span>, <span class="number">60</span>, <span class="number">40</span>);</span><br><span class="line">    p_spinBox-&gt;<span class="built_in">setRange</span>(<span class="number">0</span>, <span class="number">100</span>);                <span class="comment">//设置激光器功率0~100</span></span><br><span class="line">    t_spinBox = <span class="keyword">new</span> <span class="built_in">QSpinBox</span>(<span class="keyword">this</span>);</span><br><span class="line">    t_spinBox-&gt;<span class="built_in">setGeometry</span>(<span class="number">210</span>, <span class="number">190</span>, <span class="number">60</span>, <span class="number">40</span>);</span><br><span class="line">    <span class="built_in">connect</span>(uptemper, <span class="built_in">SIGNAL</span>(<span class="built_in">clicked</span>()), <span class="keyword">this</span>, <span class="built_in">SLOT</span>(<span class="built_in">up_temperature</span>()));</span><br><span class="line">    <span class="built_in">connect</span>(start, <span class="built_in">SIGNAL</span>(<span class="built_in">clicked</span>()),<span class="keyword">this</span>, <span class="built_in">SLOT</span>(<span class="built_in">pushButton_startprogress</span>()));<span class="comment">//开启激光器的IO口配置</span></span><br><span class="line">    <span class="built_in">connect</span>(update, <span class="built_in">SIGNAL</span>(<span class="built_in">clicked</span>()),<span class="keyword">this</span>, <span class="built_in">SLOT</span>(<span class="built_in">update_power</span>()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MainWindow::~<span class="built_in">MainWindow</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MainWindow::pushButton_startprogress</span><span class="params">()</span><span class="comment">//初始化激光器完成</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 2 &gt; /sys/class/gpio/export&quot;</span>);      <span class="comment">//gpio1_02的IO口配置</span></span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo out &gt; /sys/class/gpio/gpio2/direction&quot;</span>);</span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 1 &gt; /sys/class/gpio/gpio2/value&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 0 &gt; /sys/class/gpio/export&quot;</span>);      <span class="comment">//gpio1_00的IO口配置</span></span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo out &gt; /sys/class/gpio/gpio0/direction&quot;</span>);</span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 1 &gt; /sys/class/gpio/gpio0/value&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 0 &gt; /sys/class/pwm/pwmchip2/export&quot;</span>);  <span class="comment">//使能pwm</span></span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 1 &gt; /sys/class/pwm/pwmchip2/pwm0/enable&quot;</span>);</span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 50000 &gt; /sys/class/pwm/pwmchip2/pwm0/period&quot;</span>);</span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;echo 10000 &gt; /sys/class/pwm/pwmchip2/pwm0/duty_cycle&quot;</span>);<span class="comment">//默认占空比是百分之二十</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MainWindow::update_power</span><span class="params">()</span><span class="comment">//完成</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> current_power = p_spinBox-&gt;<span class="built_in">value</span>();</span><br><span class="line">    <span class="type">int</span> a = current_power * <span class="number">50000</span> / <span class="number">100</span>;</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; a;</span><br><span class="line">    QFile file1 ;</span><br><span class="line">    file1.<span class="built_in">setFileName</span>(<span class="string">&quot;/sys/class/pwm/pwmchip2/pwm0/duty_cycle&quot;</span>);   <span class="comment">//选择占空比的文件</span></span><br><span class="line">    <span class="comment">//file1.setFileName(&quot;/home/moss/test&quot;);</span></span><br><span class="line">    <span class="keyword">if</span>(!file1.<span class="built_in">exists</span>())                  <span class="comment">//判断文件是否存在</span></span><br><span class="line">        <span class="built_in">qDebug</span>()&lt;&lt;file.<span class="built_in">errorString</span>();</span><br><span class="line">    <span class="keyword">if</span>(!file1.<span class="built_in">open</span>(QIODevice::ReadWrite))<span class="comment">//文件打开</span></span><br><span class="line">        <span class="built_in">qDebug</span>()&lt;&lt;file.<span class="built_in">errorString</span>();</span><br><span class="line">    QString str = QString::<span class="built_in">number</span>(a);   <span class="comment">//整数型变为字符型</span></span><br><span class="line">    file1.<span class="built_in">write</span>(str.<span class="built_in">toUtf8</span>());          <span class="comment">//写入命令</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MainWindow::up_temperature</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QFile file2 ;</span><br><span class="line">    QFile file3 ;</span><br><span class="line">    file2.<span class="built_in">setFileName</span>(<span class="string">&quot;/sys/bus/iio/devices/iio:device0/in_voltage1_raw&quot;</span>);   <span class="comment">//选择adc通道文件</span></span><br><span class="line">    file3.<span class="built_in">setFileName</span>(<span class="string">&quot;/sys/bus/iio/devices/iio:device0/in_voltage_scale&quot;</span>);  <span class="comment">//比例文件</span></span><br><span class="line">    <span class="type">bool</span> isok2 = file2.<span class="built_in">open</span>(QIODevice::ReadOnly);</span><br><span class="line">    QByteArray array2;</span><br><span class="line">    QByteArray array3;</span><br><span class="line">    <span class="keyword">if</span>(isok2 == <span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        array2 =  file2.<span class="built_in">readAll</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">bool</span> isok3 = file3.<span class="built_in">open</span>(QIODevice::ReadOnly);</span><br><span class="line">    <span class="keyword">if</span>(isok3 == <span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        array3 =  file3.<span class="built_in">readAll</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">double</span> number = <span class="built_in">bytesToInt</span>(array2) * <span class="built_in">bytesToInt</span>(array3);</span><br><span class="line">    t_spinBox -&gt;<span class="built_in">setValue</span>(number);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bytesToInt</span><span class="params">(QByteArray bytes)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> addr = bytes[<span class="number">0</span>] &amp; <span class="number">0x000000FF</span>;</span><br><span class="line">    addr |= ((bytes[<span class="number">1</span>] &lt;&lt; <span class="number">8</span>) &amp; <span class="number">0x0000FF00</span>);</span><br><span class="line">    addr |= ((bytes[<span class="number">2</span>] &lt;&lt; <span class="number">16</span>) &amp; <span class="number">0x00FF0000</span>);</span><br><span class="line">    addr |= ((bytes[<span class="number">3</span>] &lt;&lt; <span class="number">24</span>) &amp; <span class="number">0xFF000000</span>);</span><br><span class="line">    <span class="keyword">return</span> addr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下，因为没有连接设备，在虚拟机上编译，所以没查到文件。这部分功能完成接下来就是光谱仪的开发了。</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-05%20152150.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/">https://example.com/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Qt/">Qt</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Qt控制gpio(sysfs控制gpio)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/" title="Qt控制gpio(sysfs控制gpio)"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-26</div><div class="title">Qt控制gpio(sysfs控制gpio)</div></div></a></div><div><a href="/2023/09/21/2023-9-21-qt-led/" title="Qt控制LED"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-21</div><div class="title">Qt控制LED</div></div></a></div><div><a href="/2023/09/17/2023-9-17-%E6%95%B0%E6%8D%AE%E5%BA%93sql/" title="SQL数据库"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-17</div><div class="title">SQL数据库</div></div></a></div><div><a href="/2023/09/15/2023-9-15-%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="多线程"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-15</div><div class="title">多线程</div></div></a></div><div><a href="/2023/09/14/2023-9-14-qchart%E7%BC%A9%E6%94%BE%E6%9B%B2%E7%BA%BF/" title="Qchart放大缩小曲线图"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-14</div><div class="title">Qchart放大缩小曲线图</div></div></a></div><div><a href="/2023/09/11/2023-9-10-qt%E5%AE%B9%E5%99%A8/" title="Qt容器"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-11</div><div class="title">Qt容器</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">111</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BF%80%E5%85%89%E5%99%A8%E7%9A%84IO"><span class="toc-number">1.</span> <span class="toc-text">激光器的IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwm%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">pwm驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ADC%E9%A9%B1%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">ADC驱动</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/" title="上位机控制激光器"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="上位机控制激光器"/></a><div class="content"><a class="title" href="/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/" title="上位机控制激光器">上位机控制激光器</a><time datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/" title="Qt控制gpio(sysfs控制gpio)"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="Qt控制gpio(sysfs控制gpio)"/></a><div class="content"><a class="title" href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/" title="Qt控制gpio(sysfs控制gpio)">Qt控制gpio(sysfs控制gpio)</a><time datetime="2023-09-26T07:20:32.000Z" title="发表于 2023-09-26 15:20:32">2023-09-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/21/2023-9-21-qt-led/" title="Qt控制LED"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="Qt控制LED"/></a><div class="content"><a class="title" href="/2023/09/21/2023-9-21-qt-led/" title="Qt控制LED">Qt控制LED</a><time datetime="2023-09-21T07:20:32.000Z" title="发表于 2023-09-21 15:20:32">2023-09-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/18/2023-9-18-git%E5%88%86%E6%94%AF/" title="Git分支"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="Git分支"/></a><div class="content"><a class="title" href="/2023/09/18/2023-9-18-git%E5%88%86%E6%94%AF/" title="Git分支">Git分支</a><time datetime="2023-09-18T08:27:27.000Z" title="发表于 2023-09-18 16:27:27">2023-09-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
