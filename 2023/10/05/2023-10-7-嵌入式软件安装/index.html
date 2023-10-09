@@ -1,0 +1,351 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>嵌入式上的C语言 | 涵风 Blog</title><meta name="keywords" content="软件安装"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="吐槽一下自己，悲催了呀，安装个pycharm引发了一系列惨案，在最新的pycharm的版本上对于16版本的python3.5不支持，卸载之后终端挂了，apt-get install挂了，重新弄一个系统吧，顺便记录一下，嵌入式的软件安装。 Ubuntu和Windows之间的复制粘贴1234sudo apt-get autoremove open-vm-toolssudo apt-get instal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嵌入式上的C语言">
+<meta property="og:url" content="https://example.com/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="吐槽一下自己，悲催了呀，安装个pycharm引发了一系列惨案，在最新的pycharm的版本上对于16版本的python3.5不支持，卸载之后终端挂了，apt-get install挂了，重新弄一个系统吧，顺便记录一下，嵌入式的软件安装。 Ubuntu和Windows之间的复制粘贴1234sudo apt-get autoremove open-vm-toolssudo apt-get instal">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-10-05T04:20:32.000Z">
+<meta property="article:modified_time" content="2023-10-09T06:00:33.802Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="软件安装">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '嵌入式上的C语言',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-09 14:00:33'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">嵌入式上的C语言</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-09T06:00:33.802Z" title="更新于 2023-10-09 14:00:33">2023-10-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="嵌入式上的C语言"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>吐槽一下自己，悲催了呀，安装个pycharm引发了一系列惨案，在最新的pycharm的版本上对于16版本的python3.5不支持，卸载之后终端挂了，apt-get install挂了，重新弄一个系统吧，顺便记录一下，嵌入式的软件安装。</p>
+<h2 id="Ubuntu和Windows之间的复制粘贴"><a href="#Ubuntu和Windows之间的复制粘贴" class="headerlink" title="Ubuntu和Windows之间的复制粘贴"></a>Ubuntu和Windows之间的复制粘贴</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get autoremove open-vm-tools</span><br><span class="line">sudo apt-get install open-vm-tools</span><br><span class="line">sudo apt-get install open-vm-tools-desktop</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装编程工具"><a href="#安装编程工具" class="headerlink" title="安装编程工具"></a>安装编程工具</h2><h3 id="make工具安装"><a href="#make工具安装" class="headerlink" title="make工具安装"></a>make工具安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install make</span><br></pre></td></tr></table></figure>
+
+<h3 id="vscode工具安装"><a href="#vscode工具安装" class="headerlink" title="vscode工具安装"></a>vscode工具安装</h3><p>官网下载安装包<a target="_blank" rel="noopener" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://vscode.cdn.azure.cn/stable/e7e037083ff4455cf320e344325dacb480062c3c/code_1.83.0-1696350811_amd64.deb">https://vscode.cdn.azure.cn/stable/e7e037083ff4455cf320e344325dacb480062c3c/code_1.83.0-1696350811_amd64.deb</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i code_1.83.0-1696350811_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<p>在任意路径的终端命令行下输入code命令，即可打开vscode；</p>
+<h3 id="安装交叉编译工具"><a href="#安装交叉编译工具" class="headerlink" title="安装交叉编译工具"></a>安装交叉编译工具</h3><p><a target="_blank" rel="noopener" href="https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/arm-linux-gnueabihf/">Linaro Releases</a></p>
+<p>安装gcc-arm-linux-gnueabihf 工具以上是官网地址。</p>
+<p>将压缩包放到&#x2F;usr&#x2F;local&#x2F;arm目录下解压</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile #打开/etc/profile 以后，在最后面输入如下所示内容：</span><br><span class="line">export PATH=$PATH:/usr/local/arm/gcc/bin</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装相关库</strong><br>在使用交叉编译器之前还需要安装一下其它的库，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install lsb-core lib32stdc++6 </span><br><span class="line">arm-linux-gnueabihf-gcc -v	#重启后使用命令查询</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装tftp服务"><a href="#安装tftp服务" class="headerlink" title="安装tftp服务"></a>安装tftp服务</h3><p>Ubuntu 主机作为 TFTP 服务器。因此需要在 Ubuntu 上搭建 TFTP 服务器，需要安装 tftp-hpa 和 tftpd-hpa，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install tftp-hpa tftpd-hpa</span><br><span class="line">sudo apt-get install xinetd</span><br></pre></td></tr></table></figure>
+
+<p>和 NFS 一样， TFTP 也需要一个文件夹来存放文件，在用户目录下新建一个目录，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/zuozhongkai/linux/tftpboot</span><br><span class="line">chmod 777 /home/zuozhongkai/linux/tftpboot</span><br></pre></td></tr></table></figure>
+
+<p>这 样 我 就 在 我 的 电 脑 上 创 建 了 一 个 名 为 tftpboot 的 目 录 ( 文 件 夹 ) ， 路 径 为<br>&#x2F;home&#x2F;moss&#x2F;linux&#x2F;tftpboot。注意！我们要给 tftpboot 文件夹权限，否则的话 uboot 不能从tftpboot 文件夹里面下载文件。<br>最后配置 tftp，安装完成以后新建文件&#x2F;etc&#x2F;xinetd.d&#x2F;tftp， 如果没有&#x2F;etc&#x2F;xinetd.d 目录的话自行创建， 然后在里面输入如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server tftp</span><br><span class="line">&#123;</span><br><span class="line">	socket_type = dgram</span><br><span class="line">	protocol = udp</span><br><span class="line">	wait = yes</span><br><span class="line">	user = root</span><br><span class="line">	server = /usr/sbin/in.tftpd</span><br><span class="line">	server_args = -s /home/moss/linux/tftpboot/</span><br><span class="line">	disable = no</span><br><span class="line">	per_source = 11</span><br><span class="line">	cps = 100 2</span><br><span class="line">	flags = IPv4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完了以后启动 tftp 服务，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service tftpd-hpa start</span><br></pre></td></tr></table></figure>
+
+<p>打开&#x2F;etc&#x2F;default&#x2F;tftpd-hpa 文件，将其修改为如下所示内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># /etc/default/tftpd-hpa</span><br><span class="line"></span><br><span class="line">TFTP_USERNAME=&quot;tftp&quot;</span><br><span class="line">TFTP_DIRECTORY=&quot;/home/moss/linux/tftpboot&quot;</span><br><span class="line">TFTP_ADDRESS=&quot;:69&quot;</span><br><span class="line">TFTP_OPTIONS=&quot;-l -c -s&quot;</span><br></pre></td></tr></table></figure>
+
+<p>TFTP_DIRECTORY 就是我们上面创建的 tftp 文件夹目录，以后我们就将所有需要通过TFTP 传输的文件都放到这个文件夹里面，并且要给予这些文件相应的权限。<br>最后输入如下命令， 重启 tftp 服务器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service tftpd-hpa restart </span><br></pre></td></tr></table></figure>
+
+<h3 id="安装NFS服务"><a href="#安装NFS服务" class="headerlink" title="安装NFS服务"></a>安装NFS服务</h3><p>进行 Linux 驱动开发的时候需要 NFS 启动，因此要先安装并开启 Ubuntu 中的 NFS 服务，使用如下命令安装 NFS 服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nfs-kernel-server rpcbind </span><br></pre></td></tr></table></figure>
+
+<p>要先配置 nfs，使用如下命令打开 nfs 配置文件&#x2F;etc&#x2F;exports：sudo vi &#x2F;etc&#x2F;exports </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/exports</span><br></pre></td></tr></table></figure>
+
+<p>打开&#x2F;etc&#x2F;exports 以后在后面添加如下所示内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/zuozhongkai/linux/nfs *(rw,sync,no_root_squash) </span><br></pre></td></tr></table></figure>
+
+<p>重启 NFS 服务，使用命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure>
+
+<p>SSH 服务开启<br>开启 Ubuntu 的 SSH 服务以后我们就可以在 Windwos 下使用终端软件登陆到 Ubuntu，比如使用 SecureCRT， Ubuntu 下使用如下命令开启 SSH 服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openssh-server </span><br></pre></td></tr></table></figure>
+
+<h3 id="nfs出现的问题"><a href="#nfs出现的问题" class="headerlink" title="nfs出现的问题"></a>nfs出现的问题</h3><p>这个问题会出现在Ubuntu18上，NFS挂载失败 - VFS: Unable to mount root fs on unknown-block(2,0)。提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[  101.168510] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(2,0)</span><br><span class="line">[  101.176792] ---[ end Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(2,0) ]---</span><br></pre></td></tr></table></figure>
+
+<p>解决方式一：</p>
+<p>改开发板的uboot参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setenv bootargs &#x27;console=ttymxc0,115200 root=/dev/nfs rw nfsroot=192.168.28.254:/rootfs ip=192.168.28.234:192.168.28.254:192.168.28.1:255.255.255.0::eth0:off&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setenv bootargs &#x27;console=ttymxc0,115200 root=/dev/nfs rw nfsroot=192.168.28.254:/rootfs,v3,tcp ip=192.168.28.234:192.168.28.254:192.168.28.1:255.255.255.0::eth0:off&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>就可以挂载成功。</p>
+<p>方式二：更改ubuntu的NFS配置参数</p>
+<p>上面那种方式是指定bootargs变量，但是如果你移植的uboot和linux内核版本不是很新的话，uboot和内核还不支持NFS-V3版本协议，那么就只能修改ubuntu的NFS配置了。</p>
+<p>问题解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/default/nfs-kernel-server </span><br></pre></td></tr></table></figure>
+
+<p>在文件末尾加入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RPCNFSDOPTS=&quot;--nfs-version 2,3,4 --debug --syslog&quot;</span><br></pre></td></tr></table></figure>
+
+<p>重启NFS：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure>
+
+<p>这样就能开发板就能挂载上了！<br>都经过了可靠的测试都是好用的。</p>
+<h2 id="tslib-移植与使用"><a href="#tslib-移植与使用" class="headerlink" title="tslib 移植与使用"></a>tslib 移植与使用</h2><p>tslib 是一个开源的第三方库，用于触摸屏性能调试 。</p>
+<p>1、获取 tslib 源码<br>首先肯定是获取 tslib 的源码， git 地址为 <a target="_blank" rel="noopener" href="https://github.com/kergoth/tslib%EF%BC%8C">https://github.com/kergoth/tslib，</a><br>2、修改 tslib 源码所属用户<br>修改解压得到的 tslib-1.21 目录所属用户为当前用户，这一步一定要做！否则在稍后的编译中会遇到各种问题。我当前 ubuntu 的登录用户名为“moss”，那么修改命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown moss:moss tslib-1.21 -R</span><br></pre></td></tr></table></figure>
+
+<p>3、 ubuntu 工具安装<br>编译 tslib 的时候需要先在 ubuntu 中安装一些文件，防止编译 tslib 过程中出错，命令如下<br>所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install autoconf</span><br><span class="line">sudo apt-get install automake</span><br><span class="line">sudo apt-get install libtool</span><br></pre></td></tr></table></figure>
+
+<p>4、编译 tslib<br>首先在 ubuntu 中创建一个名为“tslib”的目录存放编译结果，比如我们创建的 tslib 目录全路径为： &#x2F;home&#x2F;moss&#x2F;linux&#x2F;tool&#x2F;tslib。<br>接下来输入如下命令配置并编译 tslib：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd tslib-1.21/ //进入 tslib 源码目录</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --host=arm-linux-gnueabihf --prefix=/home/moss/linux/tool/tslib</span><br><span class="line">make //编译</span><br><span class="line">make install //安装</span><br></pre></td></tr></table></figure>
+
+<p>注意，在使用.&#x2F;configure 配置 tslib 的时候“–host”参数指定编译器，“–prefix”参数指定编译完成以后的 tslib 文件安装到哪里，这里肯定是安装到我们刚刚创建的“tslib”目录下。<br>bin 目录下是可执行文件，包括 tslib 的测试工具。 etc 目录下是 tslib 的配置文件， lib 目录下是相关的库文件。</p>
+<h2 id="Qt软件安装"><a href="#Qt软件安装" class="headerlink" title="Qt软件安装"></a>Qt软件安装</h2><p>进入网址 <a target="_blank" rel="noopener" href="http://download.qt.io/archive/qt/5.12/5.12.9/%E4%B8%8B%E8%BD%BD">http://download.qt.io/archive/qt/5.12/5.12.9/下载</a> Qt 5.12.9。 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.qt.io/archive/qt/5.12/5.12.9/qt-opensource-linux-x64-5.12.9.run</span><br></pre></td></tr></table></figure>
+
+<p>下载速度奇慢，建议使用迅雷下载，迅雷下完不愿用再卸载。（安装软件）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod u+x qt-opensource-linux-x64-5.12.9.run</span><br><span class="line">sudo ./qt-opensource-linux-x64-5.12.9.run </span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展分区工具"><a href="#扩展分区工具" class="headerlink" title="扩展分区工具"></a>扩展分区工具</h2><p>使用GParted Partition Editor 软件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gparted</span><br></pre></td></tr></table></figure>
+
+<h2 id="Pycharm软件安装"><a href="#Pycharm软件安装" class="headerlink" title="Pycharm软件安装"></a>Pycharm软件安装</h2><p>查询自己系统的python3的版本，pycharm不同版本支持不同python版本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 --version</span><br></pre></td></tr></table></figure>
+
+<p>之后去pythcharm官网进行下载对应的版本，进行解压压缩包。将解压的文件移动到&#x2F;opt&#x2F;目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd pycharm-community-2022.3.3 /opt/</span><br></pre></td></tr></table></figure>
+
+<p>执行&#x2F;bin&#x2F;里面的pycharm.sh文件。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">https://example.com/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">软件安装</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">上位机控制激光器</div></div></a></div><div class="next-post pull-right"><a href="/2023/10/05/2023-10-6-%E5%B5%8C%E5%85%A5%E5%BC%8F%E4%B8%8A%E7%9A%84C%E8%AF%AD%E8%A8%80/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">嵌入式上的C语言</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ubuntu%E5%92%8CWindows%E4%B9%8B%E9%97%B4%E7%9A%84%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="toc-number">1.</span> <span class="toc-text">Ubuntu和Windows之间的复制粘贴</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">安装编程工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#make%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">make工具安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vscode%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">vscode工具安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">安装交叉编译工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85tftp%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.4.</span> <span class="toc-text">安装tftp服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85NFS%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.5.</span> <span class="toc-text">安装NFS服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nfs%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.6.</span> <span class="toc-text">nfs出现的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tslib-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">tslib 移植与使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Qt%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">Qt软件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7"><span class="toc-number">5.</span> <span class="toc-text">扩展分区工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pycharm%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">6.</span> <span class="toc-text">Pycharm软件安装</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/" title="上位机控制激光器"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="上位机控制激光器"/></a><div class="content"><a class="title" href="/2023/10/05/2023-10-5-%E4%B8%8A%E4%BD%8D%E6%9C%BA%E7%9A%84%E6%BF%80%E5%85%89%E5%99%A8%E6%8E%A7%E5%88%B6/" title="上位机控制激光器">上位机控制激光器</a><time datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" title="嵌入式上的C语言"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="嵌入式上的C语言"/></a><div class="content"><a class="title" href="/2023/10/05/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" title="嵌入式上的C语言">嵌入式上的C语言</a><time datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/05/2023-10-6-%E5%B5%8C%E5%85%A5%E5%BC%8F%E4%B8%8A%E7%9A%84C%E8%AF%AD%E8%A8%80/" title="嵌入式上的C语言"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="嵌入式上的C语言"/></a><div class="content"><a class="title" href="/2023/10/05/2023-10-6-%E5%B5%8C%E5%85%A5%E5%BC%8F%E4%B8%8A%E7%9A%84C%E8%AF%AD%E8%A8%80/" title="嵌入式上的C语言">嵌入式上的C语言</a><time datetime="2023-10-05T04:20:32.000Z" title="发表于 2023-10-05 12:20:32">2023-10-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/" title="Qt控制gpio(sysfs控制gpio)"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="Qt控制gpio(sysfs控制gpio)"/></a><div class="content"><a class="title" href="/2023/09/26/2023-9-26-qt%E6%8E%A7%E5%88%B6gpio(sysfs%E6%8E%A7%E5%88%B6gpio)/" title="Qt控制gpio(sysfs控制gpio)">Qt控制gpio(sysfs控制gpio)</a><time datetime="2023-09-26T07:20:32.000Z" title="发表于 2023-09-26 15:20:32">2023-09-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
