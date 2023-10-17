@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>boa服务器发布 | 涵风 Blog</title><meta name="keywords" content="linux"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="这个东西配置cgi的路径要一次配置出来，不要安装完再配置，否则容易出现cgi的跳转404的现象。 Boa介绍其可执行代码只有大约60KB左右，Boa是一个单任务的HTTP服务器，Boa只能依次完成用户的请求，而不会fork出新的进程来处理并发连接请求。Boa支持CGI。Boa的设计目标是速度和安全。（CGI只是一个进程，用来提供接口），自动目录生成和自动文件枪支进行拼接。Boa的主要设计目标是速度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="boa服务器发布">
+<meta property="og:url" content="https://example.com/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="这个东西配置cgi的路径要一次配置出来，不要安装完再配置，否则容易出现cgi的跳转404的现象。 Boa介绍其可执行代码只有大约60KB左右，Boa是一个单任务的HTTP服务器，Boa只能依次完成用户的请求，而不会fork出新的进程来处理并发连接请求。Boa支持CGI。Boa的设计目标是速度和安全。（CGI只是一个进程，用来提供接口），自动目录生成和自动文件枪支进行拼接。Boa的主要设计目标是速度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-10-11T07:20:32.000Z">
+<meta property="article:modified_time" content="2023-10-17T12:54:21.037Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'boa服务器发布',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-17 20:54:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">115</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">boa服务器发布</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-11T07:20:32.000Z" title="发表于 2023-10-11 15:20:32">2023-10-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T12:54:21.037Z" title="更新于 2023-10-17 20:54:21">2023-10-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="boa服务器发布"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>这个东西配置cgi的路径要一次配置出来，不要安装完再配置，否则容易出现cgi的跳转404的现象。</p>
+<h3 id="Boa介绍"><a href="#Boa介绍" class="headerlink" title="Boa介绍"></a>Boa介绍</h3><p>其可执行代码只有大约60KB左右，Boa是一个单任务的HTTP服务器，Boa只能依次完成用户的请求，而不会fork出新的进程来处理并发连接请求。Boa支持CGI。Boa的设计目标是速度和安全。（CGI只是一个进程，用来提供接口），自动目录生成和自动文件枪支进行拼接。<br>Boa的主要设计目标是速度和安全性。安全性在“不能被恶意用户破坏”的意义上，不是“细粒度访问控制和加密通信”。</p>
+<p>特点：可靠性和可移植性，Boa不是作为功能强大的服务器。<br>开发平台：GNU &#x2F; Linux是目前的开发平台。</p>
+<p>下载源码<a target="_blank" rel="noopener" href="http://www.boa.org/">http://www.boa.org/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf boa-0.94.13.tar.gz</span><br><span class="line">cd ./boa-0.94.13/src/</span><br></pre></td></tr></table></figure>
+
+<p>更改文件</p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-17%20164941.png"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-17%20165211.png"></p>
+<p>在boa-0.94.13&#x2F;src目录下，新建install.mk文件，使用Makefile命令install和uninstall安装和卸载软件及软件配置信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">.PHONY: all install uninstall test</span><br><span class="line"> </span><br><span class="line">SRC_PWD 	= $(PWD)</span><br><span class="line">SUDO		= sudo</span><br><span class="line">MKDIR		= mkdir -p</span><br><span class="line">CP			= cp -rf</span><br><span class="line">RM			= rm -rf </span><br><span class="line"> </span><br><span class="line">BIN_BOA		= boa</span><br><span class="line">BIN_INDEX 	= boa_indexer</span><br><span class="line"> </span><br><span class="line">CONF_FILE 	= ../boa.conf </span><br><span class="line"> </span><br><span class="line">DIR_CONF	= /etc/boa</span><br><span class="line">DIR_LOG		= /var/log/boa</span><br><span class="line">DIR_ROOT	= /var/wwwBoa</span><br><span class="line">DIR_MAKER	= /usr/lib/boa</span><br><span class="line">DIR_CGI		= /var/wwwBoa/cgi-bin</span><br><span class="line"> </span><br><span class="line">all:install</span><br><span class="line"> </span><br><span class="line">install:</span><br><span class="line">	@echo &quot;Install boa.&quot;</span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(MKDIR) $(DIR_CONF) $(DIR_LOG) $(DIR_ROOT) $(DIR_MAKER) $(DIR_CGI) &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">		$(SUDO) $(CP) $(SRC_PWD)/$(CONF_FILE) $(DIR_CONF) &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">		$(SUDO) $(CP) $(SRC_PWD)/$(BIN_BOA) /usr/bin &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">		$(SUDO) $(CP) $(SRC_PWD)/$(BIN_INDEX) $(DIR_MAKER) &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">		$(SUDO) $(CP) $(SRC_PWD)/../examples/index.html $(DIR_ROOT)</span></span><br><span class="line"> </span><br><span class="line">uninstall:</span><br><span class="line">	@echo &quot;Uninstall boa.&quot;</span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(RM) /usr/bin/boa</span></span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(RM) $(DIR_CONF)</span></span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(RM) $(DIR_LOG)</span></span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(RM) $(DIR_ROOT)</span></span><br><span class="line"><span class="meta prompt_">	$</span><span class="language-bash">(SUDO) $(RM) $(DIR_MAKER)</span></span><br><span class="line"> </span><br><span class="line">test:</span><br><span class="line">	@echo &quot;-------This is a Test.---------&quot;</span><br><span class="line">	@echo $(SRC_PWD)</span><br></pre></td></tr></table></figure>
+
+<p>更改boa.conf文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User 0</span><br><span class="line">Group 0</span><br><span class="line">DocumentRoot /var/www</span><br><span class="line">ScriptAlias /cgi-bin/ /var/www/cgi-bin/</span><br></pre></td></tr></table></figure>
+
+<p>之后进行编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd src</span><br><span class="line">./configure</span><br><span class="line">make </span><br><span class="line">make -f install.mk install</span><br></pre></td></tr></table></figure>
+
+<p>之后在&#x2F;var&#x2F;www文件夹下面写html网页文件，写的内容就是你显示的内容。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Flyer<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello world.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>how are you.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果加上cgi的跳转，请加上一句话</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Flyer<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello world.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;./cgi-bin/hello.cgi&quot;</span>&gt;</span>cgi int the boa server<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后就要写跳转的cgi文件，cgi就是C语言文件就行编译连接生成.cgi格式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;       </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Content - Type:text/html\n\n&quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;&lt;title&gt; cgi &lt;/title&gt; \n &quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;&lt;h1&gt; hello world! &lt;/h1&gt; \n&quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;&lt;p&gt; this is a demo of cgi&#x27;s program in the boa server &lt;/p &gt; \n &quot;</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello.cgi</span><br><span class="line">cp hello.cgi /var/www/cgi-bin/</span><br><span class="line">cd</span><br><span class="line">cd boa-0.94.13</span><br><span class="line">sudo boa</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-17%20205247.png"></p>
+<p><img src="https://gitee.com/hanfengdyh/image/raw/master/blogImg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-17%20205314.png"></p>
+<p>以上是显示结果，地址为当前主机的ip地址，可以通过使用ifconfig进行查询。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/">https://example.com/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LCD应用层编程</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="LCD应用层编程"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-11</div><div class="title">LCD应用层编程</div></div></a></div><div><a href="/2022/12/13/2022-12-13-Linux%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90/" title="Linux系统信息与系统资源"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-13</div><div class="title">Linux系统信息与系统资源</div></div></a></div><div><a href="/2022/12/12/2022-12-12-Linux%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="Linux调试工具gdb"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-12</div><div class="title">Linux调试工具gdb</div></div></a></div><div><a href="/2022/11/23/2022-11-23-Linux%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/" title="Linux——字符串处理"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-23</div><div class="title">Linux——字符串处理</div></div></a></div><div><a href="/2022/11/18/2022-11-18-Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E7%9B%AE%E5%BD%95/" title="linux文件属性"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-18</div><div class="title">linux文件属性</div></div></a></div><div><a href="/2022/11/12/2022-11-12-Linux%E6%A0%87%E5%87%86IO%E5%BA%93/" title="Linux标准IO库"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-12</div><div class="title">Linux标准IO库</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">115</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Boa%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">Boa介绍</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/" title="boa服务器发布"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="boa服务器发布"/></a><div class="content"><a class="title" href="/2023/10/11/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/" title="boa服务器发布">boa服务器发布</a><time datetime="2023-10-11T07:20:32.000Z" title="发表于 2023-10-11 15:20:32">2023-10-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="LCD应用层编程"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="LCD应用层编程"/></a><div class="content"><a class="title" href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="LCD应用层编程">LCD应用层编程</a><time datetime="2023-10-11T07:20:32.000Z" title="发表于 2023-10-11 15:20:32">2023-10-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/08/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" title="嵌入式软件安装合集"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="嵌入式软件安装合集"/></a><div class="content"><a class="title" href="/2023/10/08/2023-10-7-%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" title="嵌入式软件安装合集">嵌入式软件安装合集</a><time datetime="2023-10-08T04:20:32.000Z" title="发表于 2023-10-08 12:20:32">2023-10-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/06/2023-10-6-%E5%B5%8C%E5%85%A5%E5%BC%8F%E4%B8%8A%E7%9A%84C%E8%AF%AD%E8%A8%80/" title="嵌入式上的C语言"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="嵌入式上的C语言"/></a><div class="content"><a class="title" href="/2023/10/06/2023-10-6-%E5%B5%8C%E5%85%A5%E5%BC%8F%E4%B8%8A%E7%9A%84C%E8%AF%AD%E8%A8%80/" title="嵌入式上的C语言">嵌入式上的C语言</a><time datetime="2023-10-06T04:20:32.000Z" title="发表于 2023-10-06 12:20:32">2023-10-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
