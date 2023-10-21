@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>硬件传输 | 涵风 Blog</title><meta name="keywords" content="硬件传输接口"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="双闪存模式，这也是ASPI最常用的接口协议模式之一。 双闪存模式。即QSPI 使用两个外部四线 SPI Flash（FLASH 1 和 FLASH 2），在每个周期中发送&#x2F;接收 8 位（在 DDR 模式下为16 位），能够有效地将吞吐量和容量扩大一倍。每个 Flash 使用同一个 CLK 并可选择使用同一个 nCS 信号，但其 IO0、IO1、IO2 和 IO3 信号是各自独立的。双闪存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬件传输">
+<meta property="og:url" content="https://example.com/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="双闪存模式，这也是ASPI最常用的接口协议模式之一。 双闪存模式。即QSPI 使用两个外部四线 SPI Flash（FLASH 1 和 FLASH 2），在每个周期中发送&#x2F;接收 8 位（在 DDR 模式下为16 位），能够有效地将吞吐量和容量扩大一倍。每个 Flash 使用同一个 CLK 并可选择使用同一个 nCS 信号，但其 IO0、IO1、IO2 和 IO3 信号是各自独立的。双闪存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2023-10-19T07:20:32.000Z">
+<meta property="article:modified_time" content="2023-10-19T07:03:48.643Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="硬件传输接口">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '硬件传输',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-10-19 15:03:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">硬件传输</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-19T07:20:32.000Z" title="发表于 2023-10-19 15:20:32">2023-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-19T07:03:48.643Z" title="更新于 2023-10-19 15:03:48">2023-10-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="硬件传输"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>双闪存模式</strong>，这也是ASPI最常用的接口协议模式之一。</p>
+<p>双闪存模式。即QSPI 使用两个外部四线 SPI Flash（FLASH 1 和 FLASH 2），在每个周期中发送&#x2F;接收 8 位（在 DDR 模式下为16 位），能够有效地将吞吐量和容量扩大一倍。每个 Flash 使用同一个 CLK 并可选择使用同一个 nCS 信号，但其 IO0、IO1、IO2 和 IO3 信号是各自独立的。双闪存模式可与单比特模式、双比特模式以及四比特模式结合使用，也可与 SDR 或 DDR 模式相结合。在双闪存模式下读取 Flash 状态寄存器时，需要读取的字节数是单闪存模式下的 2 倍。在双闪存模式下，FLASH 1 接口信号的行为基本上与正常模式下相同。在指令、地址、交替字节以及空指令周期阶段，FLASH 2 接口信号具有与 FLASH 1 接口信号完全相同的波形。</p>
+<p><strong>IIC协议对接口电平时序的理解</strong>，开始信号：SCL为高电平时，SDA由高电平向低电平跳变，开始传送数据。结束信号：SCL为高电平时，SDA由低电平向高电平跳变，结束传送数据。应答信号：接收数据的IC在接收到8bit数据后，向发送数据的IC发出特定的低电平脉冲，表示已收到数据。在IIC通信中，起始信号是必须的，结束信号和应答信号都不是必需的。</p>
+<p><strong>USB传输协议</strong></p>
+<p>中断传输是一种轮询的传输方式，是一种单向的传输，HOST通过固定的间隔对中断端点进行查询，若有数据传输或可以接收数据则返回数据或发送数据，否则返回NAK，表示尚未准备好。<br>除高速高带宽中断端点外，一个微帧内仅允许一次中断事务传输，高速高带宽端点最多可以在一个微帧内进行三次中断事务传输。<br>中断传输的延迟有保证，但并非实时传输，它是一种延迟有限的可靠传输，支持错误重传。<br>高速中断传输不得占用超过80%的微帧时间，全速和低速不得超过90%。<br>USB 采用小端字节顺序，在总线上先传输一个字节的最低有效位，最后传输最高有效位，采用NRZI 编码，若遇到连续的6 个1 要求进行为填充，即插入一个0。<br>所有的USB 包都由SYNC 开始，高速包的SYNC 宽度为32bit，全速&#x2F;低速包的SYNC段度为8bit。实际接收到的SYNC 产度由于USB HUB 的关系，可能会小于该值。<br>控制传输：主要用于在设备连接时对设备进行枚举以及其他因设备而已的特定操作。<br>中断传输：用于对延迟要求严格、小量数据的可靠传输，如键盘、游戏手柄等。<br>批量传输：用于对延迟要求宽松，大量数据的可靠传输，如U 盘等。<br>同步传输：用于对可靠性要求不高的实时数据传输，如摄像头、USB 音响等。<br>需要注意的是：中断传输并不意味这传输过程中，设备会先中断HOST，继而通知HOST 启动传输。中断传输也是HOST 发起的传输，采用轮询的方式询问设备是否有数据发送，若有则传输数据，否则NAK 主机。<br>在USB总线上和USB 设备进行通讯。从逻辑上可以分为功能层、设备层和总线接口层。功能层完成功能级的描述、定义和行为。设备层则完成从功能级到传输级的转换，把一次功能级的行为转换为一次一次的基本传输。USB 总线接口层则处理总线上的Bit 流，完成数据传输的物理层实现和总线管理，设备层和设备层之间不可以直接访问数据，需要透过总线接口层。<br>从功能上来说，HUB 必须支持连接行为、电源管理、设备连接&#x2F;移除检测、总线错误检测和恢复、高&#x2F;全&#x2F;低速设备支持。地址分配不在其范围内。</p>
+<p><strong>QSPI</strong></p>
+<p>在QSPI接口应用中，QSPI通过命令和FLASH通讯，命令包括：指令+地址+交替字节+空周期+数据五个阶段，<br>QSPI的传输模式可以设置为：单线SPI模式：BK_IO0即SO,BK_IO1即SI，加上NCS和SCLK，类似于SPI模式。双线SPI模式：BK_IO0和BK_IO1实现数据的双入双出。四线SPI模式：BK_IO0，BK_IO1，BK_IO2，BK_IO3四根线实现数据的传输。无指令传输模式。<br>QSPI 使用 6 个信号连接Flash，分别是四个数据线BK1_IO0~BK1_IO3，一个时钟输出CLK，一个片选输出。相较于SPI ，QSPI增加了两根I&#x2F;O线（SIO2,SIO3），目的是一个时钟内可以传输4个bit。QSPI协议主要通过发送命令来进行通讯，主机需要进行QSPI接口的配置。QSPI 通过命令与 FLASH通信，每条命令包括：指令、地址、交替字节、空指令和数据这五个阶段，任一阶段均可跳过，但至少要包含指令、地址、交替字节或数据阶段之一。<br>在间接模式下，通过写入 QUADSPI 寄存器来触发命令；并通过读写数据寄存器来传输数据，就如同对待其他通信外设那样。<br>若 FMODE &#x3D; 00，则 QUADSPI 处于间接写入模式，字节在数据阶段中发送到 Flash。<br>若 FMODE &#x3D; 01，则 QUADSPI 处于间接读取模式，在数据阶段中从 Flash 接收字节。<br>在间接写入模式下，固件写入数据 时，将在 FIFO 中增加数据。<br>在间接读出模式下，固件写入数据 时，将在 FIFO 中移除数据。<br>信号接口模式可以配置成为SDR模式、DDR模式、双闪存模式。</p>
+<p>指令阶段：此 阶段 通过寄存器的 INSTRUCTION字段指定一个 8位指令发送到FLASH。注意，指令阶段，一般是通过 IO0单线发送，但是也可以配置为双线 &#x2F;四线发送指令。<br>地址阶段：此阶段可以发送 1<del>4字节地址给 FLASH芯片，指示要操作的地址。地址阶段同样可以以单线 &#x2F;双线 &#x2F;四线模式发送。<br>交替字节（复用字节）阶段：此阶段可以发送1</del>4字节数据给 FLASH芯片，一般用于控制操作模式。 交替 字节 同样可以以单线 &#x2F;双线 &#x2F;四线模式发送。<br>空指令周期阶段：在空指令周期阶段，在给定的1~31个周期内不发送或接收任何数据，目的是当采用更高的时钟频率时，给 FLASH芯片留出准备数据阶段的时间。<br>数据阶段：此阶段可以从 FLASH读取 &#x2F;写入任意字节数量的数据。数据阶段同样可以以单线 &#x2F;双线 &#x2F;四线模式发送。</p>
+<p><strong>SDIO接口</strong></p>
+<p>SDIO 总线和 USB 总线类似，SDIO 总线也有两端，其中一端是主机（Host）端，另一端是设备端（Device）。采用Host-Device（主从模式）这样的设计是为了简化 Device 的设计，所有的通信都是由 Host 端发出命令开始的。在 Device 端只要能解析 Host 的命令，就可以同 Host 进行通信了，SDIO 的 Host 可以连接多个 Device（一主多从）。<br>在 SDIO 总线定义中，DAT1 信号线复用为中断线。在 SDIO 的 1BIT 模式下 DAT0 用来传输数据，DAT1 用作中断线。在 SDIO 的 4BIT 模式下 DAT0-DAT3 用来传输数据，其中 DAT1 复用作中断线。<br>SDIO 总线上都是 Host 端发起请求，然后 Device 端回应请求，其中请求和回应中会包含数据信息：</p>
+<ul>
+<li>Command: 用于开始传输的命令，是由 Host 端发往 Device 端的，其中命令是通过 CMD 信号线传送的；</li>
+<li>Response: 回应是 Device 返回的 Host 命令作为 Command 的回应。也是通过 CMD 线传送的；</li>
+<li>Data: 数据是双向的传送的。可以设置为 1 线模式，也可以设置为 4 线模式。数据是通过 DAT0-DAT3 信号线传输的。</li>
+</ul>
+<p>CMD52是由HOST发往DEVICE的，它必须有DEVICE返回来的Response。 CMD52不需要占用DAT线，读写的数据是通过CMD52或者Response来传送。每次CMD52只能读或者写一个byte。<br>同CMD52命令不同的是，CMD53没有返回的命令的，这里判断是否DEVICE设备读写完毕是需要驱动里面自己判断的，一般有2个方法，1.设置相应的读写完毕中断。如果DEVICE设备读写完毕，则对HOST设备发送中断。2.HOST设备主动查询DEVICE设备是否读写完毕，可以通过CMD命令是否有返回来判断是否DEVICE是否读写完毕。</p>
+<p>用来初始化SDIO卡设备的CMD是CMD5，CMD41 是用来初始化SD卡用的。CMD52和CMD53 是用来读写数据的命令。CMD52一次只能读一个字节，CMD53可以一次读取多个字节或者多个块。</p>
+<p><strong>PCIE总线接口</strong></p>
+<p>是一种高速串行计算机扩展总线标准，主要用于扩充计算机系统总线数据吞吐量以及提高设备通信速度。<br>PCIe总线标准比PCI总线有优势，采用双通道传输，全双工模式。<br>PCI总线使用并行总线结构,在同一条总线上的所有外部设备共享总线带宽,而PCIe总线使用了高速差分总线,并采用端到端的连接方式,因此在每一条PCIe链路中只能连接两个设备。这使得PCIe与PCI总线采用的拓扑结构有所不同。PCIe总线除了在连接方式上与PCI总线不同之外,还使用了一些在网络通信中使用的技术,如支持多种数据路由方式,基于多通路的数据传递方式,和基于报文的数据传送方式,并充分考虑了在数据传送中出现服务质量.<br><u>PCIE总线上的峰值带宽计算公式为总线频率 * 数据位宽 * 2</u><br>PCIE总线规范要求所有的设备必须支持Capability结构。在一个PCIE设备中，可能包含有多个Capability结构。每一个Capability结构都有唯一的ID号。每一个Capability寄存器都有一个指针，指向下一个Capability结构。<br>当PCIe设备进入休眠状态，主电源已经停止供电时，PCIe设备使用该信号向处理器系统提交唤醒请求，使处理器系统重新为该PCIe设备提供主电源Vcc。在PCIe总线中，WAKE#信号是可选的，因此使用WAKE#信号唤醒PCIe设备的机制也是可选的。值得注意的是产生该信号的硬件逻辑必须使用辅助电源Vaux供电。WAKE#是一个Open Drain信号，一个处理器的所有PCIe设备可以将WAKE#信号进行线与后，统一发送给处理器系统的电源控制器。当某个PCIe设备需要被唤醒时，该设备首先置WAKE#信号有效，然后在经过一段延时之后，处理器系统开始为该设备提供主电源Vcc，并使用PERST#信号对该设备进行复位操作。此时WAKE#信号需要始终保持为低，当主电源Vcc上电完成之后，PERST#信号也将置为无效并结束复位，WAKE#信号也将随之置为无效，结束整个唤醒过程。<br>物理层是PCIe总线的最底层，将PCIe设备连接在一起。PCIe总线的物理电气特性决定了PCIe链路只能使用端到端的连接方式。PCIe总线的物理层为PCIe设备间的数据通信提供传送介质，为数据传送提供可靠的物理环境。 PCIe总线的物理层还定义了一些专门的“序列”，这些序列用于同步PCIe链路，并进行链路管理。</p>
+<p><strong>单总线技术（单总线接口）</strong></p>
+<p>单总线接口是一种特殊的通信接口，具有简洁且经济的特点，可使用户轻松地组建传感器网络。<br>所有的单总线器件要求采用严格的信号时序，以保证数据的完整性。共有 6种信号类型：复位脉冲、应答脉冲、写 0、写 1、读 0和读 1。所有这些信号，除了应答脉冲以外都由主机发出同步信号。<br>单总线上的所有通信都是以初始化序列开始。主机输出低电平，保持低电平时间至少 480 us，，以产生复位脉冲。接着主机释放总线 ，4.7K的上拉电阻将单 总线拉高，延时 15 60 us并进入接收模式 (Rx)。</p>
+<p><strong>RS485</strong></p>
+<p>RS485使用在点对点网络，线型网络，总线型网络中，不能是星型或者环型网络。<br>由于RS485具有传输距离远、传输速度 快、支持节点多和抗干扰能力更强 等特点，所以RS485有很广泛的应用。在RS485接口设计中，我们通常需要 2个终端匹配电阻，其阻值要求等于传输电缆的特性阻抗。<br>RS485需要 2个终端匹配电阻，其阻值要求等于传输电缆的特性阻抗（一般为 120Ω）。没有特性阻抗的话，当所有的设备都静止或者没有能量的时候就会产生噪 声，而且线移需要双端的电压差。没有终接电阻的话，会使得较快速的发送端产生多个数据信号的边缘，导致数据传输出错。接口电平是物理电气特性，和匹配电阻没关系，扩展节点数和芯片能力相关，和匹配电阻无关。<br>RS485的特点：<br>① 接口电平低，不易损坏芯片。 RS485的电气特性：逻辑“ 1”以两线间的电压差为 +(2<del>6)V表示；逻辑“ 0”以两线 间的电压差为 –(2</del>6)V表示。接口信号电平比 RS232降低了，不易损坏接口电路的芯片，且该电平与 TTL电平兼容，可方便与 TTL 电路连接。<br>② 传输 速率高。 10米时， RS485的数据最高传输速率 可达 35Mbps，在 1200m时，传输速度可达 100Kbps。<br>③ 抗干扰能力强。 RS485接口是采用平衡驱动器和差分接收器的组合，抗共模干扰能力增强，即抗噪声干扰性好。 传输距离远，支持节点多。 RS485总线 最长可以传输 1200m以上（速率≤ 100Kbps<br>④ 一般最大支持 32个节点，如果使用特制的 485芯片，可以达到 128个或者 256个节点，最大的可以支持到 400个节点。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/">https://example.com/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%8E%A5%E5%8F%A3/">硬件传输接口</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/10/17/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">boa服务器发布</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/" title="硬件传输"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="硬件传输"/></a><div class="content"><a class="title" href="/2023/10/19/2023-10-19-%E7%A1%AC%E4%BB%B6%E4%BC%A0%E8%BE%93/" title="硬件传输">硬件传输</a><time datetime="2023-10-19T07:20:32.000Z" title="发表于 2023-10-19 15:20:32">2023-10-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/17/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/" title="boa服务器发布"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="boa服务器发布"/></a><div class="content"><a class="title" href="/2023/10/17/2023-10-17-boa%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83/" title="boa服务器发布">boa服务器发布</a><time datetime="2023-10-17T07:20:32.000Z" title="发表于 2023-10-17 15:20:32">2023-10-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/17/2023-10-18-%E4%B8%B2%E5%8F%A3%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="串口应用编程"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="串口应用编程"/></a><div class="content"><a class="title" href="/2023/10/17/2023-10-18-%E4%B8%B2%E5%8F%A3%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="串口应用编程">串口应用编程</a><time datetime="2023-10-17T07:20:32.000Z" title="发表于 2023-10-17 15:20:32">2023-10-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="LCD应用层编程"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="LCD应用层编程"/></a><div class="content"><a class="title" href="/2023/10/11/2023-10-11-LCD%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/" title="LCD应用层编程">LCD应用层编程</a><time datetime="2023-10-11T07:20:32.000Z" title="发表于 2023-10-11 15:20:32">2023-10-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
