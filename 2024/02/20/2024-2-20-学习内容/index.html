@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>v2v的调试 | 涵风 Blog</title><meta name="keywords" content="linux"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="学习内容通过一周学习到了一些新的知识并对嵌入式的应用层开发进行了技术栈的补充，新知识例如自动驾驶的cv2x，以及正在做的V2V部分。主要是编译了固件来支持应用层的开发，学习了使用工具adb来进行调试内核，烧录文件，并且通过设备对于V2V来进行相互通信。 1.固件编译固件编译部分跟之前没有太大的不同，差异点主要在需要在Linux搭载代理服务来进行编译，因为芯片是高通的，可能由于一些带宽和信号延时问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="v2v的调试">
+<meta property="og:url" content="https://example.com/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="学习内容通过一周学习到了一些新的知识并对嵌入式的应用层开发进行了技术栈的补充，新知识例如自动驾驶的cv2x，以及正在做的V2V部分。主要是编译了固件来支持应用层的开发，学习了使用工具adb来进行调试内核，烧录文件，并且通过设备对于V2V来进行相互通信。 1.固件编译固件编译部分跟之前没有太大的不同，差异点主要在需要在Linux搭载代理服务来进行编译，因为芯片是高通的，可能由于一些带宽和信号延时问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2024-02-20T07:20:32.000Z">
+<meta property="article:modified_time" content="2024-03-20T14:03:42.188Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'v2v的调试',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-20 22:03:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">131</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">18</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">v2v的调试</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-02-20T07:20:32.000Z" title="发表于 2024-02-20 15:20:32">2024-02-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-20T14:03:42.188Z" title="更新于 2024-03-20 22:03:42">2024-03-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="v2v的调试"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="学习内容"><a href="#学习内容" class="headerlink" title="学习内容"></a>学习内容</h1><p>通过一周学习到了一些新的知识并对嵌入式的应用层开发进行了技术栈的补充，新知识例如自动驾驶的cv2x，以及正在做的V2V部分。<br>主要是编译了固件来支持应用层的开发，学习了使用工具adb来进行调试内核，烧录文件，并且通过设备对于V2V来进行相互通信。</p>
+<h2 id="1-固件编译"><a href="#1-固件编译" class="headerlink" title="1.固件编译"></a>1.固件编译</h2><p>固件编译部分跟之前没有太大的不同，差异点主要在需要在Linux搭载代理服务来进行编译，因为芯片是高通的，可能由于一些带宽和信号延时问题，导致会有编译报错，之后可以在自己电脑虚拟机上进行代理设置玩玩，但是clash现在删库了，可能需要寻找新的方法来代替。</p>
+<p>烧录固件使用的软件为QFil，它烧录需要点运气的成分，会出现找不到指定文件的问题还有process fail的问题，解决方法就是下载最新的QPST，并且使用Tools选项来进行烧录固件，可以在烧录固件之前使用QPST Configuration来查询串口的状态是否enable。经过查询发现，这个软件经常使用在给手机进行刷机（刷系统）。</p>
+<p><a target="_blank" rel="noopener" href="https://postimg.cc/cK8Sdfjm"><img src="https://i.postimg.cc/Xvs7c8kT/2023-12-21-091223.png" alt="2023-12-21-091223.png"></a></p>
+<h2 id="2-硬件验证"><a href="#2-硬件验证" class="headerlink" title="2.硬件验证"></a>2.硬件验证</h2><p>将固件烧录成功后，使用adb进入调试，并输入命令开启进行验证服务。</p>
+<p>adb 是 Android 调试桥（Android Debug Bridge）的缩写，它是一个用于与连接到计算机的 Android 设备进行通信的命令行工具。adb 提供了一组用于设备管理、应用安装、调试和其他开发任务的命令。</p>
+<h4 id="adb工具的安装以及配置"><a href="#adb工具的安装以及配置" class="headerlink" title="adb工具的安装以及配置"></a>adb工具的安装以及配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install anroid-tools-adb</span><br><span class="line">mkdir ~/.android</span><br><span class="line">echo 0x2c7c &gt; ~/.android/adb_usb.ini</span><br><span class="line">cd /etc/udev/rules.d</span><br><span class="line">sudo vim 51-android.rules</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#内容</span></span></span><br><span class="line">SUBSYSTEM==&quot;usb&quot;, SYSFS&#123;idVendor&#125;==&quot;2c7c&quot;, MODE=&quot;0666&quot;，GROUP=&quot;plugdev&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#其中的2c7c使用lsusb命令通过热插拔来确定</span></span></span><br><span class="line">sudo usermod -a -G plugdev $(id -u -n)</span><br><span class="line">sudo udevadm control --reload-rules</span><br><span class="line">sudo service udev restart</span><br><span class="line">sudo udevadm trigger</span><br><span class="line"></span><br><span class="line">sudo -s#进入调试模式</span><br><span class="line">adb kill-server#取消服务</span><br><span class="line">adb start-server#开启adb服务</span><br><span class="line">exit 0 #回到正常模式</span><br></pre></td></tr></table></figure>
+
+<p>至此adb已经安装配置完成了。</p>
+<h4 id="adb工具的使用"><a href="#adb工具的使用" class="headerlink" title="adb工具的使用"></a>adb工具的使用</h4><p>这个工具安装完毕就可以在终端使用（无论linux和windows）</p>
+<p>以下是一些常用的 adb 命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设备连接与断开：</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">连接设备：</span></span><br><span class="line">adb devices</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">断开设备连接：</span></span><br><span class="line">adb disconnect [device]</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">应用管理：</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">安装应用：</span></span><br><span class="line">adb install path/to/app.apk</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">卸载应用：</span></span><br><span class="line">adb uninstall package_name</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动应用：</span></span><br><span class="line">adb shell am start -n package_name/activity_name</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">文件传输：</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将文件复制到设备：</span></span><br><span class="line">adb push local_file_path /device/path</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">从设备中复制文件：</span></span><br><span class="line">adb pull /device/path local_file_path</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">调试和日志：</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看设备日志：</span></span><br><span class="line">adb logcat</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">清除设备日志：</span></span><br><span class="line">adb logcat -c</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Shell 命令：</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">进入设备 shell：</span></span><br><span class="line">adb shell</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">执行设备上的命令：</span></span><br><span class="line">adb shell [command]</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">端口转发：</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将设备端口转发到主机：</span></span><br><span class="line">adb forward tcp:8080 tcp:8080</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">系统操作指令</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取设备型号</span></span><br><span class="line">adb shell getprop ro.product.model</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取andorid系统版本</span></span><br><span class="line">adb shell getprop ro.build.version.release</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取设备的序列号</span></span><br><span class="line">adb get-serialno</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取设备屏幕分辨率</span></span><br><span class="line">adb shell wm size</span><br></pre></td></tr></table></figure>
+
+<p><strong>在验证过程中发现问题可以多做正常设备之间的比较，来查找是否有问题，排除法最为好用。</strong></p>
+<p>在使用adb的过程中发现一个问题，adb在虚拟机的重启后，调试设备会显示没有权限，目前的解决方案为将adb的服务重新开启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo -s#进入调试模式</span><br><span class="line">adb kill-server#取消服务</span><br><span class="line">adb start-server#开启adb服务</span><br><span class="line">exit 0 #回到正常模式</span><br></pre></td></tr></table></figure>
+
+<h5 id="将命令发送给特定的设备"><a href="#将命令发送给特定的设备" class="headerlink" title="将命令发送给特定的设备"></a>将命令发送给特定的设备</h5><p>如果有多个设备在运行，您在发出 <code>adb</code> 命令时必须指定目标设备。如需指定目标设备，请按以下步骤操作：</p>
+<ol>
+<li>使用 <code>devices</code> 命令获取目标设备的序列号。</li>
+<li>获得序列号后，结合使用<code>-s</code>选项与<code>adb</code>命令，可以将 $ANDROID_SERIAL 环境变量设为包含序列号。<ul>
+<li>如果您要发出很多 <code>adb</code> 命令，可以将 <code>$ANDROID_SERIAL</code> 环境变量设为包含序列号。</li>
+<li>如果您同时使用 <code>-s</code> 和 <code>$ANDROID_SERIAL</code>，<code>-s</code> 会替换 <code>$ANDROID_SERIAL</code>。</li>
+</ul>
+</li>
+</ol>
+<p>以下示例中，先获得了已连接设备的列表，然后使用其中一个设备的序列号在该设备上安装了 <code>helloWorld.apk</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">emulator-5554 device</span><br><span class="line">emulator-5555 device</span><br><span class="line">adb -s emulator-5555 install helloWorld.apk</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：如果您在多个设备可用时发出命令但未指定目标设备，<code>adb</code> 会显示错误。</p>
+</blockquote>
+<h2 id="3-嵌入式应用层的编写"><a href="#3-嵌入式应用层的编写" class="headerlink" title="3.嵌入式应用层的编写"></a>3.嵌入式应用层的编写</h2><p>应用层的编写主要是使用C和C++的语言，主要发送和接收都是基于SDK开发，</p>
+<p>因为收发程序为发送字符缓冲区的字符串，为保证数据发送的稳定，时间戳放入前要注意将数据类型设置为无符号整型变量，而且要注意变量的实际大小，不要溢出。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> array&lt;<span class="type">char</span>, G_BUF_LEN&gt; gBuf;       <span class="comment">//用于存储发送的数据</span></span><br><span class="line"><span class="type">uint64_t</span> time1 = <span class="built_in">getCurrentTimestamp</span>();          <span class="comment">//获取时间戳</span></span><br><span class="line">std::string stringValue = std::<span class="built_in">to_string</span>(time1);	<span class="comment">//整型转成字符串</span></span><br><span class="line">std::<span class="built_in">strncpy</span>(gBuf.<span class="built_in">data</span>(), stringValue.<span class="built_in">c_str</span>(), G_BUF_LEN);<span class="comment">//将整型变量放入字符缓冲区</span></span><br></pre></td></tr></table></figure>
+
+<p>要注意环境，可能C++程序编译没bug，但是实际硬件运行的环境不能完全支持。还是C更好一点。</p>
+<p>应用层编写出现的问题：</p>
+<ol>
+<li>在全双工通信时候做收发线程时候发现堵塞，暂时没发现解决方案，换做半双工通信，两个线程作为互斥并加入应答机制，但是在其中发现主机容易堵塞，从机没事，找到其中的区别，是收发线程开启的顺序问题，所以将全双工通信的双线程分时打开，发现问题得到了解决。</li>
+<li>因为必须在程序执行结束后进行退出服务，如果不进行注销退出服务的话不能再次开启程序只能重新启动，为方便调试加入了信号处理机制便于退出，但是因为接收线程使用的接收机制是阻塞接收，在信号处理机制后会阻塞在接收函数中，放入了跳转机制想跳出这个阻塞，会出现线程没有结束的报错总线错误。最后是去掉了跳转，对阻塞接收函数进行超时处理，这样退出时就不会因为没有信号发生进程阻塞。</li>
+<li>发送消息为判断是否丢包，加入发送时候所在的发送次数。在接收时候进行打印，并比较总接收次数完成丢包率的查找。</li>
+<li>V2V使用的是卫星同步源，两端的设备使用的是网络时间同步，会有不同的延迟误差。</li>
+</ol>
+<h2 id="4-时间戳的同步"><a href="#4-时间戳的同步" class="headerlink" title="4.时间戳的同步"></a>4.时间戳的同步</h2><p>时间戳是指<strong>使用数字签名技术对包含原始文件信息、签名参数、签名时间等信息构成的对象进行数字签名而产生的数据，用以证明原始文件在签名时间之前已经存在</strong>。</p>
+<p>多个传感器可能同时工作，或者在同一系统中的多个组件需要协同工作。通过在传感器数据中包含时间戳，可以实现时间同步，确保数据采集的时序是一致的。这对于在后续数据处理或分析中确保时间一致性是很重要的。<br>在v2v中使用接收时间戳减去发送时间戳来得到传输设备之间的传输延迟，所使用的精度越高那么得到的时间戳的精度越高。</p>
+<p>目前了解可使用的时间戳同步为ntp时间同步以及订阅时间同步，可使用命令进行查询时间同步后的系统偏差。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chronyc tracking</span><br><span class="line">chronyc sources -v</span><br></pre></td></tr></table></figure>
+
+<p>chrony的配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打开终端。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装chrony</span></span><br><span class="line">sudo apt-get install chrony</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动chrony服务</span></span><br><span class="line">sudo systemctl start chronyd</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确保chrony在系统启动时自动运行</span></span><br><span class="line">sudo systemctl enable chronyd</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查chrony的状态，如果显示为“active（running）”，则表示已成功启动</span></span><br><span class="line">sudo systemctl status chronyd</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编辑chrony配置文件</span></span><br><span class="line">sudo nano /etc/chrony/chrony.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">找到服务器行注释以下信息</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">pool ntp.ubuntu.com        iburst maxsources 4</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">pool 0.ubuntu.pool.ntp.org iburst maxsources 1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">pool 1.ubuntu.pool.ntp.org iburst maxsources 1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">pool 2.ubuntu.pool.ntp.org iburst maxsources 2</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">常用ntp时间服务器：国家授时中心ntp服务器、阿里云ntp服务器</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">找到服务器行并添加您想要同步的NTP服务器地址（可以根据需要添加多个服务器），例如：</span></span><br><span class="line">server ntp1.aliyun.com iburst</span><br><span class="line">server ntp1.aliyun.com minpoll 4 maxpoll 10 iburst</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">同步更新时间间隔在2的4次幂到2的10次幂秒之间</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保存并关闭文件。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启chrony服务以应用更改</span></span><br><span class="line">sudo systemctl restart chronyd。</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">最后，检查时间同步状态。如果显示为“*”或“+”，则表示时间同步正在进行中</span></span><br><span class="line">chronyc tracking</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/">https://example.com/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/02/25/2024-2-25-%E4%B8%8A%E7%94%B5%E8%87%AA%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%BC%80%E5%90%AF/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">程序上电自启动</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/30/2024-1-30-%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84bug%E8%A7%A3%E5%86%B3/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">程序中的bug解决</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/10/2024-03-10-NVIDIA-X-AVIER%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="NVIDIA X AVIER编译内核配置开发环境"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-10</div><div class="title">NVIDIA X AVIER编译内核配置开发环境</div></div></a></div><div><a href="/2024/03/05/2024-03-05-NVIDIA-X-AVIER/" title="NVIDIA X AVIER"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-05</div><div class="title">NVIDIA X AVIER</div></div></a></div><div><a href="/2024/02/25/2024-2-25-%E4%B8%8A%E7%94%B5%E8%87%AA%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%BC%80%E5%90%AF/" title="程序上电自启动"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-25</div><div class="title">程序上电自启动</div></div></a></div><div><a href="/2024/01/30/2024-1-30-%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84bug%E8%A7%A3%E5%86%B3/" title="程序中的bug解决"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-30</div><div class="title">程序中的bug解决</div></div></a></div><div><a href="/2024/01/05/2024-1-5-tcp/" title="TCP"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-05</div><div class="title">TCP</div></div></a></div><div><a href="/2024/01/05/tcp/" title="TCP"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-05</div><div class="title">TCP</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">131</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">18</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">学习内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9B%BA%E4%BB%B6%E7%BC%96%E8%AF%91"><span class="toc-number">1.1.</span> <span class="toc-text">1.固件编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%A1%AC%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.</span> <span class="toc-text">2.硬件验证</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#adb%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">adb工具的安装以及配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#adb%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">adb工具的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E5%8F%91%E9%80%81%E7%BB%99%E7%89%B9%E5%AE%9A%E7%9A%84%E8%AE%BE%E5%A4%87"><span class="toc-number">1.2.0.2.1.</span> <span class="toc-text">将命令发送给特定的设备</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BA%94%E7%94%A8%E5%B1%82%E7%9A%84%E7%BC%96%E5%86%99"><span class="toc-number">1.3.</span> <span class="toc-text">3.嵌入式应用层的编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%97%B6%E9%97%B4%E6%88%B3%E7%9A%84%E5%90%8C%E6%AD%A5"><span class="toc-number">1.4.</span> <span class="toc-text">4.时间戳的同步</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/03/10/2024-03-10-NVIDIA-X-AVIER%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="NVIDIA X AVIER编译内核配置开发环境"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="NVIDIA X AVIER编译内核配置开发环境"/></a><div class="content"><a class="title" href="/2024/03/10/2024-03-10-NVIDIA-X-AVIER%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="NVIDIA X AVIER编译内核配置开发环境">NVIDIA X AVIER编译内核配置开发环境</a><time datetime="2024-03-10T07:20:32.000Z" title="发表于 2024-03-10 15:20:32">2024-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/05/2024-03-05-NVIDIA-X-AVIER/" title="NVIDIA X AVIER"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="NVIDIA X AVIER"/></a><div class="content"><a class="title" href="/2024/03/05/2024-03-05-NVIDIA-X-AVIER/" title="NVIDIA X AVIER">NVIDIA X AVIER</a><time datetime="2024-03-05T07:20:32.000Z" title="发表于 2024-03-05 15:20:32">2024-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/25/2024-2-25-%E4%B8%8A%E7%94%B5%E8%87%AA%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%BC%80%E5%90%AF/" title="程序上电自启动"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="程序上电自启动"/></a><div class="content"><a class="title" href="/2024/02/25/2024-2-25-%E4%B8%8A%E7%94%B5%E8%87%AA%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%BC%80%E5%90%AF/" title="程序上电自启动">程序上电自启动</a><time datetime="2024-02-25T07:20:32.000Z" title="发表于 2024-02-25 15:20:32">2024-02-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/" title="v2v的调试"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="v2v的调试"/></a><div class="content"><a class="title" href="/2024/02/20/2024-2-20-%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B9/" title="v2v的调试">v2v的调试</a><time datetime="2024-02-20T07:20:32.000Z" title="发表于 2024-02-20 15:20:32">2024-02-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
