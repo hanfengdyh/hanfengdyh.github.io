@@ -2151,25 +2151,6 @@
     
     
     <entry>
-      <title>Linux系统管理篇——进程管理</title>
-      <link href="/2022/10/20/2022-10-19-Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E7%AF%87%E2%80%94%E2%80%94%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
-      <url>/2022/10/20/2022-10-19-Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E7%AF%87%E2%80%94%E2%80%94%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
-      
-        <content type="html"><![CDATA[<p>进程</p><p><u>进程是用来表示正在进行的程序。</u></p><p>内核中一些重要的进程信息如下：</p><p>进程的内存地址；</p><p>进程当前的状态；</p><p>进程正在使用的资源；</p><p>进程的优先级；</p><p>进程的属组；</p><p><strong>PID</strong>：进程的ID号</p><p><strong>PPID</strong>：父进程的PID</p><p>所有的进程都必须由另一个进程创建——除了系统在系统引导时，由内核自主创建并安装的进程。当一个进程被创建时，创建他的那个进程称为父进程。这个进程叫做子进程；PPID就是父进程的PID。</p><p>只有进程的创建者和root用户才有权对该进程进行操作，记录进程的创建者（属组）就必要了，进程的<strong>UID</strong>就是创建者的ID。</p><p>Linux为进程保存了有效用户ID号叫<strong>EUID</strong>，用来确定进程对某些资源和文件的访问权限。绝大部分情况，UID和EUID一样，除了seruid程序。</p><p>进程的<strong>GID</strong>是创建者所属组的ID号，进程同样有一个<strong>EGID</strong>号，当进程需要创建一个新文件时候，这个文件将采用该进程的GID。</p><h4 id="监视进程：PS命令"><a href="#监视进程：PS命令" class="headerlink" title="监视进程：PS命令"></a>监视进程：PS命令</h4><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d0ada7c0d.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d0ada7c0d.png" alt="屏幕截图 2022-10-20 123723.png"></a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps aux</span><br><span class="line">$ ps lax##可以提供父进程ID（PPID）和谦让度（IN）</span><br></pre></td></tr></table></figure><h4 id="即时跟踪进程信息"><a href="#即时跟踪进程信息" class="headerlink" title="即时跟踪进程信息"></a>即时跟踪进程信息</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ top##实时检测10更新一回q退出</span><br></pre></td></tr></table></figure><h4 id="查看占用文件的进程"><a href="#查看占用文件的进程" class="headerlink" title="查看占用文件的进程"></a>查看占用文件的进程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsof database.doc##查找文件的进程</span><br></pre></td></tr></table></figure><h4 id="向进程发送信号：kill"><a href="#向进程发送信号：kill" class="headerlink" title="向进程发送信号：kill"></a>向进程发送信号：kill</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill [-signal] pid</span><br></pre></td></tr></table></figure><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d50bb4963.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d50bb4963.png" alt="屏幕截图 2022-10-20 125610.png"></a></p><h4 id="调整进程的谦让度（优先级的反义）nice和renice"><a href="#调整进程的谦让度（优先级的反义）nice和renice" class="headerlink" title="调整进程的谦让度（优先级的反义）nice和renice"></a>调整进程的谦让度（优先级的反义）nice和renice</h4><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d9a16f49d.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d9a16f49d.png" alt="屏幕截图 2022-10-20 131600.png"></a></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> Linux系统管理篇 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>C语言算法项</title>
       <link href="/2022/10/20/2022-10-20-C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/"/>
       <url>/2022/10/20/2022-10-20-C%E8%AF%AD%E8%A8%80%E7%AE%97%E6%B3%95%E9%A1%B9/</url>
@@ -2181,6 +2162,25 @@
         <tags>
             
             <tag> C </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux系统管理篇——进程管理</title>
+      <link href="/2022/10/20/2022-10-19-Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E7%AF%87%E2%80%94%E2%80%94%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
+      <url>/2022/10/20/2022-10-19-Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E7%AF%87%E2%80%94%E2%80%94%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<p>进程</p><p><u>进程是用来表示正在进行的程序。</u></p><p>内核中一些重要的进程信息如下：</p><p>进程的内存地址；</p><p>进程当前的状态；</p><p>进程正在使用的资源；</p><p>进程的优先级；</p><p>进程的属组；</p><p><strong>PID</strong>：进程的ID号</p><p><strong>PPID</strong>：父进程的PID</p><p>所有的进程都必须由另一个进程创建——除了系统在系统引导时，由内核自主创建并安装的进程。当一个进程被创建时，创建他的那个进程称为父进程。这个进程叫做子进程；PPID就是父进程的PID。</p><p>只有进程的创建者和root用户才有权对该进程进行操作，记录进程的创建者（属组）就必要了，进程的<strong>UID</strong>就是创建者的ID。</p><p>Linux为进程保存了有效用户ID号叫<strong>EUID</strong>，用来确定进程对某些资源和文件的访问权限。绝大部分情况，UID和EUID一样，除了seruid程序。</p><p>进程的<strong>GID</strong>是创建者所属组的ID号，进程同样有一个<strong>EGID</strong>号，当进程需要创建一个新文件时候，这个文件将采用该进程的GID。</p><h4 id="监视进程：PS命令"><a href="#监视进程：PS命令" class="headerlink" title="监视进程：PS命令"></a>监视进程：PS命令</h4><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d0ada7c0d.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d0ada7c0d.png" alt="屏幕截图 2022-10-20 123723.png"></a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps aux</span><br><span class="line">$ ps lax##可以提供父进程ID（PPID）和谦让度（IN）</span><br></pre></td></tr></table></figure><h4 id="即时跟踪进程信息"><a href="#即时跟踪进程信息" class="headerlink" title="即时跟踪进程信息"></a>即时跟踪进程信息</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ top##实时检测10更新一回q退出</span><br></pre></td></tr></table></figure><h4 id="查看占用文件的进程"><a href="#查看占用文件的进程" class="headerlink" title="查看占用文件的进程"></a>查看占用文件的进程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsof database.doc##查找文件的进程</span><br></pre></td></tr></table></figure><h4 id="向进程发送信号：kill"><a href="#向进程发送信号：kill" class="headerlink" title="向进程发送信号：kill"></a>向进程发送信号：kill</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill [-signal] pid</span><br></pre></td></tr></table></figure><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d50bb4963.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d50bb4963.png" alt="屏幕截图 2022-10-20 125610.png"></a></p><h4 id="调整进程的谦让度（优先级的反义）nice和renice"><a href="#调整进程的谦让度（优先级的反义）nice和renice" class="headerlink" title="调整进程的谦让度（优先级的反义）nice和renice"></a>调整进程的谦让度（优先级的反义）nice和renice</h4><p><a href="https://cdn2.pandaimg.com/2022/10/20/6350d9a16f49d.png"><img src="https://cdn2.pandaimg.com/2022/10/20/6350d9a16f49d.png" alt="屏幕截图 2022-10-20 131600.png"></a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Linux系统管理篇 </tag>
             
         </tags>
       
@@ -2379,25 +2379,6 @@
     
     
     <entry>
-      <title>stm32最小系统板制作</title>
-      <link href="/2022/09/21/2022-9-21-stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/"/>
-      <url>/2022/09/21/2022-9-21-stm32%E6%9C%80%E5%B0%8F%E7%B3%BB%E7%BB%9F%E6%9D%BF%E5%88%B6%E4%BD%9C/</url>
-      
-        <content type="html"><![CDATA[<p>此次制作使用的为立创EDA，主要是快速上手制板，没有选择AD。</p><p>首先了解<strong>stm32最小系统电路</strong>构成如下：</p><p>复位电路、电源电路、SWD&#x2F;JTAG下载接口、晶振电路（时钟电路）、启动选择电路、stm32构成。</p><p>关于启动选择电路可以查看以下链接来了解。</p><p><a href="%5B(82%E6%9D%A1%E6%B6%88%E6%81%AF">Boot模式选择</a> STM32中BOOT模式配置的作用_qq_22010549的博客-CSDN博客_stm32f103boot设置](<a href="https://blog.csdn.net/qq_22010549/article/details/123425814">https://blog.csdn.net/qq_22010549/article/details/123425814</a>))</p><p>可以将boot0和boot1的两个分别设计单刀双制开关接3.3V和GND</p><p>主闪存模式是用ｆｌａｓｈ，使用串口下载，或者可以选择使用SWD</p><p>本款设计芯片选择stm32f103RCT６芯片。</p><p>晶振电路分别使用两种晶振８MＨｚ晶振提供外部时钟和３２．７６８ＫＨｚ内部晶振为RTC提供时钟信号。</p><p>复位电路由电容、电阻、开关组成，电路采用手动复位的方式，当开关闭合时电路导通，RSET为芯片的复位引脚信号，此时芯片复位引脚接通GND，芯片将会复位重启。其中的电容的功能则是储能，当开发板上电瞬间，电容开始充电，复位引脚为低电平，所以上电瞬间开发板也会复位重启，但随着电容充电完成，引脚变为高电平，则不会再进行复位重启。</p><p>为了方便下载程序设计JTAG电路</p><p>电源电路把电源电压稳压在3.3V给单片机供电。</p><p><a href="%5B(82%E6%9D%A1%E6%B6%88%E6%81%AF">稳压电路选择</a> 5V降压转3.3V，5V转3V电路图芯片_usb type的博客-CSDN博客_5v转3.3v稳压芯片](<a href="https://blog.csdn.net/quke1/article/details/114530112?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166381207416800182735752%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=166381207416800182735752&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-114530112-null-null.142%5Ev49%5Econtrol,201%5Ev3%5Econtrol_2&amp;utm_term=5v%E8%BD%AC3.3v%E7%94%B5%E8%B7%AF&amp;spm=1018.2226.3001.4187">https://blog.csdn.net/quke1/article/details/114530112?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166381207416800182735752%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=166381207416800182735752&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-114530112-null-null.142^v49^control,201^v3^control_2&amp;utm_term=5v%E8%BD%AC3.3v%E7%94%B5%E8%B7%AF&amp;spm=1018.2226.3001.4187</a>))</p><p>大多数选择为LDO电路，使用的一般为LM1117或者AMS117芯片。</p><p>stm32的MCU接口VDD接正极3.3V，VSS接地，VBAT使用电池或者其他电源，</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 实战 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>arm-linux -ld、-objcopy和obdump</title>
       <link href="/2022/07/08/2022-7-8-arm-linux-ld%E5%92%8Carm-linux-objcopy/"/>
       <url>/2022/07/08/2022-7-8-arm-linux-ld%E5%92%8Carm-linux-objcopy/</url>
@@ -2468,20 +2449,7 @@
     
     
     <entry>
-      <title>Linux初学</title>
-      <link href="/2022/06/28/2022-6-28-linux%E5%88%9D%E5%AD%A6/"/>
-      <url>/2022/06/28/2022-6-28-linux%E5%88%9D%E5%AD%A6/</url>
-      
-        <content type="html"><![CDATA[<p>一个C&#x2F;C++文件要经过预处理、编译、汇编、连接等四步才能变为可执行文件。</p><p>预处理就是要将包含（include）的文件插入到原文件中、宏定义展开、根据条件编译命令选择要使用的代码。</p><p>编译是把C&#x2F;C++代码翻译成汇编代码。</p><p>汇编是将输出的汇编代码翻译成一定格式的机器代码。</p><p>连接是将上部生成的OBJ和系统库的OBJ文件、库文件连接起来，最终生成可执行文件。</p><p>首先记录一些常用的linux指令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash"><span class="built_in">cd</span> 目标文件夹名称                 导向目标文件夹所在终端</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash"><span class="built_in">touch</span> hel                               创建一个叫hel的文件</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash">gedit hel.c                             创建一个叫hel.c的文件并用文本编辑器打开</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash">gcc hel.c -o <span class="built_in">test</span>                    编译hel.c为<span class="built_in">test</span>可执行文件</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash">./test                                     执行<span class="built_in">test</span>可执行文件</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure><p>多个.c文件使用命令将多个文件连接到一个可执行文件中，之后执行。</p><p>在C语言文件中调用math.h库报错只需要gcc将代码与链接库连接起来</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc two.c -lm -o two</span></span><br></pre></td></tr></table></figure><p>编译C语言文件会有警告以及报错，但是警告是不显示的，需要用指令进行显示。</p><p>比如显示hello.c文件的警告</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">~$ </span><span class="language-bash">gcc -Wll -c hello.c</span></span><br></pre></td></tr></table></figure><p>如果文件里有没定义的变量就会出现如下现象</p><p><img src="https://gitee.com/hanfengdyh/image/raw/master/bloglmg/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-15%20145045.png"></p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>泰山派（瑞芯微SDK编译烧录）</title>
+      <title>项目梗概</title>
       <link href="/2022/06/08/2022-7-8-%E9%A1%B9%E7%9B%AE%E6%A2%97%E6%A6%82/"/>
       <url>/2022/06/08/2022-7-8-%E9%A1%B9%E7%9B%AE%E6%A2%97%E6%A6%82/</url>
       
