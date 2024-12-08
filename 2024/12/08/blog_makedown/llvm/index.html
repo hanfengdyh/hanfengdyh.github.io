@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>涵风 Blog | 涵风 Blog</title><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="title：llvm入门LLVM概念LLVM编译器是基于模块化、可扩展化的设计，将编译器过程分为多个阶段，而gcc编译器则是集成了多个前端和后端的传统编译器，设计更紧密一体化。 LLVM编译器因具有高度模块化的中间表示IR为基础，具有能实现更细粒度的优化。 LLVM结构 前端解析源代码，检查错误，并构建特定语言的抽象语法树(AST)来表示输入代码。AST额可以选择转换为新的表示形式来进行优化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="涵风 Blog">
+<meta property="og:url" content="https://example.com/2024/12/08/blog_makedown/llvm/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="title：llvm入门LLVM概念LLVM编译器是基于模块化、可扩展化的设计，将编译器过程分为多个阶段，而gcc编译器则是集成了多个前端和后端的传统编译器，设计更紧密一体化。 LLVM编译器因具有高度模块化的中间表示IR为基础，具有能实现更细粒度的优化。 LLVM结构 前端解析源代码，检查错误，并构建特定语言的抽象语法树(AST)来表示输入代码。AST额可以选择转换为新的表示形式来进行优化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2024-12-08T12:56:20.370Z">
+<meta property="article:modified_time" content="2024-12-08T12:56:20.370Z">
+<meta property="article:author" content="HF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2024/12/08/blog_makedown/llvm/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '涵风 Blog',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-12-08 20:56:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">151</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-08T12:56:20.370Z" title="发表于 2024-12-08 20:56:20">2024-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-08T12:56:20.370Z" title="更新于 2024-12-08 20:56:20">2024-12-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+<h2 id="title：llvm入门"><a href="#title：llvm入门" class="headerlink" title="title：llvm入门"></a>title：llvm入门</h2><h1 id="LLVM概念"><a href="#LLVM概念" class="headerlink" title="LLVM概念"></a>LLVM概念</h1><p>LLVM编译器是基于模块化、可扩展化的设计，将编译器过程分为多个阶段，而gcc编译器则是集成了多个前端和后端的传统编译器，设计更紧密一体化。</p>
+<p>LLVM编译器因具有高度模块化的中间表示IR为基础，具有能实现更细粒度的优化。</p>
+<p>LLVM结构</p>
+<p>前端解析源代码，检查错误，并构建特定语言的抽象语法树(AST)来表示输入代码。AST额可以选择转换为新的表示形式来进行优化。</p>
+<p>优化器负责进行各种转换以尝试提高代码的运行时间，例如消除冗余计算</p>
+<p>后端将代码映射到目标指令集。除了编写正确代码之外，它还负责生成利用受支持架构的不寻常的功能的良好代码。后端常见部分包括指令选择、寄存器分配和指令调度。</p>
+<p><img src="https://img.picgo.net/2024/11/28/-2024-11-28-11415752d6b1a600dbeb82.png" alt="屏幕截图 2024 11 28 114157"></p>
+<h1 id="编译构建LLVM"><a href="#编译构建LLVM" class="headerlink" title="编译构建LLVM"></a>编译构建LLVM</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#git克隆LLVM-project</span></span></span><br><span class="line">git clone --depth 10 https://github.com/llvm/llvm-project.git </span><br><span class="line">git chectout 19.1.3</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake -G &quot;Unix Makefiles&quot; \</span><br><span class="line">    -DCMAKE_BUILD_TYPE=Release \</span><br><span class="line">    -DLLVM_ENABLE_PROJECTS=&quot;clang;lld;mlir&quot; \</span><br><span class="line">    -DCMAKE_INSTALL_PREFIX=/opt/llvm19 \</span><br><span class="line">    /home/riscv/llvm-project/llvm  ##工程下的llvm目录</span><br><span class="line">make -j$(nproc)</span><br><span class="line">make install</span><br><span class="line">sudo vi ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#add</span></span> </span><br><span class="line">  export PATH=$PATH:/opt/llvm19/bin</span><br><span class="line">source ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># version find</span></span></span><br><span class="line">llvm-config --version</span><br></pre></td></tr></table></figure>
+
+<h2 id="LLVM常用命令"><a href="#LLVM常用命令" class="headerlink" title="LLVM常用命令"></a>LLVM常用命令</h2><p><img src="https://img.picgo.net/2024/11/28/xiangguanput824ea8c179d62cff.png" alt="xiangguanput"></p>
+<p><code>.ll</code> 文件是 <strong>LLVM汇编语言格式</strong>的源代码文件，它是LLVM中间表示的一种文本格式，通常用于人类阅读和调试。它与机器代码无关，旨在展示程序的逻辑和结构，适用于编译、优化以及生成目标代码的各个阶段。</p>
+<p><code>.bc</code> 文件是 <strong>LLVM Bitcode</strong> 文件，它是LLVM IR的二进制表示格式。<code>.bc</code> 是平台无关的二进制格式，适用于编译过程中的中间步骤。<code>.bc</code> 文件通常用于优化、链接和跨平台处理。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-as： 将IR文件编译为二进制文件，默认生成后缀名为.bc的文件，也可以使用-o指定输出:</span></span></span><br><span class="line">llvm-as -o hello hello.ll</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-dis 将二进制生成IR文件生成.ll后缀文件</span></span></span><br><span class="line">llvm-dis hello</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llc将.ll或.bc文件编译成汇编文件，输出.s文件</span></span></span><br><span class="line">llc hello.ll</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#将.ll或.bc文件编译为汇编文件,输出后缀名为.s文件</span></span></span><br><span class="line">lli hello.bc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-link将多个LLVM的二进制文件合并为一个二进制文件</span></span></span><br><span class="line">llvm-link -o hello hello.bc bye.bc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-diff对比两个文件的区别,可以用来比较.ll文件和LLVM的二进制文件</span></span></span><br><span class="line">llvm-diff hello1.ll hello2.ll</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-nm:列出LLVM二进制文件或静态库文件的符号表</span></span></span><br><span class="line">llvm-nm hello.a</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#llvm-ar:创建静态库,值得注意的是llvm-ar会创建一个新的符号表来统一记录静态库中所有的成员，这有助于提升速度</span></span></span><br><span class="line">llvm-ar r hello.a hello.bc bye.bc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#opt是LLVM的优化器和分析器，输入LLVM源文件，会对其进行优化或分析，然后输出优化文件或分析结果。</span></span></span><br><span class="line">opt [options] &lt;input-file&gt; -o &lt;output-file&gt;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#[options]：指定一个或多个要应用的优化 Pass。</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#&lt;input-file&gt;：输入的 LLVM IR 文件（可以是 .bc 或 .ll 格式）。</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#-o &lt;output-file&gt;：指定优化后的输出文件。</span></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Clang前端"><a href="#Clang前端" class="headerlink" title="Clang前端"></a>Clang前端</h1><p>目录：<code>llvm-project/clang/</code></p>
+<ul>
+<li>预处理：头文件以及宏的处理</li>
+<li>词法分析：词法分析器的任务是从左向右逐行扫描源程序的字符，识别除哥哥单词并确定单词的类型，将识别出的单词转换成同意的机内表示————词法单元形式。</li>
+<li>语法分析：主要任务是从词法分析器输出的token序列中识别除各类短语，并构造语法分析树。如果输入字符串的哥哥单词敲好自左至右地站在分析树的各个节点上，那么这个词串就是该语言的一个句子，语法分析树描述了句子的语法结构</li>
+<li>语义分析：收集标识符的属性信息与语义检查。表示符的属性包括种属，类型，存储位置和长度、值、作用域、参数和返回值类型。语义检查包括变量或过程未经声明就是用，重复声明、运算分量类型不匹配、操作符与操作数之间类型不匹配。</li>
+<li>代码生成:将AST转换成相依的LLVM代码。</li>
+</ul>
+<h1 id="IR"><a href="#IR" class="headerlink" title="IR"></a>IR</h1><p>高级语言经过Clang等前端解析为平台无关的中间表示(<strong>IR</strong>),使编译器能够在编译、链接以及代码生成的各个阶段忽略语言特性，进行全面优化分析。LLVM的各种pass都是作用在LLVM IR上的，通常设计一门语言就是生成一个语言的编译器前端Clang即可。</p>
+<p>LLVM IR三种表示形式：</p>
+<ul>
+<li><p>内存中的表示形式，如BasicBlock，Instruction这种cpp类；</p>
+</li>
+<li><p>bitcode形式，这是序列化的二进制表示形式</p>
+</li>
+<li><p>LLVM汇编文件形式，也是序列化的表达形式。</p>
+</li>
+</ul>
+<p>IR表达：</p>
+<ul>
+<li>Module类，Module可以理解一个完整的编译单元。一般来说，这个编译单元就是个源码文件，如一个后缀为cpp的源文件</li>
+<li>Function类，对一个函数单元，两种情况分别是函数定义和函数声明。</li>
+<li>BasticBlock类，表示一个基本代码块（就是一段没有控制流逻辑的基本流程）</li>
+<li>Instruction类，指令类就是LLVM中定义的基本操作。</li>
+</ul>
+<h2 id="控制流程图"><a href="#控制流程图" class="headerlink" title="控制流程图"></a>控制流程图</h2><p>在LLVM的编译和优化过程中，控制流图用来描述函数或程序的执行顺序和控制流结构。它帮助LLVM分析每个基本块（Basic Block）之间的跳转关系，从而进行各种优化，如死代码消除、循环展开、常量传播等。</p>
+<p>eg:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">foo</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> result = foo(<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Result:%d\n&quot;</span>,result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>编译器生成LLVM IR</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -S -emit-llvm program.c -o program.ll</span><br></pre></td></tr></table></figure>
+
+<p><code>-S</code> 选项表示编译为汇编语言（但这里是LLVM IR汇编格式）。</p>
+<p><code>-emit-llvm</code> 告诉 <code>clang</code> 生成LLVM IR，而不是机器代码。</p>
+<p><code>program.c</code> 是你编写的C源代码文件。</p>
+<p><code>program.ll</code> 是输出的LLVM IR文件。</p>
+<ol start="2">
+<li>使用llvm-opt 工具查看LLVM IR 控制流的结构图(每个版本的都不一样,使用的是LLVM19.1.4)</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">opt --dot-regions program.ll</span><br><span class="line"></span><br><span class="line">dot -Tpng program.dot -o program.png</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>LLVM19.1.4的opt工具是有问题的，生成多个dot图形文件时候都报错，这版的开发工具并不完善。唯一不报错的就是–dot-regions 选项了</p>
+</blockquote>
+<h2 id="中间优化遍"><a href="#中间优化遍" class="headerlink" title="中间优化遍"></a>中间优化遍</h2><p>目录：<code>llvm-project/llvm/lib/Transforms/</code></p>
+<ul>
+<li>Analysis Passes</li>
+<li>Transform Passes</li>
+<li>Unility Passes</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://llvm.org/docs/Passes.html">https://llvm.org/docs/Passes.html</a></p>
+<h3 id="Pass管理器"><a href="#Pass管理器" class="headerlink" title="Pass管理器"></a>Pass管理器</h3><p><a target="_blank" rel="noopener" href="https://llvm.org/docs/NewPassManager.html">https://llvm.org/docs/NewPassManager.html</a></p>
+<h1 id="LLVM后端"><a href="#LLVM后端" class="headerlink" title="LLVM后端"></a>LLVM后端</h1><p>目录位置：<code>llvm-project/llvm/lib/Target/</code></p>
+<p>LLVM后端主要功能是代码生成，所以也叫代码生成器，负责将LLVM IR 转换特定目标架构的机器代码。</p>
+<p>用于实现本机代码生成的各个阶段的目标无关算法。此代码位于lib&#x2F;CodeGen中。</p>
+<p>目标独立JIT组件。LLVM JIT完全独立于目标。</p>
+<p>在代码生成过程中，LLVM 后端会根据目标硬件平台的特性和要求，将 LLVM IR 转换为适合该平台的机器码或汇编语言。这个过程涉及到指令选择（Instruction Selection）、寄存器分配（Register Allocation）、指令调度（Instruction Scheduling）等关键步骤，以确保生成的目标代码在目标平台上能够高效运行。</p>
+<h2 id="LLVM-后端-Pass"><a href="#LLVM-后端-Pass" class="headerlink" title="LLVM 后端 Pass"></a>LLVM 后端 Pass</h2><p>整个后端流水线涉及到四种不同层次的指令表示，包括：</p>
+<ul>
+<li>内存中的 LLVM IR：LLVM 中间表现形式，提供了高级抽象的表示，用于描述程序的指令和数据流。</li>
+<li>SelectionDAG 节点：在编译优化阶段生成的一种抽象的数据结构，用以表示程序的计算过程，帮助优化器进行高效的指令选择和调度。</li>
+<li>Machinelnstr：机器相关的指令格式，用于描述特定目标架构下的指令集和操作码。</li>
+<li>MCInst：机器指令，是具体的目标代码表示，包含了特定架构下的二进制编码指令。</li>
+</ul>
+<p>不是重点操作目标，详情请看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ZOMI/articles/18558930">【AI系统】LLVM 后端代码生成 - ZOMI酱酱 - 博客园</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>前端阶段</li>
+</ol>
+<ul>
+<li>词法分析（Lexical Analysis）：源代码被分解为词法单元，如标识符、关键字和常量。</li>
+<li>语法分析（Syntax Analysis）：词法单元被组织成语法结构，构建抽象语法树（AST）。</li>
+<li>语义分析（Semantic Analysis）：AST 被分析以确保语义的正确性和一致性。</li>
+</ul>
+<ol>
+<li>中间表示（IR）阶段</li>
+</ol>
+<ul>
+<li>将 AST 转化为中间表示（IR），采用 SSA 形式的三地址指令表示代码结构。</li>
+<li>通过多段 pass 进行代码优化，包括常量传播、死代码消除、循环优化等，以提高代码性能和效率。</li>
+<li>IR 进一步转化为 DAG 图，其中每个节点代表一个指令，边表示数据流动。</li>
+</ul>
+<ol>
+<li>后端阶段</li>
+</ol>
+<ul>
+<li>指令选择（Instruction Selection）：根据目标平台特性选择合适的指令。</li>
+<li>寄存器分配（Register Allocation）：分配寄存器以最大程度减少内存访问。</li>
+<li>指令调度（Instruction Scheduling）：优化指令执行顺序以减少延迟。</li>
+</ul>
+<p>最终生成目标代码，用于目标平台的执行。</p>
+<p>Pass 管理：</p>
+<p>在编译器的每个模块和 Pass 均可通过 Pass manager 进行管理，可以动态添加、删除或调整 Pass 来优化编译过程中的各个阶段。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2024/12/08/blog_makedown/llvm/">https://example.com/2024/12/08/blog_makedown/llvm/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/12/08/blog_makedown/RVOS%E7%B3%BB%E7%BB%9F/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2024/12/08/blog_makedown/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info"></div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">151</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title%EF%BC%9Allvm%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">title：llvm入门</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LLVM%E6%A6%82%E5%BF%B5"><span class="toc-number"></span> <span class="toc-text">LLVM概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BALLVM"><span class="toc-number"></span> <span class="toc-text">编译构建LLVM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LLVM%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">LLVM常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Clang%E5%89%8D%E7%AB%AF"><span class="toc-number"></span> <span class="toc-text">Clang前端</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IR"><span class="toc-number"></span> <span class="toc-text">IR</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">控制流程图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BC%98%E5%8C%96%E9%81%8D"><span class="toc-number">2.</span> <span class="toc-text">中间优化遍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">2.1.</span> <span class="toc-text">Pass管理器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LLVM%E5%90%8E%E7%AB%AF"><span class="toc-number"></span> <span class="toc-text">LLVM后端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LLVM-%E5%90%8E%E7%AB%AF-Pass"><span class="toc-number">1.</span> <span class="toc-text">LLVM 后端 Pass</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">总结</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96/" title="无题">无题</a><time datetime="2024-12-08T13:12:27.666Z" title="发表于 2024-12-08 21:12:27">2024-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="无题">无题</a><time datetime="2024-12-08T13:12:27.657Z" title="发表于 2024-12-08 21:12:27">2024-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/title%EF%BC%9Agit%E4%BD%BF%E7%94%A8%E5%9B%9E%E9%A1%BE/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/title%EF%BC%9Agit%E4%BD%BF%E7%94%A8%E5%9B%9E%E9%A1%BE/" title="无题">无题</a><time datetime="2024-12-08T13:12:27.657Z" title="发表于 2024-12-08 21:12:27">2024-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/README/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/README/" title="无题">无题</a><time datetime="2024-12-08T13:12:27.656Z" title="发表于 2024-12-08 21:12:27">2024-12-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
