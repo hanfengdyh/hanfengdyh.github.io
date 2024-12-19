@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>RVV Intrinsic | 涵风 Blog</title><meta name="keywords" content="riscv"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="RVV向量扩展向量扩展 使用 Intrinsics 的 C 语言 RISC-V 向量编程 RVV 的灵活性体现在以下几个方面：  向量长度的可变性：RVV 提供了灵活的向量长度（VL）设置，使得同一指令可以处理不同数量的数据元素。例如，你可以在同一程序中为不同的操作指定不同的向量长度，以适应硬件的能力或特定的计算任务。一个寄存器可以包含多个数据元素（例如 32 位整数、64 位浮点数等），并根据当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RVV Intrinsic">
+<meta property="og:url" content="https://example.com/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="RVV向量扩展向量扩展 使用 Intrinsics 的 C 语言 RISC-V 向量编程 RVV 的灵活性体现在以下几个方面：  向量长度的可变性：RVV 提供了灵活的向量长度（VL）设置，使得同一指令可以处理不同数量的数据元素。例如，你可以在同一程序中为不同的操作指定不同的向量长度，以适应硬件的能力或特定的计算任务。一个寄存器可以包含多个数据元素（例如 32 位整数、64 位浮点数等），并根据当">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2024-12-04T07:20:32.000Z">
+<meta property="article:modified_time" content="2024-12-19T06:04:23.614Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="riscv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RVV Intrinsic',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-12-19 14:04:23'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">155</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RVV Intrinsic</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-04T07:20:32.000Z" title="发表于 2024-12-04 15:20:32">2024-12-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-19T06:04:23.614Z" title="更新于 2024-12-19 14:04:23">2024-12-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RVV Intrinsic"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="RVV向量扩展"><a href="#RVV向量扩展" class="headerlink" title="RVV向量扩展"></a>RVV向量扩展</h1><p><a target="_blank" rel="noopener" href="https://www.xrvm.cn/community/post/detail?id=4187650891316269056">向量扩展</a></p>
+<p><a target="_blank" rel="noopener" href="https://fprox.substack.com/p/risc-v-vector-programming-in-c-with">使用 Intrinsics 的 C 语言 RISC-V 向量编程</a></p>
+<p>RVV 的灵活性体现在以下几个方面：</p>
+<ol>
+<li><strong>向量长度的可变性</strong>：RVV 提供了灵活的向量长度（VL）设置，使得同一指令可以处理不同数量的数据元素。例如，你可以在同一程序中为不同的操作指定不同的向量长度，以适应硬件的能力或特定的计算任务。一个寄存器可以包含多个数据元素（例如 32 位整数、64 位浮点数等），并根据当前的 <code>vl</code> 设置来决定每个寄存器要处理多少数据元素。因此，向量寄存器组有时可以半满或不满——取决于 <code>vl</code> 设置以及每个操作处理的数据量。</li>
+<li><strong>向量寄存器组的大小</strong>：RISC-V 向量寄存器组通常由多个寄存器组成，每个寄存器的大小是固定的。寄存器的大小和数据类型（如整数或浮点数）是固定的，但由于 <code>vl</code> 是动态可调整的，寄存器的填充率可能会小于其最大容量。例如，假设一个寄存器是 128 位宽，如果你只需要处理 64 位的数据元素，寄存器的 “半满” 情况就可能发生。</li>
+<li><strong>指令和掩码的作用</strong>：在 RVV 中，某些指令可以允许掩码操作（例如，<code>vfmv_v_f_f64m1</code>），这意味着某些元素可能会被忽略或处理为零，而不影响其他寄存器元素的计算。这使得向量寄存器的实际使用情况（如 1&#x2F;2 或更少）变得有可能。</li>
+</ol>
+<h1 id="可行性方案"><a href="#可行性方案" class="headerlink" title="可行性方案"></a>可行性方案</h1><h3 id="工具链的安装"><a href="#工具链的安装" class="headerlink" title="工具链的安装"></a>工具链的安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/riscv-collab/riscv-gnu-toolchain</span><br><span class="line">cd riscv-gnu-toolchain</span><br><span class="line">git submodule update --init --recursive##速度很慢</span><br><span class="line">mkdir build &amp;&amp; cd build</span><br><span class="line">../configure --prefix=/opt/riscv64 --enable-multilib --enable-languages=c,c++ --with-arch=rv64gcv --with-abi=lp64 --enable-rvv</span><br><span class="line">make -$(nproc)j</span><br><span class="line">riscv64-unknown-elf-gcc --version</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">riscv64-unknown-elf-gcc (g04696df0963) 14.2.0</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Copyright (C) 2024 Free Software Foundation, Inc.</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="程序编写"><a href="#程序编写" class="headerlink" title="程序编写"></a>程序编写</h3><blockquote>
+<p>经过测试以上配置的工具版本只能支持具有riscv前缀的函数如__riscv_vle32_v_i32m2(lhs, vl)</p>
+<p>更高版本对向量指令的处理方式更严格，因此它不再直接解析某些低级别函数，特别是那些没有前缀的 RVV 内建函数。这种变化旨在减少混淆，并统一 LLVM 中的向量扩展处理。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Reference: https://pages.dogdog.run/toolchain/riscv_vector_extension.html</span></span><br><span class="line"><span class="comment">// #define __riscv_vector // make VSC happy when reading riscv_vector.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;riscv_vector.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x[<span class="number">10</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> y[<span class="number">10</span>] = &#123;<span class="number">0</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>&#125;;</span><br><span class="line"><span class="type">int</span> z[<span class="number">10</span>], z_real[<span class="number">10</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vec_add_rvv</span><span class="params">(<span class="type">int</span>* dst, <span class="type">int</span>* lhs, <span class="type">int</span>* rhs, <span class="type">size_t</span> avl)</span> &#123;</span><br><span class="line">    <span class="type">vint32m2_t</span> vlhs, vrhs, vres;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> vl; (vl = __riscv_vsetvl_e32m2(avl));</span><br><span class="line">         avl -= vl, lhs += vl, rhs += vl, dst += vl) &#123;</span><br><span class="line">        vlhs = __riscv_vle32_v_i32m2(lhs, vl);</span><br><span class="line">        vrhs = __riscv_vle32_v_i32m2(rhs, vl);</span><br><span class="line">        vres = __riscv_vadd_vv_i32m2(vlhs, vrhs, vl);</span><br><span class="line">        __riscv_vse32_v_i32m2(dst, vres, vl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vec_add_real</span><span class="params">(<span class="type">int</span>* dest, <span class="type">int</span>* lhs, <span class="type">int</span>* rhs, <span class="type">size_t</span> vlen)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; vlen; i++) &#123;</span><br><span class="line">        dest[i] = lhs[i] + rhs[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_vec</span><span class="params">(<span class="type">int</span>* v, <span class="type">size_t</span> vlen, <span class="type">char</span>* msg)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s=&#123; &quot;</span>, msg);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; vlen; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d, &quot;</span>, v[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&#125;\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span>* argv[])</span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// check RVV support</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __riscv_v_intrinsic</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;RVV NOT supported in this compiler\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    vec_add_rvv(z, x, y, <span class="number">10</span>);</span><br><span class="line">    vec_add_real(z_real, x, y, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    print_vec(x, <span class="number">10</span>, <span class="string">&quot;x[10]&quot;</span>);</span><br><span class="line">    print_vec(y, <span class="number">10</span>, <span class="string">&quot;y[10]&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (z[i] != z_real[i]) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;==========\nTest FAILED: pos %d mismatch\n&quot;</span>, i);</span><br><span class="line">            print_vec(z, <span class="number">10</span>, <span class="string">&quot;z[10]&quot;</span>);</span><br><span class="line">            print_vec(z_real, <span class="number">10</span>, <span class="string">&quot;z_real[10]&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    print_vec(z, <span class="number">10</span>, <span class="string">&quot;z[10]&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;==========\nTest PASSED\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="模拟器对于RVV的支持"><a href="#模拟器对于RVV的支持" class="headerlink" title="模拟器对于RVV的支持"></a>模拟器对于RVV的支持</h3><h4 id="qemu"><a href="#qemu" class="headerlink" title="qemu"></a>qemu</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">##编译执行报错，说是不支持rvv扩展，所以采用了spike模拟器</span><br><span class="line">qemu-riscv64 -cpu rv64,v=true,vlen=128,vext_spec=v1.0 ./vadd</span><br><span class="line">qemu-riscv64: can&#x27;t apply global rv64-riscv-cpu.v=true: Property &#x27;rv64-riscv-cpu.v&#x27; not found</span><br></pre></td></tr></table></figure>
+
+<h4 id="Spike"><a href="#Spike" class="headerlink" title="Spike"></a>Spike</h4><p><strong>安装依赖</strong></p>
+<p>在开始之前，你需要确保你的系统上安装了必要的依赖项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install -y autoconf automake libtool g++ pkg-config make python3</span><br></pre></td></tr></table></figure>
+
+<p><strong>克隆 Spike 仓库</strong></p>
+<p>首先克隆 Spike 仓库到本地：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/riscv/riscv-isa-sim.git</span><br><span class="line">cd riscv-isa-sim</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置和编译 Spike</strong></p>
+<p>配置和编译 Spike，使其支持 RVV 扩展。通过以下步骤来完成：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">../configure --prefix=/opt/riscv --enable-rvv</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>--enable-rvv</code> 确保 Spike 配置支持 RISC-V 向量扩展 (RVV)。</p>
+<p><strong>配置环境变量</strong></p>
+<p>安装完成后，确保将 <code>/opt/riscv/bin</code> 添加到你的 <code>PATH</code> 环境变量中，以便可以方便地调用 Spike。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi ~./basrch #将一下内容放入最后</span><br><span class="line">export PATH=/opt/riscv/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>为了让Spike，正确执行成程序需要将RISCV-V Proxy Kernel(pk)。</p>
+<p><strong>安装PK</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/riscv/riscv-pk.git</span><br><span class="line">cd riscv-pk</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line"> ../configure --prefix=/opt/riscv --host=riscv64-unknown-linux-gnu</span><br><span class="line">make </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">报错</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#../machine/flush_icache.c: Assembler messages:</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#../machine/flush_icache.c:4: Error: unrecognized opcode fence.i&#x27;, extension ##zifencei&#x27; required</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#make: *** [Makefile:336：flush_icache.o] 错误 1</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># vim Makefile</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 启用 zifencei 扩展</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 在CFLAGS中添加 -march=rv64imafdc_zifencei</span></span></span><br><span class="line">sudo make install</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 验证安装成不成功</span></span></span><br><span class="line">ls /opt/riscv/riscv64-unknown-linux-gnu/lib/riscv-pk</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#看到诸如 libpk.a、libbbl.a、libsoftfloat.a 等文件。</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="gcc编译"><a href="#gcc编译" class="headerlink" title="gcc编译"></a>gcc编译</h3><p><code>spike只能跑静态编译的程序。</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#执行</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">riscv64-unknown-linux-gnu-gcc -march=rv64gcv  -O2 -g -static ./vadd.c -o ./vadd</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#或者</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">riscv64-unknown-elf-gcc -march=rv64gcv  -O2 -g -static ./vadd.c -o ./vadd</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#执行</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">spike --isa=rv64gcv /opt/riscv/riscv64-unknown-linux-gnu/bin/pk ./vadd</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>clang编译</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">clang --target=riscv64-unknown-linux-gnu -O2 -g -march=rv64gcv1p0 -menable-experimental-extensions --gcc-toolchain=/opt/riscv64 --sysroot=/opt/riscv64/sysroot -mllvm --riscv-v-vector-bits-min=256 ./vadd.c -o vadd</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>报错</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">./vadd.c:<span class="number">10</span>:<span class="number">14</span>: warning: implicit declaration of function <span class="string">&#x27;__riscv_vsetvl_e32m1&#x27;</span> is invalid in C99 [-Wimplicit-function-declaration]</span><br><span class="line">        vl = __riscv_vsetvl_e32m1(vlen - i);</span><br><span class="line">             ^</span><br><span class="line">./vadd.c:<span class="number">12</span>:<span class="number">27</span>: warning: implicit declaration of function <span class="string">&#x27;__riscv_vle32_v_f32m1&#x27;</span> is invalid in C99 [-Wimplicit-function-declaration]</span><br><span class="line">        <span class="type">vfloat32m1_t</span> va = __riscv_vle32_v_f32m1(&amp;a[i], vl);</span><br><span class="line">                          ^</span><br><span class="line">./vadd.c:<span class="number">12</span>:<span class="number">22</span>: error: initializing <span class="string">&#x27;vfloat32m1_t&#x27;</span> (aka <span class="string">&#x27;__rvv_float32m1_t&#x27;</span>) with an expression of incompatible type <span class="string">&#x27;int&#x27;</span></span><br><span class="line">        <span class="type">vfloat32m1_t</span> va = __riscv_vle32_v_f32m1(&amp;a[i], vl);</span><br><span class="line">                     ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">./vadd.c:<span class="number">13</span>:<span class="number">22</span>: error: initializing <span class="string">&#x27;vfloat32m1_t&#x27;</span> (aka <span class="string">&#x27;__rvv_float32m1_t&#x27;</span>) with an expression of incompatible type <span class="string">&#x27;int&#x27;</span></span><br><span class="line">        <span class="type">vfloat32m1_t</span> vb = __riscv_vle32_v_f32m1(&amp;b[i], vl);</span><br><span class="line">                     ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">./vadd.c:<span class="number">15</span>:<span class="number">29</span>: warning: implicit declaration of function <span class="string">&#x27;__riscv_vfmul_vv_f32m1&#x27;</span> is invalid in C99 [-Wimplicit-function-declaration]</span><br><span class="line">        <span class="type">vfloat32m1_t</span> vres = __riscv_vfmul_vv_f32m1(va, vb, vl);</span><br><span class="line">                            ^</span><br><span class="line">./vadd.c:<span class="number">15</span>:<span class="number">22</span>: error: initializing <span class="string">&#x27;vfloat32m1_t&#x27;</span> (aka <span class="string">&#x27;__rvv_float32m1_t&#x27;</span>) with an expression of incompatible type <span class="string">&#x27;int&#x27;</span></span><br><span class="line">        <span class="type">vfloat32m1_t</span> vres = __riscv_vfmul_vv_f32m1(va, vb, vl);</span><br><span class="line">                     ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">./vadd.c:<span class="number">17</span>:<span class="number">9</span>: warning: implicit declaration of function <span class="string">&#x27;__riscv_vse32_v_f32m1&#x27;</span> is invalid in C99 [-Wimplicit-function-declaration]</span><br><span class="line">        __riscv_vse32_v_f32m1(&amp;dest[i], vres, vl);</span><br><span class="line">        ^</span><br><span class="line">./vadd.c:<span class="number">55</span>:<span class="number">66</span>: warning: format specifies type <span class="string">&#x27;int&#x27;</span> but the argument has type <span class="string">&#x27;size_t&#x27;</span> (aka <span class="string">&#x27;unsigned long&#x27;</span>) [-Wformat]</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;==========\nTest FAILED: pos %d mismatch\n&quot;</span>, i);</span><br><span class="line">                                                 ~~              ^</span><br><span class="line">                                                 %zu</span><br><span class="line"><span class="number">5</span> warnings and <span class="number">3</span> errors generated.</span><br></pre></td></tr></table></figure>
+
+<h3 id="等待验证方案"><a href="#等待验证方案" class="headerlink" title="等待验证方案"></a>等待验证方案</h3><p>qemu的RVV扩展以及clang为什么编译报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">使用的qemu是9.0.1的，但是在命令中识别不了vv=<span class="literal">true</span>,</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接：[中科院RVV配置Intrinsic](<a target="_blank" rel="noopener" href="https://learning.eulixos.com/posts/2024-01/zyx_01_config/">RVV C Intrinsic 配置教程</a>)</p>
+<p>参考报告中的工具链版本是13.2，使用的clang是14.0.6，但是我使用的工具链是最新版的14.2.0，这个更高的版本clang14还支持不了，需要更高的版本才可以对RVV的全面支持。</p>
+<p><img src="https://img.picgo.net/2024/11/15/-2024-11-15-16172237daeb92e2d520cb.png" alt="屏幕截图 2024 11 15 161722"></p>
+<p>使用clang17是可以编译的。</p>
+<p>后续编程实例：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/riscv-non-isa/rvv-intrinsic-doc/blob/v0.11.x/examples/rvv_branch.c">https://github.com/riscv-non-isa/rvv-intrinsic-doc/blob/v0.11.x/examples/rvv_branch.c</a></p>
+<p>函数API为：</p>
+<p><a target="_blank" rel="noopener" href="https://dzaima.github.io/intrinsics-viewer/">Intrinsics viewer</a></p>
+<p>qemu关于RVV的编译报错：</p>
+<p><img src="https://img.picgo.net/2024/11/18/QEMU-RVVe6d6b32d2c5c93d7.png" alt="QEMU RVV"></p>
+<p><code>在Ubuntu20.04上可以成功运行。</code></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/">https://example.com/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/riscv/">riscv</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/12/08/RISC-V%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RISC-V汇编语言入门</div></div></a></div><div class="next-post pull-right"><a href="/2024/12/01/RISC-V%20Vector%20Extension/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">RISCV内存管理单元</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/12/08/MLIR/" title="MLIR"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-08</div><div class="title">MLIR</div></div></a></div><div><a href="/2024/12/08/RISC-V%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/" title="RISC-V汇编语言入门"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-08</div><div class="title">RISC-V汇编语言入门</div></div></a></div><div><a href="/2024/12/01/RISC-V%20Vector%20Extension/" title="RISCV内存管理单元"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-01</div><div class="title">RISCV内存管理单元</div></div></a></div><div><a href="/2024/11/30/RVOS%E7%B3%BB%E7%BB%9F/" title="RVOS系统"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-30</div><div class="title">RVOS系统</div></div></a></div><div><a href="/2024/11/24/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="RISCV Vector test"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-24</div><div class="title">RISCV Vector test</div></div></a></div><div><a href="/2024/11/23/RISCV%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/" title="RISCV内存管理单元"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-23</div><div class="title">RISCV内存管理单元</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">155</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RVV%E5%90%91%E9%87%8F%E6%89%A9%E5%B1%95"><span class="toc-number">1.</span> <span class="toc-text">RVV向量扩展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E8%A1%8C%E6%80%A7%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">可行性方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">2.0.1.</span> <span class="toc-text">工具链的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%BC%96%E5%86%99"><span class="toc-number">2.0.2.</span> <span class="toc-text">程序编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AF%B9%E4%BA%8ERVV%E7%9A%84%E6%94%AF%E6%8C%81"><span class="toc-number">2.0.3.</span> <span class="toc-text">模拟器对于RVV的支持</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#qemu"><span class="toc-number">2.0.3.1.</span> <span class="toc-text">qemu</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Spike"><span class="toc-number">2.0.3.2.</span> <span class="toc-text">Spike</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gcc%E7%BC%96%E8%AF%91"><span class="toc-number">2.0.4.</span> <span class="toc-text">gcc编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E9%AA%8C%E8%AF%81%E6%96%B9%E6%A1%88"><span class="toc-number">2.0.5.</span> <span class="toc-text">等待验证方案</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/12/23/2024-12-23-%E7%91%9E%E8%8A%AF%E5%BE%AEROS/" title="瑞芯微ROS"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="瑞芯微ROS"/></a><div class="content"><a class="title" href="/2024/12/23/2024-12-23-%E7%91%9E%E8%8A%AF%E5%BE%AEROS/" title="瑞芯微ROS">瑞芯微ROS</a><time datetime="2024-12-23T14:51:27.000Z" title="发表于 2024-12-23 22:51:27">2024-12-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/blog_makedown/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/blog_makedown/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="无题">无题</a><time datetime="2024-12-08T12:56:20.373Z" title="发表于 2024-12-08 20:56:20">2024-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/blog_makedown/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/blog_makedown/%E7%B3%BB%E7%BB%9F%E8%99%9A%E6%8B%9F%E5%8C%96/" title="无题">无题</a><time datetime="2024-12-08T12:56:20.373Z" title="发表于 2024-12-08 20:56:20">2024-12-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/08/blog_makedown/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="无题"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="无题"/></a><div class="content"><a class="title" href="/2024/12/08/blog_makedown/RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="无题">无题</a><time datetime="2024-12-08T12:56:20.370Z" title="发表于 2024-12-08 20:56:20">2024-12-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
