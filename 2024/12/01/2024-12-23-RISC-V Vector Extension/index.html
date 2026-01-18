@@ -1,0 +1,427 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>RISCV内存管理单元 | 涵风 Blog</title><meta name="keywords" content="riscv"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="RISC-V 向量扩展（RVV, RISC-V Vector Extension）中的指令可以大致分为三大类：设置向量长度（setvl）、加载&#x2F;存储（load&#x2F;store）、和 数学运算（mathematical operations）。以下是这三类指令的详细描述： setvl 指令 setvl 指令用于设置向量长度，并返回当前向量长度。它是 RVV 中的核心指令，用于动态地控制每条指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISCV内存管理单元">
+<meta property="og:url" content="https://example.com/2024/12/01/2024-12-23-RISC-V%20Vector%20Extension/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="RISC-V 向量扩展（RVV, RISC-V Vector Extension）中的指令可以大致分为三大类：设置向量长度（setvl）、加载&#x2F;存储（load&#x2F;store）、和 数学运算（mathematical operations）。以下是这三类指令的详细描述： setvl 指令 setvl 指令用于设置向量长度，并返回当前向量长度。它是 RVV 中的核心指令，用于动态地控制每条指">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2024-12-01T07:20:32.000Z">
+<meta property="article:modified_time" content="2024-12-19T06:04:23.537Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="riscv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2024/12/01/2024-12-23-RISC-V%20Vector%20Extension/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RISCV内存管理单元',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-12-19 14:04:23'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">161</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RISCV内存管理单元</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-01T07:20:32.000Z" title="发表于 2024-12-01 15:20:32">2024-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-19T06:04:23.537Z" title="更新于 2024-12-19 14:04:23">2024-12-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RISCV内存管理单元"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><ul>
+<li><p>RISC-V 向量扩展（RVV, RISC-V Vector Extension）中的指令可以大致分为三大类：<strong>设置向量长度</strong>（<code>setvl</code>）、<strong>加载&#x2F;存储</strong>（<code>load/store</code>）、和 <strong>数学运算</strong>（<code>mathematical operations</code>）。以下是这三类指令的详细描述：</p>
+<p><strong>setvl</strong> 指令</p>
+<p><code>setvl</code> 指令用于设置向量长度，并返回当前向量长度。它是 RVV 中的核心指令，用于动态地控制每条指令处理的向量元素数量。通过设置向量长度寄存器（<code>vl</code>），可以使得后续的指令在处理数据时，按照给定的向量长度来处理。</p>
+<ul>
+<li><p><strong>指令格式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setvl  xlen, rs1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>功能</strong>：</p>
+<ul>
+<li>设置向量长度（<code>vl</code>）。</li>
+<li><code>rs1</code> 寄存器的值决定了目标向量长度（<code>vl</code>）。</li>
+<li>返回的向量长度会被存储在 <code>vlen</code> 寄存器中。</li>
+</ul>
+</li>
+<li><p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setvl   x0, x1  // 设置向量长度</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> <strong>加载&#x2F;存储指令</strong>（Load&#x2F;Store）</p>
+<p>加载和存储指令用于将数据从内存加载到向量寄存器中，或者将向量寄存器中的数据存储回内存。这些指令的操作对象是向量寄存器，可以处理多个数据元素。</p>
+<ul>
+<li><p><strong>加载指令（Vector Load）</strong>：</p>
+<ul>
+<li>用于从内存中加载数据到向量寄存器。</li>
+<li>支持不同的访问模式，包括按字节、按字、按双字等。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vlb    vd, (rs1)      // 加载字节数据到向量寄存器</span><br><span class="line">vlh    vd, (rs1)      // 加载半字数据到向量寄存器</span><br><span class="line">vld    vd, (rs1)      // 加载双字数据到向量寄存器</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>存储指令（Vector Store）</strong>：</p>
+<ul>
+<li>用于将向量寄存器的数据存储回内存。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vsb    (rs1), vs      // 将向量寄存器中的字节存储到内存</span><br><span class="line">vsh    (rs1), vs      // 将向量寄存器中的半字存储到内存</span><br><span class="line">vsd    (rs1), vs      // 将向量寄存器中的双字存储到内存</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>数学运算指令</strong>（Mathematical Operations）</p>
+<p>数学运算指令用于执行向量运算，包括加法、减法、乘法、除法、按元素操作、以及向量间的点积等。这些指令通常操作向量寄存器中的数据。</p>
+<ul>
+<li><p><strong>加法&#x2F;减法指令</strong>：</p>
+<ul>
+<li>用于执行向量元素之间的加法或减法。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vadd   vd, vs, vt   // 向量加法，vd = vs + vt</span><br><span class="line">vsub   vd, vs, vt   // 向量减法，vd = vs - vt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>乘法&#x2F;除法指令</strong>：</p>
+<ul>
+<li>用于执行向量元素之间的乘法或除法。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vmul   vd, vs, vt   // 向量乘法，vd = vs * vt</span><br><span class="line">vdiv   vd, vs, vt   // 向量除法，vd = vs / vt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>按元素操作</strong>：</p>
+<ul>
+<li>例如按位与、按位或、按位异或等操作。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vand   vd, vs, vt   // 向量按位与</span><br><span class="line">vor    vd, vs, vt   // 向量按位或</span><br><span class="line">vxor   vd, vs, vt   // 向量按位异或</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>归约操作</strong>：</p>
+<ul>
+<li>执行归约操作，如计算向量元素的总和、最小值、最大值等。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vredsum  rd, vs     // 向量元素求和</span><br><span class="line">vredmin  rd, vs     // 向量元素求最小值</span><br><span class="line">vredmax  rd, vs     // 向量元素求最大值</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>比较和掩码操作</strong>：</p>
+<ul>
+<li>用于比较向量元素，生成掩码或标志。</li>
+</ul>
+<p>示例指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vcmpeq  vd, vs, vt  // 向量元素相等比较</span><br><span class="line">vcmpgt  vd, vs, vt  // 向量元素大于比较</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>RISC-V 向量扩展（RVV）指令集包括三大类指令：</p>
+<ol>
+<li><strong>setvl</strong>：设置向量长度。</li>
+<li><strong>加载&#x2F;存储</strong>：用于向量数据的加载和存储操作。</li>
+<li><strong>数学运算</strong>：进行加法、减法、乘法、除法、按位运算、比较等操作。</li>
+</ol>
+<p>这些指令的组合使得 RISC-V 向量扩展能够高效地处理并行数据，适用于大规模的数据处理任务，如矩阵计算、科学计算等。</p>
+</li>
+</ul>
+<p>在 RISC-V 向量扩展（RVV）中，<strong>加载&#x2F;存储（load&#x2F;store）指令</strong>按照内存寻址模型（memory addressing model）的不同，可以进一步分为以下三类：</p>
+<hr>
+<h3 id="Unit-Strided-Load-x2F-Store"><a href="#Unit-Strided-Load-x2F-Store" class="headerlink" title="Unit Strided Load&#x2F;Store"></a><strong>Unit Strided Load&#x2F;Store</strong></h3><p><strong>Unit strided</strong> 是最简单的内存寻址模型，数据在内存中是连续存储的，每个元素占据固定的内存字节大小（如字节、半字、字或双字）。这种模型假设内存地址是以固定步幅（stride&#x3D;1）递增的。</p>
+<p>指令格式：</p>
+<ul>
+<li><p><strong>加载指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vle8   vd, (rs1)      // 加载连续的 8-bit 数据到向量寄存器</span><br><span class="line">vle16  vd, (rs1)      // 加载连续的 16-bit 数据到向量寄存器</span><br><span class="line">vle32  vd, (rs1)      // 加载连续的 32-bit 数据到向量寄存器</span><br><span class="line">vle64  vd, (rs1)      // 加载连续的 64-bit 数据到向量寄存器</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>存储指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vse8   (rs1), vd      // 存储向量寄存器中的 8-bit 数据到连续的内存</span><br><span class="line">vse16  (rs1), vd      // 存储 16-bit 数据</span><br><span class="line">vse32  (rs1), vd      // 存储 32-bit 数据</span><br><span class="line">vse64  (rs1), vd      // 存储 64-bit 数据</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>数据在内存中以连续地址存储。</li>
+<li>使用场景：矩阵或向量的逐元素处理，如密集向量运算。</li>
+</ul>
+<p><strong>Strided Load&#x2F;Store</strong></p>
+<p><strong>Strided</strong> 寻址模型允许内存地址以固定步幅（stride）递增。这种模型用于处理间隔存储的数据，例如二维数组中的一行数据。</p>
+<p>指令格式：</p>
+<ul>
+<li><p><strong>加载指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vlse8  vd, (rs1), rs2   // 加载具有固定步幅的 8-bit 数据</span><br><span class="line">vlse16 vd, (rs1), rs2   // 加载 16-bit 数据</span><br><span class="line">vlse32 vd, (rs1), rs2   // 加载 32-bit 数据</span><br><span class="line">vlse64 vd, (rs1), rs2   // 加载 64-bit 数据</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>存储指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vsse8  (rs1), rs2, vd   // 存储 8-bit 数据到具有固定步幅的内存</span><br><span class="line">vsse16 (rs1), rs2, vd   // 存储 16-bit 数据</span><br><span class="line">vsse32 (rs1), rs2, vd   // 存储 32-bit 数据</span><br><span class="line">vsse64 (rs1), rs2, vd   // 存储 64-bit 数据</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>参数说明：</p>
+<ul>
+<li><code>rs1</code> 是基地址寄存器。</li>
+<li><code>rs2</code> 是步幅寄存器（stride），指定每个元素之间的字节距离。</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>数据在内存中以固定步幅分布。</li>
+<li>使用场景：处理稀疏矩阵行、二维数组或其他非连续存储的数据。</li>
+</ul>
+<p><strong>Indexed Load&#x2F;Store</strong></p>
+<p><strong>Indexed</strong> 寻址模型允许每个元素的地址由基地址加上一个偏移量（offsets）决定。偏移量可以存储在一个单独的向量寄存器中，使得可以自由访问内存中的任意位置。</p>
+<p>指令格式：</p>
+<ul>
+<li><p><strong>加载指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vluxei8  vd, (rs1), vs2   // 加载 8-bit 数据，地址由索引寄存器决定</span><br><span class="line">vluxei16 vd, (rs1), vs2   // 加载 16-bit 数据</span><br><span class="line">vluxei32 vd, (rs1), vs2   // 加载 32-bit 数据</span><br><span class="line">vluxei64 vd, (rs1), vs2   // 加载 64-bit 数据</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>存储指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vsuxei8  (rs1), vs2, vd   // 存储 8-bit 数据到索引指定的地址</span><br><span class="line">vsuxei16 (rs1), vs2, vd   // 存储 16-bit 数据</span><br><span class="line">vsuxei32 (rs1), vs2, vd   // 存储 32-bit 数据</span><br><span class="line">vsuxei64 (rs1), vs2, vd   // 存储 64-bit 数据</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>参数说明：</p>
+<ul>
+<li><code>rs1</code> 是基地址寄存器。</li>
+<li><code>vs2</code> 是索引寄存器，存储相对基地址的偏移量。</li>
+</ul>
+<p><strong>特点：</strong></p>
+<ul>
+<li>数据地址可以完全动态控制，适合处理非规则的数据布局。</li>
+<li>使用场景：稀疏矩阵列访问、图处理、或不规则存储数据的加载和存储。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>类别</strong></th>
+<th><strong>内存分布</strong></th>
+<th><strong>特点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Unit Strided</strong></td>
+<td>连续存储</td>
+<td>地址递增步幅为 1</td>
+<td>密集向量运算</td>
+</tr>
+<tr>
+<td><strong>Strided</strong></td>
+<td>固定步幅分布</td>
+<td>地址递增步幅由寄存器 <code>rs2</code> 指定</td>
+<td>稀疏矩阵行处理</td>
+</tr>
+<tr>
+<td><strong>Indexed</strong></td>
+<td>任意分布</td>
+<td>地址偏移由索引向量决定</td>
+<td>稀疏矩阵列、不规则数据处理</td>
+</tr>
+</tbody></table>
+<h2 id="7个CSR-Context-Status-Register-寄存器"><a href="#7个CSR-Context-Status-Register-寄存器" class="headerlink" title="7个CSR(Context Status Register)寄存器"></a>7个CSR(Context Status Register)寄存器</h2><h3 id="Vstart-Vector-Start-寄存器"><a href="#Vstart-Vector-Start-寄存器" class="headerlink" title="Vstart(Vector Start)寄存器"></a>Vstart(Vector Start)寄存器</h3><p>存储向量指令中被执行第一个元素的索引值。</p>
+<p>通常在向量指令执行过程中产生了陷阱被写入，记录了陷阱时向量指令操作元素的索引，以便跳出陷阱之后能够继续执行剩下的元素。当向量指令产生非法指令异常时，vstart寄存器将不会被改写。</p>
+<p>如果vstart数值大于vl的值，说明vstart指向的元素索引已经超过当前所有元素的范围，该指令不会执行，同事寄存器复位0</p>
+<h3 id="Vxsat寄存器"><a href="#Vxsat寄存器" class="headerlink" title="Vxsat寄存器"></a>Vxsat寄存器</h3><p>vxsat为可读可写寄存器，该寄存器不仅有独立的寄存器地址，并且在vcsr寄存器中也有对应的域。该寄存器有效表示输出结果做了饱和截位以适应目的寄存器格式。比如当运算发生正溢出时，保留结果为能取到的最大正值；当运算发生负溢出时，保留结果为负数最小值。</p>
+<h3 id="vxrm寄存器"><a href="#vxrm寄存器" class="headerlink" title="vxrm寄存器"></a>vxrm寄存器</h3><p>vxrm[1:0]为可读可写寄存器，该寄存器不仅有独立的寄存器地址，并且在vcsr寄存器中也有对应的域。该寄存器控制定点舍入模式，一共四种模式，分别是round-to-nearest-up（rnu）、round-to-nearest-even(rne)、round-down(rdn)、round-to-odd(rod)。(问题：可否解释一下定点数在内存中的存放格式)<br>vxrm[1:0]寄存器通过单条csrwi指令写入值。<br>假如源操作数是v，有低d bit数据要被截掉，那么做完rounding-mode之后的最终结果应该是(v&gt;&gt;d)+r，r就是根据不同的rounding mode得到的增量值。<br>rnu：向距离近的方向进行舍入，当距离与两边都相等时，向上舍入。<br>rne：向距离近的方向进行舍入，当距离与两边都相等时，向偶数方向舍入。<br>rdn：向下舍入，直接取移位后的值。<br>rod：舍入到奇数值方向。<br>其中，v[d-1]表示权重位。当v[d-1]&#x3D;0，表示距离舍的方向更近；当v[d-1]&#x3D;1且v[d-2:0]&#x3D;0时，距离舍入两个方向距离均相等；当v[d-1]&#x3D;1，且v[d-2:0] !&#x3D; 0时，表示距离入的方向更近。</p>
+<h3 id="vcsr寄存器"><a href="#vcsr寄存器" class="headerlink" title="vcsr寄存器"></a>vcsr寄存器</h3><p>vcsr[2:0]寄存器为可读可写寄存器，该寄存器由vxrm[1:0]，以及vxsat组成。<br> riscv spec中fflags和frm寄存器也采用的这样的设计。这类状态寄存器，希望方便快速的读写，比如有时候希望一条指令能把这两个寄存器的值同时读出来。又或者写这两个寄存器，如果要同时写，就得先做移位拼接在写，那有的时候只想改变其中一个寄存器的值，也做移位在拼接然后写的操作就比较慢，因此单独写对应的地址就显得尤为方便快速。考虑到适应不同的需求，这类状态寄存器就设计为既有各自单独的寄存器存储空间，又集中在一个寄存集中划分各自的域。</p>
+<h3 id="vtype寄存器"><a href="#vtype寄存器" class="headerlink" title="vtype寄存器"></a>vtype寄存器</h3><p>vtype为只读寄存器，位宽同通用整型架构寄存器位宽（XLEN）。该寄存器提供了默认值用于解析向量寄存器中的内容，并且只能通过vsetvl{i}指令进行更新（这样做的目的是使得维护vtype寄存器的状态简单化）。<br>vtype寄存器用于解析向量寄存器文件中的内容、决定单个向量寄存器中元素的组成以及决定多个向量寄存器是如分组的。<br>vtype寄存器有五个域，分别是vill，vma，vta，vsew[2:0]，vlmul[2:0]。</p>
+<p><img src="https://img.picgo.net/2024/11/22/-2024-11-22-1525179aad71b0c2eb9e83.png" alt="屏幕截图 2024 11 22 152517"></p>
+<h3 id="vl寄存器"><a href="#vl寄存器" class="headerlink" title="vl寄存器"></a>vl寄存器</h3><p>vl寄存器为只读寄存器，该寄存器存储着一个无符号整数，用来规定一条向量指令需要更新多少个元素。<br>该寄存器只能被vsetvli、vsetvl指令以及fault-only-first矢量读取指令的变体进行更新。<br>目的寄存器中元素索引大于等于vl的元素，将不会被修改。如果vstart大于等于vl，那么目的寄存器的任何元素都不会被修改。<br>vl的位宽由最小元素组成的最大向量长度决定。最小的元素位宽至少是8bit，最大的分组设置为LMUL等于8，那么VLMAX&#x3D;LMUL * (VLEN &#x2F; SEW) &#x3D; VLEN。也就是说vl的位宽，直接由VLEN的大小决定。</p>
+<h3 id="vlenb寄存器"><a href="#vlenb寄存器" class="headerlink" title="vlenb寄存器"></a>vlenb寄存器</h3><p>该寄存器为只读寄存器，表示以字节为单位的向量寄存器长度，vlenb&#x3D;VLEN&#x2F;8。vlenb是一个设计时常量，增加这个寄存器是为了减少一些需要直接用到vlenb的程序的额外计算指令的开销。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2024/12/01/2024-12-23-RISC-V%20Vector%20Extension/">https://example.com/2024/12/01/2024-12-23-RISC-V%20Vector%20Extension/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/riscv/">riscv</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RVV Intrinsic</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/30/2024-11-23-RVOS%E7%B3%BB%E7%BB%9F/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">RVOS系统</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/12/08/2024-11-23-RISC-V%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/" title="RISC-V汇编语言入门"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-08</div><div class="title">RISC-V汇编语言入门</div></div></a></div><div><a href="/2024/12/08/2024-12-23-MLIR/" title="MLIR"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-08</div><div class="title">MLIR</div></div></a></div><div><a href="/2024/12/04/%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E7%BC%96%E8%AF%91%E5%8C%85%E5%90%ABRVV-Intrinsic%E7%9A%84%E7%A8%8B%E5%BA%8F/" title="RVV Intrinsic"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-04</div><div class="title">RVV Intrinsic</div></div></a></div><div><a href="/2024/11/30/2024-11-23-RVOS%E7%B3%BB%E7%BB%9F/" title="RVOS系统"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-30</div><div class="title">RVOS系统</div></div></a></div><div><a href="/2024/11/24/2024-11-23-RVV%E7%9A%84%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="RISCV Vector test"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-24</div><div class="title">RISCV Vector test</div></div></a></div><div><a href="/2024/11/23/2024-11-23-RISCV%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/" title="RISCV内存管理单元"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-23</div><div class="title">RISCV内存管理单元</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">161</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unit-Strided-Load-x2F-Store"><span class="toc-number">1.</span> <span class="toc-text">Unit Strided Load&#x2F;Store</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E4%B8%AACSR-Context-Status-Register-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number"></span> <span class="toc-text">7个CSR(Context Status Register)寄存器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vstart-Vector-Start-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">Vstart(Vector Start)寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vxsat%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">Vxsat寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vxrm%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">vxrm寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vcsr%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">4.</span> <span class="toc-text">vcsr寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vtype%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">vtype寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vl%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">6.</span> <span class="toc-text">vl寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vlenb%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">7.</span> <span class="toc-text">vlenb寄存器</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="I/O多路复用"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="I/O多路复用"/></a><div class="content"><a class="title" href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="I/O多路复用">I/O多路复用</a><time datetime="2026-01-07T11:30:00.000Z" title="发表于 2026-01-07 19:30:00">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="共享内存"/></a><div class="content"><a class="title" href="/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存">共享内存</a><time datetime="2026-01-02T11:30:00.000Z" title="发表于 2026-01-02 19:30:00">2026-01-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/" title="WS2812S总线灯"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="WS2812S总线灯"/></a><div class="content"><a class="title" href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/" title="WS2812S总线灯">WS2812S总线灯</a><time datetime="2025-12-31T11:30:00.000Z" title="发表于 2025-12-31 19:30:00">2025-12-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/22/2025-12-22-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E7%94%B5%E5%90%AF%E5%8A%A8/" title="系统上下电启动"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="系统上下电启动"/></a><div class="content"><a class="title" href="/2025/12/22/2025-12-22-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E7%94%B5%E5%90%AF%E5%8A%A8/" title="系统上下电启动">系统上下电启动</a><time datetime="2025-12-22T11:30:00.000Z" title="发表于 2025-12-22 19:30:00">2025-12-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

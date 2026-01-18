@@ -1,0 +1,538 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>共享内存 | 涵风 Blog</title><meta name="keywords" content="linux"><meta name="author" content="HF"><meta name="copyright" content="HF"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="共享内存共享内存  共享内存是 Linux &#x2F; Unix 系统提供的一种 进程间通信（IPC, Inter-Process Communication）机制： 允许 两个或多个进程访问同一块物理内存。 数据可以直接从内存中读写，无需复制，所以速度极快。 必须自己管理同步，否则会出现数据冲突或破坏。    Producer &#x2F; Consumer 模式  Producer: 负责生">
+<meta property="og:type" content="article">
+<meta property="og:title" content="共享内存">
+<meta property="og:url" content="https://example.com/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="涵风 Blog">
+<meta property="og:description" content="共享内存共享内存  共享内存是 Linux &#x2F; Unix 系统提供的一种 进程间通信（IPC, Inter-Process Communication）机制： 允许 两个或多个进程访问同一块物理内存。 数据可以直接从内存中读写，无需复制，所以速度极快。 必须自己管理同步，否则会出现数据冲突或破坏。    Producer &#x2F; Consumer 模式  Producer: 负责生">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://example.com/img/taozhuang.jpg">
+<meta property="article:published_time" content="2026-01-02T11:30:00.000Z">
+<meta property="article:modified_time" content="2026-01-18T13:09:58.652Z">
+<meta property="article:author" content="HF">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://example.com/img/taozhuang.jpg"><link rel="shortcut icon" href="/img/tb.png"><link rel="canonical" href="https://example.com/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '共享内存',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-18 21:09:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxaing.gif" onerror="onerror=null;src='/img/fr.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">161</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/taozhuang.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">涵风 Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">共享内存</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-02T11:30:00.000Z" title="发表于 2026-01-02 19:30:00">2026-01-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-18T13:09:58.652Z" title="更新于 2026-01-18 21:09:58">2026-01-18</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="共享内存"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h1><p><strong>共享内存</strong></p>
+<ul>
+<li><strong>共享内存</strong>是 Linux &#x2F; Unix 系统提供的一种 <strong>进程间通信（IPC, Inter-Process Communication）机制</strong>：<ul>
+<li>允许 <strong>两个或多个进程访问同一块物理内存</strong>。</li>
+<li>数据可以直接从内存中读写，<strong>无需复制</strong>，所以速度极快。</li>
+<li>必须自己管理同步，否则会出现数据冲突或破坏。</li>
+</ul>
+</li>
+</ul>
+<p><strong>Producer &#x2F; Consumer 模式</strong></p>
+<ul>
+<li><strong>Producer</strong>: 负责生产数据（Camera &#x2F; RGA 输出）</li>
+<li><strong>Consumer</strong>: 负责消费数据（AI &#x2F; 推理 &#x2F; 模型）</li>
+<li>核心原则：<ol>
+<li>Producer 不阻塞</li>
+<li>Consumer 可以慢</li>
+<li>buffer 生命周期清晰</li>
+</ol>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>零拷贝</td>
+<td>Producer 写入内存，Consumer 直接读取，不经过 socket &#x2F; 文件拷贝</td>
+</tr>
+<tr>
+<td>低延迟</td>
+<td>CPU 不用做序列化 &#x2F; 反序列化操作</td>
+</tr>
+<tr>
+<td>跨进程</td>
+<td>只要进程映射了同一块共享内存，任何进程都能访问</td>
+</tr>
+<tr>
+<td>必须同步</td>
+<td>没有内置锁，需要 mutex &#x2F; semaphore &#x2F; condition variable 来保证安全</td>
+</tr>
+</tbody></table>
+<h2 id="Linux-下实现方式"><a href="#Linux-下实现方式" class="headerlink" title="Linux 下实现方式"></a>Linux 下实现方式</h2><ul>
+<li><strong>POSIX 共享内存</strong><ul>
+<li><code>shm_open</code> 创建&#x2F;打开</li>
+<li><code>ftruncate</code> 设置大小</li>
+<li><code>mmap</code> 映射到用户空间</li>
+</ul>
+</li>
+<li><strong>System V 共享内存</strong>（老式，不常用）</li>
+<li><strong>DMA-BUF &#x2F; GPU buffer</strong>（现代图像应用）<ul>
+<li>可以直接传递硬件 buffer fd 给其他进程</li>
+</ul>
+</li>
+</ul>
+<h2 id="内存布局概念"><a href="#内存布局概念" class="headerlink" title="内存布局概念"></a>内存布局概念</h2><p>共享内存不仅仅是一个 <strong>裸数据块</strong>，通常还包含：</p>
+<ol>
+<li><strong>数据区</strong><ul>
+<li>图像 buffer、frame_id、timestamp</li>
+</ul>
+</li>
+<li><strong>状态标志</strong><ul>
+<li>Producer &#x2F; Consumer 状态，是否可读&#x2F;可写</li>
+</ul>
+</li>
+<li><strong>同步机制</strong><ul>
+<li>Mutex + Condition Variable</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>这三部分一起组成了<strong>共享内存结构体</strong></p>
+</blockquote>
+<h2 id="Producer-x2F-Consumer-架构的概念"><a href="#Producer-x2F-Consumer-架构的概念" class="headerlink" title="Producer &#x2F; Consumer 架构的概念"></a>Producer &#x2F; Consumer 架构的概念</h2><blockquote>
+<p>Producer &#x2F; Consumer 是一种<strong>经典的并发模式</strong>：</p>
+</blockquote>
+<ul>
+<li><h3 id="Producer（生产者）"><a href="#Producer（生产者）" class="headerlink" title="Producer（生产者）"></a><strong>Producer（生产者）</strong></h3><p> 只负责生成数据。</p>
+</li>
+<li><p><strong>Consumer（消费者）</strong><br> 只负责使用数据。</p>
+</li>
+<li><p><strong>核心思想</strong>：职责分离，数据通过共享缓冲区传递。</p>
+</li>
+</ul>
+<blockquote>
+<p>Producer 写共享内存</p>
+<p>Consumer 读共享内存</p>
+<p>同步逻辑保证：</p>
+<ol>
+<li>Producer 不覆盖未消费的数据</li>
+<li>Consumer 不读无效数据</li>
+<li>CPU 不空转，条件变量阻塞</li>
+</ol>
+</blockquote>
+<h3 id="核心同步逻辑"><a href="#核心同步逻辑" class="headerlink" title="核心同步逻辑"></a>核心同步逻辑</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Producer                  Consumer</span><br><span class="line">  |                         |</span><br><span class="line">lock mutex                 lock mutex</span><br><span class="line">check data_ready ----------&gt; wait (if false)</span><br><span class="line">write data                  |</span><br><span class="line">data_ready = true          read data</span><br><span class="line">signal cond &lt;-------------- signal cond</span><br><span class="line">unlock mutex               unlock mutex</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="头文件"><a href="#头文件" class="headerlink" title="头文件"></a>头文件</h3><table>
+<thead>
+<tr>
+<th>头文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sys/mman.h</code></td>
+<td>mmap&#x2F;munmap 映射共享内存</td>
+</tr>
+<tr>
+<td><code>sys/stat.h</code></td>
+<td>文件权限模式常量（0666）</td>
+</tr>
+<tr>
+<td><code>fcntl.h</code></td>
+<td>shm_open, O_CREAT &#x2F; O_RDWR</td>
+</tr>
+<tr>
+<td><code>unistd.h</code></td>
+<td>ftruncate, close</td>
+</tr>
+<tr>
+<td><code>pthread.h</code></td>
+<td>mutex &#x2F; cond 等同步机制</td>
+</tr>
+<tr>
+<td><code>cstring</code></td>
+<td>字符串操作，例如 strncpy</td>
+</tr>
+</tbody></table>
+<p>共享内存结构体</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">SharedBlock</span> &#123;</span><br><span class="line">    <span class="type">pthread_mutex_t</span> mutex;		<span class="comment">//互斥锁，保证读写互斥</span></span><br><span class="line">    <span class="type">pthread_cond_t</span>  cond;		<span class="comment">//条件变量，用于阻塞等待</span></span><br><span class="line">    <span class="type">bool</span> data_ready;			<span class="comment">//状态标志，true 表示 Producer 已写数据</span></span><br><span class="line">    <span class="type">uint32_t</span> frame_id;</span><br><span class="line">    <span class="type">uint64_t</span> timestamp;</span><br><span class="line">    <span class="type">char</span> payload[<span class="number">256</span>]; 			<span class="comment">//数据缓冲区（可替换为 DMA-BUF 或 RGA buffer）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数详解"><a href="#函数详解" class="headerlink" title="函数详解"></a>函数详解</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> fd = <span class="built_in">shm_open</span>(SHM_NAME, O_CREAT | O_RDWR, <span class="number">0666</span>);</span><br><span class="line"><span class="built_in">ftruncate</span>(fd, SHM_SIZE);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shm_open</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打开或创建一个共享内存对象</li>
+<li>参数：<ul>
+<li><code>SHM_NAME</code>：共享内存名字</li>
+<li><code>O_CREAT | O_RDWR</code>：创建 + 可读写</li>
+<li><code>0666</code>：权限</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ftruncate(fd, SHM_SIZE)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调整共享内存大小（必须指定 size &#x3D; sizeof(SharedBlock)）</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span>* shm = (SharedBlock*)<span class="built_in">mmap</span>(<span class="literal">nullptr</span>, SHM_SIZE,</span><br><span class="line">                                PROT_READ | PROT_WRITE,</span><br><span class="line">                                MAP_SHARED, fd, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>mmap</code> 映射共享内存到进程地址空间</p>
+<p>参数：</p>
+<ul>
+<li><code>PROT_READ | PROT_WRITE</code> → 可读写</li>
+<li><code>MAP_SHARED</code> → 对其他进程可见</li>
+<li><code>fd</code> → shm_open 的文件描述符</li>
+</ul>
+<p>返回值：指向映射的内存，可以像普通指针一样操作</p>
+<p><strong>初始化互斥锁和条件变量</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_mutexattr_t</span> mattr;</span><br><span class="line"><span class="type">pthread_condattr_t</span>  cattr;</span><br><span class="line"><span class="built_in">pthread_mutexattr_init</span>(&amp;mattr);</span><br><span class="line"><span class="built_in">pthread_mutexattr_setpshared</span>(&amp;mattr, PTHREAD_PROCESS_SHARED); <span class="comment">//允许跨进程使用 mutex</span></span><br><span class="line"><span class="built_in">pthread_mutex_init</span>(&amp;shm-&gt;mutex, &amp;mattr);</span><br><span class="line"></span><br><span class="line"><span class="built_in">pthread_condattr_init</span>(&amp;cattr);</span><br><span class="line"><span class="built_in">pthread_condattr_setpshared</span>(&amp;cattr, PTHREAD_PROCESS_SHARED);  <span class="comment">//允许跨进程使用条件变量</span></span><br><span class="line"><span class="built_in">pthread_cond_init</span>(&amp;shm-&gt;cond, &amp;cattr);</span><br></pre></td></tr></table></figure>
+
+<p><strong>必须由一个进程初始化</strong>，其他进程只映射即可</p>
+<h4 id="生产数据逻辑"><a href="#生产数据逻辑" class="headerlink" title="生产数据逻辑"></a>生产数据逻辑</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pthread_mutex_lock(&amp;shm-&gt;mutex);  // 上锁</span><br><span class="line">while (shm-&gt;data_ready)            // 检查状态</span><br><span class="line">    pthread_cond_wait(&amp;shm-&gt;cond, &amp;shm-&gt;mutex);  // 阻塞等待</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>上锁：保证写入互斥</p>
+</li>
+<li><p><code>while</code> 检查状态：</p>
+<ul>
+<li>如果上一次数据还没被 Consumer 消费，Producer 阻塞</li>
+</ul>
+</li>
+<li><p><code>pthread_cond_wait</code>：</p>
+<ol>
+<li><h3 id="自动释放-mutex，阻塞等待"><a href="#自动释放-mutex，阻塞等待" class="headerlink" title="自动释放 mutex，阻塞等待"></a>自动释放 mutex，阻塞等待</h3></li>
+<li><p>被 Consumer signal 唤醒后重新获取 mutex</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>写入数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shm-&gt;frame_id++;</span><br><span class="line">shm-&gt;timestamp = now;</span><br><span class="line">strncpy(shm-&gt;payload, &quot;frame_x&quot;, sizeof(shm-&gt;payload));</span><br><span class="line">shm-&gt;data_ready = true; // 标记数据已准备好</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>先写数据，再标记 <code>data_ready = true</code></li>
+<li><strong>顺序关键</strong>：否则 Consumer 可能读到半写入的数据</li>
+</ul>
+<hr>
+<p>通知 Consumer 并解锁：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pthread_cond_signal(&amp;shm-&gt;cond);  // 唤醒 Consumer</span><br><span class="line">pthread_mutex_unlock(&amp;shm-&gt;mutex); // 解锁</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>signal → 唤醒 Consumer</li>
+<li>unlock → 允许 Consumer 获取 mutex</li>
+</ul>
+<h4 id="消费者逻辑"><a href="#消费者逻辑" class="headerlink" title="消费者逻辑"></a>消费者逻辑</h4><p>打开共享内存：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int fd = shm_open(SHM_NAME, O_RDWR, 0666);</span><br><span class="line">auto* shm = (SharedBlock*)mmap(nullptr, SHM_SIZE,</span><br><span class="line">                                PROT_READ | PROT_WRITE,</span><br><span class="line">                                MAP_SHARED, fd, 0);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不需要 O_CREAT</li>
+<li>Consumer 不初始化 mutex &#x2F; cond，直接使用映射的</li>
+</ul>
+<hr>
+<p>读取数据逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pthread_mutex_lock(&amp;shm-&gt;mutex);          // 上锁</span><br><span class="line">while (!shm-&gt;data_ready)                  // 等待数据准备</span><br><span class="line">    pthread_cond_wait(&amp;shm-&gt;cond, &amp;shm-&gt;mutex); // 阻塞</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果没有数据，阻塞等待</li>
+<li>条件变量避免 busy loop → CPU 零占用</li>
+</ul>
+<hr>
+<p>读取并消费：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; shm-&gt;frame_id &lt;&lt; &quot; &quot; &lt;&lt; shm-&gt;payload &lt;&lt; &quot;\n&quot;;</span><br><span class="line">shm-&gt;data_ready = false;  // 标记数据已被消费</span><br><span class="line">pthread_cond_signal(&amp;shm-&gt;cond); // 唤醒 Producer</span><br><span class="line">pthread_mutex_unlock(&amp;shm-&gt;mutex); // 解锁</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>先读，再清 <code>data_ready</code></li>
+<li>signal → 告诉 Producer 可以写下一帧</li>
+<li>unlock → 释放共享内存访问权</li>
+</ul>
+<h2 id="智能指针管理逻辑"><a href="#智能指针管理逻辑" class="headerlink" title="智能指针管理逻辑"></a>智能指针管理逻辑</h2><p>共享内存里的指针操作用 <strong>智能指针</strong> 封装，方便管理，避免手动 <code>mmap</code>&#x2F;<code>munmap</code>、<code>shm_open</code>&#x2F;<code>close</code> 出错，同时保持线程安全。</p>
+<p>智能指针管理共享内存的主要目标：</p>
+<ol>
+<li><p><strong>自动释放资源</strong></p>
+<ul>
+<li><h2 id="mmap-→-munmap"><a href="#mmap-→-munmap" class="headerlink" title="mmap → munmap"></a><code>mmap</code> → <code>munmap</code></h2></li>
+<li><p><code>shm_open</code> → <code>close</code></p>
+</li>
+<li><p>可用 <code>std::unique_ptr</code> + 自定义删除器封装</p>
+</li>
+</ul>
+</li>
+<li><p><strong>依旧保持 Producer&#x2F;Consumer 同步逻辑</strong></p>
+<ul>
+<li><code>mutex</code> 和 <code>cond</code> 仍然是原生 <code>pthread</code>，智能指针不干预</li>
+</ul>
+</li>
+<li><p><strong>安全、异常友好</strong></p>
+<ul>
+<li>如果程序异常退出，智能指针自动释放映射</li>
+</ul>
+</li>
+</ol>
+<h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><p><strong>智能指针</strong>是一种 C++ 提供的 RAII 资源管理机制，它能<strong>自动管理动态分配的资源</strong>，防止内存泄漏和资源未释放。</p>
+<table>
+<thead>
+<tr>
+<th><code>std::unique_ptr&lt;T&gt;</code></th>
+<th><strong>独占所有权</strong></th>
+<th><strong><code>std::unique_ptr&lt;int&gt; p(new int(5));</code></strong></th>
+<th><strong>生命周期结束自动释放；不能拷贝，可移动</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><code>std::shared_ptr&lt;T&gt;</code></strong></td>
+<td><strong>共享所有权</strong></td>
+<td><strong><code>auto sp = std::make_shared&lt;int&gt;(5);</code></strong></td>
+<td><strong>多个指针共享同一资源，最后一个析构时释放</strong></td>
+</tr>
+<tr>
+<td><strong><code>std::weak_ptr&lt;T&gt;</code></strong></td>
+<td><strong>弱引用</strong></td>
+<td><strong><code>std::weak_ptr&lt;int&gt; wp = sp;</code></strong></td>
+<td><strong>不增加引用计数，用于避免循环引用</strong></td>
+</tr>
+</tbody></table>
+<h2 id="为什么共享内存适合用智能指针"><a href="#为什么共享内存适合用智能指针" class="headerlink" title="为什么共享内存适合用智能指针"></a>为什么共享内存适合用智能指针</h2><p>共享内存操作流程：</p>
+<ol>
+<li><code>shm_open</code> → 获取 fd</li>
+<li><code>ftruncate</code> → 设置大小</li>
+<li><code>mmap</code> → 映射</li>
+<li><code>munmap</code> → 释放映射</li>
+<li><code>close</code> → 关闭 fd（可选）</li>
+</ol>
+<p>问题：</p>
+<ul>
+<li>如果手动操作，一旦异常退出，<code>munmap</code> 可能没调用 → 内存泄漏</li>
+<li>fd 没关闭 → 资源泄漏</li>
+</ul>
+<p>解决方案：</p>
+<ul>
+<li>用 <code>unique_ptr</code> + 自定义删除器封装 <code>mmap</code> 的地址</li>
+<li>这样映射就能和智能指针绑定，<strong>出作用域自动释放</strong></li>
+</ul>
+<h2 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义删除器</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ShmDeleter</span> &#123;</span><br><span class="line">    <span class="type">size_t</span> size;</span><br><span class="line">    <span class="built_in">ShmDeleter</span>(<span class="type">size_t</span> s) : <span class="built_in">size</span>(s) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(SharedBlock* ptr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ptr) <span class="built_in">munmap</span>(ptr, size); <span class="comment">// 自动释放映射</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建共享内存智能指针</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;SharedBlock, ShmDeleter&gt; <span class="title">shm_ptr</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    (SharedBlock*)mmap(<span class="literal">nullptr</span>, <span class="keyword">sizeof</span>(SharedBlock),</span></span></span><br><span class="line"><span class="params"><span class="function">                        PROT_READ|PROT_WRITE, MAP_SHARED, fd, <span class="number">0</span>),</span></span></span><br><span class="line"><span class="params"><span class="function">    ShmDeleter(<span class="keyword">sizeof</span>(SharedBlock))</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://example.com">HF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://example.com/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/">https://example.com/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://example.com" target="_blank">涵风 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="/img/taozhuang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/"><img class="prev-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">I/O多路复用</div></div></a></div><div class="next-post pull-right"><a href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/"><img class="next-cover" src="/img/taozhuang.jpg" onerror="onerror=null;src='/img/fr.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">WS2812S总线灯</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="I&#x2F;O多路复用"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-07</div><div class="title">I&#x2F;O多路复用</div></div></a></div><div><a href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/" title="WS2812S总线灯"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-31</div><div class="title">WS2812S总线灯</div></div></a></div><div><a href="/2025/12/22/2025-12-22-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E7%94%B5%E5%90%AF%E5%8A%A8/" title="系统上下电启动"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-22</div><div class="title">系统上下电启动</div></div></a></div><div><a href="/2024/07/08/2024-7-8-%E6%B3%B0%E5%B1%B1%E6%B4%BE%EF%BC%88%E7%91%9E%E8%8A%AF%E5%BE%AESDK%E7%BC%96%E8%AF%91%E7%83%A7%E5%BD%95%EF%BC%89/" title="泰山派（瑞芯微SDK编译烧录）"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-08</div><div class="title">泰山派（瑞芯微SDK编译烧录）</div></div></a></div><div><a href="/2024/03/10/2024-3-10-NVIDIA-X-AVIER%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="NVIDIA X AVIER编译内核配置开发环境"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-10</div><div class="title">NVIDIA X AVIER编译内核配置开发环境</div></div></a></div><div><a href="/2024/03/05/2024-3-05-NVIDIA-X-AVIER/" title="NVIDIA X AVIER"><img class="cover" src="/img/taozhuang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-05</div><div class="title">NVIDIA X AVIER</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxaing.gif" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="avatar"/></div><div class="author-info__name">HF</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">161</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">加菲猫中的一句话：应该有更好的方式开始新一天,而不是千篇一律地在每个上午都醒来。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="toc-number">1.</span> <span class="toc-text">共享内存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-%E4%B8%8B%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">Linux 下实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">内存布局概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Producer-x2F-Consumer-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">1.3.</span> <span class="toc-text">Producer &#x2F; Consumer 架构的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer%EF%BC%88%E7%94%9F%E4%BA%A7%E8%80%85%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">Producer（生产者）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%90%8C%E6%AD%A5%E9%80%BB%E8%BE%91"><span class="toc-number">1.3.2.</span> <span class="toc-text">核心同步逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">头文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.4.</span> <span class="toc-text">函数详解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E6%95%B0%E6%8D%AE%E9%80%BB%E8%BE%91"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">生产数据逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE-mutex%EF%BC%8C%E9%98%BB%E5%A1%9E%E7%AD%89%E5%BE%85"><span class="toc-number">1.3.5.</span> <span class="toc-text">自动释放 mutex，阻塞等待</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E9%80%BB%E8%BE%91"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">消费者逻辑</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%AE%A1%E7%90%86%E9%80%BB%E8%BE%91"><span class="toc-number">1.4.</span> <span class="toc-text">智能指针管理逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mmap-%E2%86%92-munmap"><span class="toc-number">1.5.</span> <span class="toc-text">mmap → munmap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.5.1.</span> <span class="toc-text">智能指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E9%80%82%E5%90%88%E7%94%A8%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.6.</span> <span class="toc-text">为什么共享内存适合用智能指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="toc-number">1.7.</span> <span class="toc-text">示例代码：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="I/O多路复用"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="I/O多路复用"/></a><div class="content"><a class="title" href="/2026/01/07/2026-01-07-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="I/O多路复用">I/O多路复用</a><time datetime="2026-01-07T11:30:00.000Z" title="发表于 2026-01-07 19:30:00">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="共享内存"/></a><div class="content"><a class="title" href="/2026/01/02/2026-01-02-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存">共享内存</a><time datetime="2026-01-02T11:30:00.000Z" title="发表于 2026-01-02 19:30:00">2026-01-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/" title="WS2812S总线灯"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="WS2812S总线灯"/></a><div class="content"><a class="title" href="/2025/12/31/2025-12-31-WS2812S%E6%80%BB%E7%BA%BF%E7%81%AF/" title="WS2812S总线灯">WS2812S总线灯</a><time datetime="2025-12-31T11:30:00.000Z" title="发表于 2025-12-31 19:30:00">2025-12-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/22/2025-12-22-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E7%94%B5%E5%90%AF%E5%8A%A8/" title="系统上下电启动"><img src="/img/taozhuang.jpg" onerror="this.onerror=null;this.src='/img/fr.gif'" alt="系统上下电启动"/></a><div class="content"><a class="title" href="/2025/12/22/2025-12-22-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E7%94%B5%E5%90%AF%E5%8A%A8/" title="系统上下电启动">系统上下电启动</a><time datetime="2025-12-22T11:30:00.000Z" title="发表于 2025-12-22 19:30:00">2025-12-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By HF</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">生活就像一颗巧克力，你永远都不会知道下一颗的滋味。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'neutral' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="2127967295" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-lrctype="1" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="214,237,240" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
